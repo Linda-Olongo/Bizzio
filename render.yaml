@@ -1,0 +1,26 @@
+services:
+  - type: web
+    name: bizzio-app
+    env: python
+    plan: free  # ou starter selon vos besoins
+    buildCommand: |
+      pip install --upgrade pip
+      pip install -r requirements.txt
+    startCommand: |
+      gunicorn --bind 0.0.0.0:$PORT app:app --workers 2 --timeout 120
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
+      - key: FLASK_ENV
+        value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: bizzio-db
+          property: connectionString
+      
+  - type: pgsql
+    name: bizzio-db
+    databaseName: bizzio
+    user: bbs  # comme dans votre capture
+    plan: free
+    region: frankfurt  # comme votre base actuelle
