@@ -2294,6 +2294,15 @@
 {% endblock %}
 
 <style>
+/* Styles pour les tooltips avec carrés colorés */
+.chartjs-tooltip .chartjs-tooltip-body li:first-child {
+    color: #d81b60 !important; /* Rouge pour Articles vendus */
+}
+
+.chartjs-tooltip .chartjs-tooltip-body li:nth-child(2) {
+    color: #ff8a80 !important; /* Orange pour Chiffre d'affaires */
+}
+
 /* --- Fix select text invisible in edit modal --- */
 #editArticleForm select.form-control {
     text-indent: 0 !important;               /* prevent hidden text tricks */
@@ -2635,31 +2644,43 @@ function initMonthlyChart(data) {
                     bodyColor: 'white',
                     borderWidth: 0,
                     cornerRadius: 6,
+                    enableHTML: true,
                     callbacks: {
                         title: function(context) {
                             return context[0].label;
                         },
                         label: function(context) {
-                            const label = context.dataset.label || '';
-                            const value = context.parsed.y || 0;
+                            // Masquer le label par défaut
+                            return '';
+                        },
+                        beforeBody: function(context) {
+                            const dataIndex = context[0].dataIndex;
+                            const lines = [];
                             
-                            if (label.includes('Articles vendus')) {
-                                return `${label}: ${value}`;
-                            } else if (label.includes('Chiffre d\'affaires')) {
-                                return `${label}: ${value.toLocaleString()} FCFA`;
+                            // Toujours afficher les deux lignes principales avec carrés colorés
+                            if (data.quantities && data.quantities[dataIndex] !== undefined) {
+                                lines.push(`■ Articles vendus: ${data.quantities[dataIndex]}`);
                             }
-                            return `${label}: ${value}`;
+                            if (data.revenues && data.revenues[dataIndex] !== undefined) {
+                                lines.push(`■ Chiffre d'affaires : ${data.revenues[dataIndex].toLocaleString()} FCFA`);
+                            }
+                            
+                            return lines;
                         },
                         afterBody: function(context) {
                             // Ajouter les détails par agence si disponibles
                             const dataIndex = context[0].dataIndex;
                             if (data.agence_details && data.agence_details[dataIndex]) {
                                 const agenceDetails = data.agence_details[dataIndex];
-                                const lines = ['---'];
+                                const lines = [];
+                                
+                                lines.push('Répartition par Agence:');
+                                
+                                // Ajouter les détails par ville
                                 for (const [ville, details] of Object.entries(agenceDetails)) {
-                                    lines.push(`${ville}:`);
+                                    lines.push(`■ ${ville}:`);
                                     lines.push(`  Articles: ${details.articles_vendus}`);
-                                    lines.push(`  CA: ${details.chiffre_affaire.toLocaleString()} FCFA`);
+                                    lines.push(`  Chiffre d'affaire: ${details.chiffre_affaire.toLocaleString()} FCFA`);
                                 }
                                 return lines;
                             }
@@ -2793,6 +2814,7 @@ function initPrestationsChart(data) {
                     bodyColor: 'white',
                     borderWidth: 0,
                     cornerRadius: 6,
+                    enableHTML: true,
                     callbacks: {
                         label: function(context) {
                             const label = context.label || '';
