@@ -106,13 +106,13 @@
         }
 
         .chart-card:first-child {
-            flex: 0 0 calc(70% - 10px);
-            max-width: calc(70% - 10px);
+            flex: 0 0 calc(60% - 10px);
+            max-width: calc(60% - 10px);
         }
 
         .chart-card:last-child {
-            flex: 0 0 calc(30% - 10px);
-            max-width: calc(30% - 10px);
+            flex: 0 0 calc(40% - 10px);
+            max-width: calc(40% - 10px);
             overflow: hidden; /* Empêcher le débordement */
         }
         
@@ -180,48 +180,37 @@
             padding: 20px;
         }
 
-        /* CSS pour la légende personnalisée */
+        /* CSS pour la légende personnalisée - Style identique à prestation.html */
         .chart-legend {
-            margin-top: 15px;
-            padding: 15px;
-            background: rgba(0,0,0,0.02);
+            position: absolute;
+            bottom: 15px;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 10px 15px;
             border-radius: 8px;
-        }
-
-        .legend-title {
-            text-align: center;
-            margin-bottom: 15px;
-        }
-
-        .legend-total {
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: #333;
-            margin-bottom: 5px;
-        }
-
-        .legend-subtitle {
-            font-size: 0.9rem;
-            color: #666;
-        }
-
-        .legend-list {
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin: 0 15px;
+            font-size: 0.8rem;
             display: flex;
-            flex-direction: column;
+            flex-wrap: wrap;
+            justify-content: center;
             gap: 8px;
+            max-height: 80px;
+            overflow-y: auto;
         }
-
+        
         .legend-item {
             display: flex;
             align-items: center;
-            padding: 6px 10px;
+            padding: 4px 8px;
             background: rgba(0,0,0,0.03);
             border-radius: 4px;
             min-width: 0;
             flex: 1;
             max-width: 100%;
         }
-
+        
         .legend-color {
             width: 12px;
             height: 12px;
@@ -229,13 +218,14 @@
             margin-right: 8px;
             flex-shrink: 0;
         }
-
+        
         .legend-label {
             font-weight: 500;
             color: #333;
-            font-size: 0.9rem;
+            font-size: 0.7rem;
+            line-height: 1.1;
             word-break: break-word;
-            line-height: 1.3;
+            white-space: normal;
         }
 
         /* Styles pour le graphique donut comme dans prestation.html */
@@ -252,6 +242,29 @@
             max-width: 280px !important;
             max-height: 280px !important;
         }
+
+        .donut-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            z-index: 10;
+        }
+
+        .donut-value {
+            font-size: 1.2rem;     /* Plus petit */
+            font-weight: 600;      /* Plus fin */
+            color: #000;           /* Noir */
+            margin-bottom: 5px;
+        }
+
+        .donut-label {
+            font-size: 0.8rem;     /* Plus petit */
+            color: #bbb;           /* Gris clair */
+            font-weight: 400;      /* Plus fin */
+        }
+
 
         .loading-spinner {
             width: 20px;
@@ -877,13 +890,20 @@
                         <h3>Segmentation par Ville</h3>
                     </div>
                     <div class="chart-container">
+                        <div id="chart3DContainer" style="display: none;"></div>
+                        <!-- Donut classique comme prestation.html -->
                         <div class="donut-wrapper">
-                            <canvas id="segmentationVillesChart"></canvas>
+                            <canvas id="segmentationVillesChart" width="280" height="280"></canvas>
+                            <div class="donut-center" id="donutCenter">
+                                <div class="donut-value" id="donutValue">0 FCFA</div>
+                                <div class="donut-label">CA Total</div>
+                            </div>
                         </div>
+                        <div id="segmentationVillesLegend" class="chart-legend"></div>
+                        
                         <div id="segmentationVillesNoData" class="no-data-message" style="display: none;">
                             AUCUNE DONNÉE DISPONIBLE
                         </div>
-                        <div class="chart-legend" id="segmentationVillesLegend"></div>
                     </div>
                 </div>
             </div>
@@ -1051,10 +1071,20 @@ async function loadVentesCharts() {
 
         // Initialiser les graphiques
         console.log("📊 Initialisation graphique évolution...");
-        initVentesEvolutionChart(evolutionData);
+        try {
+            initVentesEvolutionChart(evolutionData);
+            console.log("✅ Graphique évolution initialisé");
+        } catch (error) {
+            console.error("❌ Erreur graphique évolution:", error);
+        }
         
         console.log("📊 Initialisation graphique segmentation...");
-        initSegmentationVillesChartNew(segmentationData);
+        try {
+            initSegmentationVillesChartNew(segmentationData);
+            console.log("✅ Graphique segmentation initialisé");
+        } catch (error) {
+            console.error("❌ Erreur graphique segmentation:", error);
+        }
         
         const endTime = Date.now();
         console.log(`📊 Graphiques chargés en ${endTime - startTime}ms`);
@@ -1128,7 +1158,7 @@ function initVentesEvolutionChart(data) {
                         boxWidth: 15,
                         padding: 20,
                         font: { size: 12, weight: '500' },
-                        usePointStyle: true
+                        usePointStyle: false
                     }
                 },
                 title: {
@@ -1154,9 +1184,9 @@ function initVentesEvolutionChart(data) {
                             const value = context.parsed.y || 0;
                             
                             if (datasetLabel === 'Nombre de ventes') {
-                                return `■ ${datasetLabel}: ${value.toLocaleString('fr-FR')}`;
+                                return `${datasetLabel}: ${value.toLocaleString('fr-FR')}`;
                             } else if (datasetLabel === 'Chiffre d\'affaires (FCFA)') {
-                                return `■ Chiffre d'affaire: ${formatCurrency(value)}`;
+                                return `Chiffre d'affaire: ${formatCurrency(value)}`;
                             }
                             
                             return `${datasetLabel}: ${value}`;
@@ -1255,7 +1285,12 @@ function initSegmentationVillesChart(data) {
     const canvas = document.getElementById('segmentationVillesChart');
     const noDataDiv = document.getElementById('segmentationVillesNoData');
     
+    console.log('🔍 Canvas trouvé:', canvas);
+    console.log('🔍 NoData div trouvé:', noDataDiv);
     console.log('🔍 Debug segmentation villes data:', data);
+    console.log('🔍 Data success:', data.success);
+    console.log('🔍 Data villes:', data.villes);
+    console.log('🔍 Data villes length:', data.villes ? data.villes.length : 'undefined');
     
     if (!data.success || !data.villes || data.villes.length === 0) {
         console.log('❌ Pas de données pour segmentation villes');
@@ -1889,22 +1924,23 @@ function updateSegmentationVillesLegend(villes, totalCa) {
     if (!legendDiv) return;
     
     legendDiv.innerHTML = '';
+    legendDiv.style.display = 'flex';
     
-    // Titre avec CA total
-    const titleDiv = document.createElement('div');
-    titleDiv.className = 'legend-title';
-    titleDiv.innerHTML = `
-        <div class="legend-total">${formatCurrency(totalCa)}</div>
-        <div class="legend-subtitle">CA Total</div>
+    // Créer un élément pour le total (comme dans prestation.html)
+    const totalElement = document.createElement('div');
+    totalElement.style.cssText = `
+        width: 100%;
+        text-align: center;
+        font-weight: 600;
+        margin-bottom: 5px;
+        color: #333;
     `;
-    legendDiv.appendChild(titleDiv);
-    
-    // Liste des villes
-    const listDiv = document.createElement('div');
-    listDiv.className = 'legend-list';
+    totalElement.textContent = `Total: ${formatCurrency(totalCa || 0)}`;
+    legendDiv.appendChild(totalElement);
     
     const modernColors = [
-        '#4A90E2',  // Bleu principal
+        '#795548',  // Marron principal (première couleur)
+        '#4A90E2',  // Bleu
         '#7ED321',  // Vert moderne  
         '#F5A623',  // Orange/jaune
         '#D0021B',  // Rouge moderne
@@ -1912,10 +1948,10 @@ function updateSegmentationVillesLegend(villes, totalCa) {
         '#50E3C2',  // Turquoise
         '#FF6B6B',  // Rouge clair
         '#4ECDC4',  // Turquoise clair
-        '#45B7D1',  // Bleu clair
-        '#96CEB4'   // Vert clair
+        '#45B7D1'   // Bleu clair
     ];
     
+    // Ajouter chaque élément de légende directement dans la légende principale
     villes.forEach((ville, index) => {
         const itemDiv = document.createElement('div');
         itemDiv.className = 'legend-item';
@@ -1932,36 +1968,55 @@ function updateSegmentationVillesLegend(villes, totalCa) {
         
         itemDiv.appendChild(colorSpan);
         itemDiv.appendChild(labelSpan);
-        listDiv.appendChild(itemDiv);
+        legendDiv.appendChild(itemDiv);
     });
+}
+
+// Fonction pour mettre à jour le centre du donut
+function updateDonutCenter(totalCA) {
+    const valueElement = document.getElementById('donutValue');
+    const labelElement = document.querySelector('.donut-label');
     
-    legendDiv.appendChild(listDiv);
+    if (valueElement) {
+        valueElement.textContent = formatCurrency(totalCA);
+    }
+    
+    if (labelElement) {
+        labelElement.textContent = 'CA Total';
+    }
 }
 
 // Nouvelle fonction pour le graphique de segmentation par ville
 function initSegmentationVillesChartNew(data) {
+    console.log('🔍 Segmentation villes data:', data);
     const canvas = document.getElementById('segmentationVillesChart');
     const noDataDiv = document.getElementById('segmentationVillesNoData');
     
-    console.log('🔍 Debug segmentation villes data:', data);
+    console.log('🔍 Canvas trouvé:', canvas);
+    console.log('🔍 Canvas dimensions:', canvas ? `${canvas.width}x${canvas.height}` : 'null');
     
     if (!data.success || !data.villes || data.villes.length === 0) {
-        console.log('❌ Pas de données pour segmentation villes');
+        console.log('❌ Pas de données segmentation villes');
         showNoDataMessage('segmentationVillesChart', 'segmentationVillesNoData');
         return;
     }
     
-    showChart('segmentationVillesChart');
+    // Le donut-wrapper est déjà affiché par défaut
     
-    const ctx = canvas.getContext('2d');
+    console.log('🔍 Appel showChart...');
+    showChart('segmentationVillesChart');
+    console.log('🔍 Canvas après showChart:', canvas.style.display);
     
     if (segmentationVillesChart) {
         segmentationVillesChart.destroy();
     }
     
-    // Couleurs modernes
+    const ctx = canvas.getContext('2d');
+    
+    // Couleurs modernes comme dans prestation.html
     const modernColors = [
-        '#4A90E2',  // Bleu principal
+        '#795548',  // Marron principal (première couleur)
+        '#4A90E2',  // Bleu
         '#7ED321',  // Vert moderne  
         '#F5A623',  // Orange/jaune
         '#D0021B',  // Rouge moderne
@@ -1969,8 +2024,7 @@ function initSegmentationVillesChartNew(data) {
         '#50E3C2',  // Turquoise
         '#FF6B6B',  // Rouge clair
         '#4ECDC4',  // Turquoise clair
-        '#45B7D1',  // Bleu clair
-        '#96CEB4'   // Vert clair
+        '#45B7D1'   // Bleu clair
     ];
     
     segmentationVillesChart = new Chart(ctx, {
@@ -1978,30 +2032,45 @@ function initSegmentationVillesChartNew(data) {
         data: {
             labels: data.villes.map(v => v.ville),
             datasets: [{
-                data: data.villes.map(v => v.revenue),
+                data: data.villes.map(v => v.percentage),
                 backgroundColor: modernColors.slice(0, data.villes.length),
-                borderWidth: 2,
-                borderColor: '#fff'
+                borderWidth: 0,
+                hoverBorderWidth: 0,
+                cutout: '65%'
             }]
         },
         options: {
-            responsive: true,
+            responsive: false,
             maintainAspectRatio: false,
             plugins: {
                 legend: {
-                    display: false // On utilise notre légende personnalisée
+                    display: false
                 },
                 tooltip: {
+                    enabled: true,
+                    backgroundColor: 'rgba(0,0,0,0.8)',
+                    titleColor: 'white',
+                    bodyColor: 'white',
+                    borderWidth: 0,
+                    cornerRadius: 6,
                     callbacks: {
                         label: function(context) {
                             const ville = data.villes[context.dataIndex];
-                            return `${ville.ville}: ${ville.percentage}% (${formatCurrency(ville.revenue)})`;
+                            return `${ville.ville}: ${ville.percentage}%`;
                         }
                     }
                 }
+            },
+            interaction: {
+                intersect: false
             }
         }
     });
+    
+    console.log('✅ Graphique segmentation créé:', segmentationVillesChart);
+    
+    // Afficher le centre du donut avec le CA total
+    updateDonutCenter(data.total_ca);
     
     // Créer la légende personnalisée
     updateSegmentationVillesLegend(data.villes, data.total_ca);
