@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ document_title or 'PROFORMA' }} - {{ proforma_id }}</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            line-height: 1.4;
+            color: #333;
+            background: white;
+        }
+
+        .container {
+            max-width: 21cm;
+            margin: 0 auto;
+            padding: 10px 20px 20px;
+            background: white;
+            min-height: calc(100vh - 40px);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .content {
+            flex: 1;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0;
+        }
+
+        .invoice-info {
+            text-align: right;
+        }
+
+        .invoice-info h1 {
+            font-size: 36px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: rgb(232, 62, 95);
+            margin-top: 0;
+        }
+
+        .invoice-info p {
+            margin: 4px 0;
+            font-size: 14px;
+        }
+
+        .client-section {
+            margin-top: -60px;
+            margin-bottom: 15px;
+        }
+
+        .client-title {
+            color: rgb(232, 62, 95);
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .client-info {
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .client-info p {
+            margin: 3px 0;
+        }
+
+        .items-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+        }
+
+        .items-table th {
+            padding: 12px 8px;
+            text-align: left;
+            font-weight: bold;
+            font-size: 13px;
+            color: white;
+            border: 1px solid rgb(232, 62, 95);
+        }
+
+        .items-table th:first-child,
+        .items-table th:nth-child(2) {
+            background-color: rgb(232, 62, 95);
+        }
+
+        .items-table th:not(:first-child):not(:nth-child(2)) {
+            background-color: #000;
+        }
+
+        .items-table td {
+            padding: 10px 8px;
+            border-bottom: 1px solid #ddd;
+            font-size: 12px;
+            border-left: 1px solid #eee;
+            border-right: 1px solid #eee;
+        }
+
+        .items-table td:last-child,
+        .items-table th:last-child {
+            text-align: right;
+        }
+
+        .totals-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 30px;
+        }
+
+        .amount-words {
+            flex: 1;
+            padding-right: 20px;
+        }
+
+        .amount-words p {
+            font-size: 13px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .totals {
+            min-width: 300px;
+            text-align: right;
+        }
+
+        .totals-row {
+            display: flex;
+            justify-content: space-between;
+            margin: 5px 0;
+            font-size: 13px;
+        }
+
+        .totals-row.grand-total {
+            font-weight: bold;
+            font-size: 14px;
+            border-top: 2px solid #333;
+            padding-top: 8px;
+            margin-top: 10px;
+        }
+
+        .conditions-section {
+            margin-bottom: 30px;
+        }
+
+        .conditions-title {
+            color: rgb(232, 62, 95);
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .conditions-text {
+            font-size: 12px;
+            line-height: 1.5;
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+
+        .signature {
+            text-align: right;
+            font-size: 13px;
+            margin-top: 20px;
+        }
+
+        .footer {
+            text-align: center;
+            font-size: 11px;
+            color: #666;
+            border-top: 1px solid #ddd;
+            padding-top: 40 !important;
+            margin-bottom: 20px !important;
+            margin-top: auto;
+            page-break-inside: avoid;
+        }
+
+        .footer-row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 5px 0;
+        }
+
+        .footer-icon {
+            width: 14px;
+            height: 14px;
+            margin-right: 8px;
+            fill: rgb(232, 62, 95);
+        }
+
+        .tva-note {
+            font-size: 10px;
+            text-align: center;
+            margin-top: 10px;
+            font-style: italic;
+            color: #666;
+        }
+
+        @media print {
+            body {
+                font-size: 11px;
+            }
+            
+            .container {
+                max-width: none;
+                margin: 0;
+                padding: 15px;
+                min-height: auto;
+                display: block;
+            }
+            
+            .content {
+                flex: none;
+            }
+            
+            @page {
+                size: A4;
+                margin: 1.5cm;
+            }
+
+            .footer {
+                position: static;
+                margin-top: 20px;
+                page-break-inside: avoid;
+                break-inside: avoid;
+            }
+
+            /* Éviter les coupures de page dans certains éléments */
+            .totals-section,
+            .conditions-section {
+                page-break-inside: avoid;
+                break-inside: avoid;
+            }
+
+            /* S'assurer que le footer reste avec le contenu */
+            .conditions-section + .footer {
+                page-break-before: avoid;
+                break-before: avoid;
+            }
+        }
+    </style>
+</head>
+<body class="document-{{ document_type or 'proforma' }}">
+    <div class="container">
+        <div class="content">
+            <!-- En-tête du document -->
+            <div class="header" style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0;">
+                <!-- Logo à gauche -->
+                <div style="display: flex; flex-direction: column; align-items: flex-start; justify-content: flex-start;">
+                    <img src="{{ url_for('static', filename='image/logo1.png') }}"
+                        alt="Logo"
+                        style="height: 400px; object-fit: contain; display: block; align-self: flex-start; margin: 0; margin-top: -140px; margin-left: -90px;">
+                </div>
+                <!-- Infos document à droite -->
+                <div class="invoice-info" style="text-align: right;">
+                    <h1>{{ document_title or 'PROFORMA' }}</h1>
+                    <p><strong>N° :</strong> 
+                        {% if document_type == 'facture' %}
+                            FAC{{ "%05d"|format(proforma_id) }}
+                        {% elif document_type == 'bon' %}
+                            BL{{ "%05d"|format(proforma_id) }}
+                        {% else %}
+                            PRO{{ "%05d"|format(proforma_id) }}
+                        {% endif %}
+                    </p>
+                    <p><strong>Date :</strong> 
+                        {% if date_creation %}
+                            {{ date_creation.strftime('%d/%m/%Y') if date_creation.strftime else date_creation }}
+                        {% else %}
+                            {{ moment().format('DD/MM/YYYY') }}
+                        {% endif %}
+                    </p>
+                    {% if document_type == 'facture' %}
+                    <p><strong>Référence Proforma :</strong> PRO{{ "%05d"|format(proforma_id) }}</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Section des informations client -->
+            <div class="client-section">
+                <div class="client-title">
+                    {% if document_type == 'bon' %}
+                        Informations de Livraison
+                    {% else %}
+                        Informations Client
+                    {% endif %}
+                </div>
+                <div class="client-info">
+                    <p><strong>Nom :</strong> {{ client.nom or "Client inconnu" }}</p>
+                    <p><strong>Téléphone :</strong> {{ client.telephone or "Non renseigné" }}</p>
+                    <p><strong>Adresse :</strong> {{ client.adresse or "Non renseignée" }}</p>
+                    <p><strong>Ville :</strong> {{ client.ville or "Non renseignée" }}</p>
+                    <p><strong>Pays :</strong> {{ client.pays or "Cameroun" }}</p>
+                    {% if adresse_livraison and adresse_livraison != client.adresse %}
+                    <p><strong>Adresse de livraison :</strong> {{ adresse_livraison }}</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Tableau des articles/services -->
+            <table class="items-table">
+                <thead>
+                    <tr>
+                        <th>Catégorie</th> 
+                        <th>Désignation</th>
+                        {% if articles and articles[0].type_article in ['Service', 'Formation'] %}
+                            {% if articles[0].type_article == 'Service' %}
+                                <th>Prix par jour</th>
+                                <th>Nombre de jours</th>
+                            {% else %}
+                                <th>Prix par heure</th>
+                                <th>Nombre d'heures</th>
+                            {% endif %}
+                        {% else %}
+                            <th>Prix Unitaire</th>
+                            <th>Qté</th>
+                        {% endif %}
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if articles %}
+                        {% for article in articles %}
+                        <tr>
+                            <td>{{ article.type_article or "Service" }}</td>
+                            <td>{{ article.designation or "Article sans nom" }}</td>
+                            {% if article.type_article in ['Service', 'Formation'] %}
+                                {% if article.type_article == 'Service' %}
+                                    <td>{{ "{:,}".format(article.prix_unitaire|int).replace(',', ' ') }} FCFA</td>
+                                    <td>{{ article.quantite or 1 }}</td>
+                                {% else %}
+                                    <td>{{ "{:,}".format(article.prix_unitaire|int).replace(',', ' ') }} FCFA</td>
+                                    <td>{{ article.quantite or 1 }}</td>
+                                {% endif %}
+                            {% else %}
+                                <td>{{ "{:,}".format(article.prix_unitaire|int).replace(',', ' ') }} FCFA</td>
+                                <td>{{ article.quantite or 1 }}</td>
+                            {% endif %}
+                            <td>{{ "{:,}".format((article.prix_unitaire * article.quantite)|int).replace(',', ' ') }} FCFA</td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="5" style="text-align: center; padding: 20px; color: #666;">
+                                Aucun article trouvé
+                            </td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+
+            <!-- Section des totaux -->
+            <div class="totals-section">
+                <div class="amount-words">
+                    <p><strong>Montant en lettres :</strong> {{ montant_lettre }}</p>
+                </div>
+                <div class="totals">
+                    <div class="totals-row">
+                        <span>Sous-Total</span>
+                        <span>{{ "{:,}".format(sous_total|int).replace(',', ' ') }} FCFA</span>
+                    </div>
+                    
+                    {% if remise_montant and remise_montant > 0 %}
+                    <div class="totals-row">
+                        <span>Remise ({{ remise or 0 }}%)</span>
+                        <span>- {{ "{:,}".format(remise_montant|int).replace(',', ' ') }} FCFA</span>
+                    </div>
+                    {% endif %}
+                    
+                    {% if frais and frais > 0 %}
+                    <div class="totals-row">
+                        <span>Frais supplémentaires</span>
+                        <span>{{ "{:,}".format(frais|int).replace(',', ' ') }} FCFA</span>
+                    </div>
+                    {% endif %}
+                    
+                    <div class="totals-row">
+                        <span>TVA *</span>
+                        <span>0 FCFA</span>
+                    </div>
+                    
+                    <div class="totals-row grand-total">
+                        <span>TOTAL TTC</span>
+                        <span>{{ "{:,}".format(total_ttc|int).replace(',', ' ') }} FCFA</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section des conditions générales et signature -->
+            <div class="conditions-section">
+                <div class="conditions-title">
+                    {% if document_type == 'bon' %}
+                        Conditions de Livraison
+                    {% elif document_type == 'facture' %}
+                        Conditions de Paiement
+                    {% else %}
+                        Conditions Générales
+                    {% endif %}
+                </div>
+                <div class="conditions-text">
+                    {% if document_type == 'bon' %}
+                        <p>Les articles mentionnés sur ce bon doivent être vérifiés dès leur réception. Toute réclamation doit être formulée immédiatement auprès du livreur ou signalée à Bookbookshop.com dans un délai maximum de 24 heures suivant la livraison.</p>
+                    {% elif document_type == 'facture' %}
+                        <p>La facture est payable à la livraison ; toute réclamation doit être faite sous 24h, les articles livrés ou expédiés ne sont ni repris ni échangés.</p>
+                    {% else %}
+                        <p>Le devis est valable 7 jours, sauf en cas de réservation confirmée par un acompte ou un paiement partiel.</p>
+                    {% endif %}
+                    
+                    {% if commentaire %}
+                    <p><strong>Remarques :</strong> {{ commentaire }}</p>
+                    {% endif %}
+                </div>
+                
+                {% if document_type == 'bon' %}
+                <div class="signature">
+                    Signature du destinataire : ______________________ &nbsp;&nbsp;&nbsp; Signature du livreur : ______________________
+                </div>
+                {% elif document_type == 'facture' %}
+                <div class="signature">
+                    Signature de l'agence : ______________________
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Pied de page -->
+        <div class="footer">
+            <div class="footer-row">
+                <svg class="footer-icon" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                </svg>
+                <span>Agence : {{ client.ville or "Yaoundé" }}</span>
+            </div>
+            <div class="footer-row">
+                <svg class="footer-icon" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
+                </svg>
+                <span>Tél : +237 695 335 535 / +237 650 626 221 / +237 650 460 0</span>
+            </div>
+            <div class="footer-row">
+                <svg class="footer-icon" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zm6.93 6h-2.95c-.32-1.25-.78-2.45-1.38-3.56 1.84.63 3.37 1.91 4.33 3.56zM12 4.04c.83 1.2 1.48 2.53 1.91 3.96h-3.82c.43-1.43 1.08-2.76 1.91-3.96zM4.26 14C4.1 13.36 4 12.69 4 12s.1-1.36.26-2h3.38c-.08.66-.14 1.32-.14 2 0 .68.06 1.34.14 2H4.26zm.82 2h2.95c.32 1.25.78 2.45 1.38 3.56-1.84-.63-3.37-1.9-4.33-3.56zm2.95-8H5.08c.96-1.66 2.49-2.93 4.33-3.56C8.81 5.55 8.35 6.75 8.03 8zM12 19.96c-.83-1.2-1.48-2.53-1.91-3.96h3.82c-.43 1.43-1.08 2.76-1.91 3.96zM14.34 14H9.66c-.09-.66-.16-1.32-.16-2 0-.68.07-1.35.16-2h4.68c.09.65.16 1.32.16 2 0 .68-.07 1.34-.16 2zm.25 5.56c.6-1.11 1.06-2.31 1.38-3.56h2.95c-.96 1.65-2.49 2.93-4.33 3.56zM16.36 14c.08-.66.14-1.32.14-2 0-.68-.06-1.34-.14-2h3.38c.16.64.26 1.31.26 2s-.1 1.36-.26 2h-3.38z"/>
+                </svg>
+                <span>N° de Contribuable : M051912783962M</span>
+            </div>
+            <div class="footer-row">
+                <span>R.C. N° : YAO/2019/B/422</span>
+            </div>
+            <div class="tva-note">* L'entreprise Bookbookshop n'est pas assujettie à la TVA.</div>
+        </div>
+    </div>
+</body>
+</html>

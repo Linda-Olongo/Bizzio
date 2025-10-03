@@ -1,0 +1,2669 @@
+{% extends 'base.html' %} 
+{% block title %}Dashboard{% endblock %} 
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css">
+<style>
+  .content-area {
+    padding: 30px;
+  }
+
+  .page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+  }
+
+  .page-title {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: #333;
+  }
+
+  .new-invoice-btn {
+    background: linear-gradient(90deg, #d81b60, #ff8a80);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: transform 0.2s ease;
+  }
+
+  .new-invoice-btn:hover {
+    transform: translateY(-2px);
+  }
+
+  .date-filter {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+  }
+
+  .date-filter label {
+    font-weight: 500;
+    color: #333;
+  }
+
+  .date-filter select {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 0.9rem;
+    width: 150px;
+  }
+
+  .date-filter select:focus {
+    border: 2px solid #d81b60;
+    outline: none;
+  }
+
+  .kpi-section {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+  }
+
+  .kpi-card {
+    background: white;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    flex: 1;
+    min-width: 200px;
+    position: relative;
+  }
+
+  .kpi-card h3 {
+    color: #666;
+    font-size: 0.9rem;
+    margin-bottom: 10px;
+    font-weight: 500;
+  }
+
+  .kpi-card .value {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #000;
+    margin-bottom: 5px;
+  }
+
+  .kpi-trend {
+    font-size: 0.8rem;
+    font-weight: 500;
+    margin-top: 5px;
+  }
+
+  .trend-up {
+    color: #4CAF50;
+  }
+
+  .trend-up::before {
+    content: "▲";
+    margin-right: 3px;
+  }
+
+  .trend-down {
+    color: #F44336;
+  }
+
+  .trend-down::before {
+    content: "▼";
+    margin-right: 3px;
+  }
+
+  .chart-container {
+    background: white;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+    width: 100%;
+    min-height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .no-data-message {
+    text-align: center;
+    color: #666;
+    font-size: 1rem;
+    font-weight: 500;
+  }
+
+  .table-section {
+    background: white;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    overflow-x: auto;
+  }
+
+  .table-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 15px;
+  }
+
+  .required-asterisk {
+    color: #d81b60;
+    font-weight: normal;
+  }
+
+  .search-filters {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .search-filters select,
+  .search-filters input {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 0.9rem;
+    width: 150px;
+  }
+
+  .search-filters select:focus {
+    border: 2px solid #d81b60;
+    outline: none;
+  }
+
+  .export-btn {
+    background: #f8d7da;
+    color: #d81b60;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 500;
+  }
+
+  .export-btn1 {
+    color: #000;
+    border: none;
+    padding: 8px 8px;
+    cursor: pointer;
+    font-weight: 500;
+    background: #ffffff;
+  }
+
+  .table-info {
+    margin-bottom: 20px;
+    color: #666;
+    font-size: 0.9rem;
+  }
+
+  .proforma-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 900px;
+  }
+
+  .proforma-table th,
+  .proforma-table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #e0e0e0;
+    vertical-align: middle;
+  }
+
+  .proforma-table th {
+    background: #f8f9fa;
+    font-weight: 500;
+    color: #333;
+    border-bottom: 2px solid #e0e0e0;
+  }
+
+  .proforma-table tbody tr {
+    position: relative;
+  }
+
+  .proforma-table tbody tr:hover {
+    background: #f8f9fa;
+  }
+
+  .status-badge {
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    cursor: pointer;
+    display: inline-block;
+    min-width: 80px;
+    text-align: center;
+  }
+
+  .status-en_attente {
+    background: #fff3cd;
+    color: #856404;
+  }
+  .status-en_cours {
+    background: #cce5ff;
+    color: #004085;
+  }
+  .status-partiel {
+    background: #fdfdfe;
+    color: #818182;
+    border: 1px solid #c6c8ca;
+  }
+  .status-termine {
+    background: #d4edda;
+    color: #155724;
+  }
+
+  /* INDICATEUR D'ACTION AU SURVOL (même style que clients.html) */
+  .proforma-table tbody tr::after {
+    content: "⋮";
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 18px;
+    color: #d81b60;
+    opacity: 0;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+    padding: 4px 8px;
+    border-radius: 4px;
+  }
+
+  .proforma-table tbody tr:hover::after {
+    opacity: 1;
+  }
+
+  .proforma-table tbody tr::after:hover {
+    background: rgba(216, 27, 96, 0.1);
+  }
+
+  .svg-icon {
+    width: 18px;
+    height: 18px;
+    fill: currentColor;
+  }
+
+  .slide-over {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 500px;
+    height: 100vh;
+    background: white;
+    box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
+    transform: translateX(100%);
+    transition: transform 0.3s ease;
+    padding: 20px;
+    overflow-y: auto;
+    z-index: 1000;
+  }
+
+  .slide-over.open {
+    transform: translateX(0);
+  }
+
+  .slide-over-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+
+  .slide-over-close {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #666;
+  }
+
+  .slide-over-close:hover {
+    color: #d81b60;
+  }
+
+  .form-group {
+    margin-bottom: 15px;
+  }
+
+  .form-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #333;
+  }
+
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 0.9rem;
+    box-sizing: border-box;
+  }
+
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus {
+    border-color: #d81b60;
+    outline: none;
+    box-shadow: none;
+  }
+
+  /* Champs avec icônes */
+  #clientName {
+    background-image: url('data:image/svg+xml;utf8,<svg fill="%23666" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>');
+    background-position: 10px center;
+    background-repeat: no-repeat;
+    background-size: 18px;
+    padding-left: 35px;
+  }
+
+  #address {
+    background-image: url('data:image/svg+xml;utf8,<svg fill="%23666" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>');
+    background-position: 10px center;
+    background-repeat: no-repeat;
+    background-size: 18px;
+    padding-left: 35px;
+  }
+
+  #city {
+    background-image: url('data:image/svg+xml;utf8,<svg fill="%23666" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M15 11V5l-3-3-3 3v2H3v14h18V11h-6zm-8 8H5v-2h2v2zm0-4H5v-2h2v2zm0-4H5V9h2v2zm6 8h-2v-2h2v2zm0-4h-2v-2h2v2zm0-4h-2V9h2v2zm6 12h-2v-2h2v2zm0-4h-2v-2h2v2z"/></svg>');
+    background-position: 10px center;
+    background-repeat: no-repeat;
+    background-size: 18px;
+    padding-left: 35px;
+  }
+
+  #client-country {
+    background-image: url('data:image/svg+xml;utf8,<svg fill="%23666" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>');
+    background-position: 10px center;
+    background-repeat: no-repeat;
+    background-size: 18px;
+    padding-left: 35px;
+  }
+
+  #remise {
+    background-image: url('data:image/svg+xml;utf8,<svg fill="%23666" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>');
+    background-position: 10px center;
+    background-repeat: no-repeat;
+    background-size: 18px;
+    padding-left: 35px;
+  }
+
+  /* Téléphone avec intl-tel-input */
+  .iti {
+    width: 100%;
+  }
+
+  .iti__input {
+    width: 100% !important;
+    padding: 8px 12px !important;
+    border: 1px solid #ddd !important;
+    border-right: 1px solid #ddd !important;
+    border-radius: 5px !important;
+    font-size: 0.9rem !important;
+  }
+
+  .iti__input:focus {
+    border-color: #d81b60 !important;
+    outline: none !important;
+  }
+
+  .iti__flag {
+    background-image: url("https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/img/flags.png") !important;
+  }
+
+  @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    .iti__flag {
+      background-image: url("https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/img/flags@2x.png") !important;
+    }
+  }
+
+  .prestation-section {
+    margin-bottom: 20px;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    position: relative;
+  }
+
+  .prestation-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 15px;
+    border-bottom: 1px solid #eee;
+    position: relative;
+  }
+
+  .delete-prestation {
+    background: none;
+    border: none;
+    color: #dc3545;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  .delete-prestation:hover {
+    background: #ffebee;
+    color: #c82333;
+  }
+
+  .delete-prestation svg {
+    width: 16px;
+    height: 16px;
+    fill: currentColor;
+  }
+
+  .prestation-type-select {
+    flex: 1;
+    margin-right: 40px;
+  }
+
+  .prestation-fields {
+    padding: 15px;
+    display: none;
+    gap: 10px;
+    flex-direction: column;
+  }
+
+  .prestation-fields.show {
+    display: flex;
+  }
+
+  .field-row {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+
+  .field-row > * {
+    flex: 1;
+  }
+
+  .add-new-article {
+    color: #d81b60;
+    text-decoration: none;
+    font-size: 1rem;
+    cursor: pointer;
+    display: inline-block;
+    margin-top: 15px;
+  }
+
+  .add-new-article:hover {
+    color: #ff8a80;
+  }
+
+  .add-new-fee {
+    color: #d81b60;
+    text-decoration: none;
+    font-size: 1rem;
+    cursor: pointer;
+    display: inline-block;
+    margin-top: 15px;
+  }
+
+  .add-new-fee:hover {
+    color: #ff8a80;
+  }
+
+  .save-btn {
+    background: linear-gradient(90deg, #d81b60, #ff8a80);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 500;
+    float: right;
+    margin-top: 20px;
+  }
+
+  .save-btn:hover {
+    transform: translateY(-2px);
+  }
+
+  .total-section {
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid #e0e0e0;
+  }
+
+  .total-section div {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px;
+    font-weight: 500;
+  }
+
+  .supplementary-fee-section {
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #eee;
+    border-radius: 5px;
+    position: relative;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+
+  .delete-fee-btn {
+    background: none;
+    border: none;
+    color: #dc3545;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 5px;
+    right: 5px;
+  }
+
+  .delete-fee-btn:hover {
+    background: #ffebee;
+    color: #c82333;
+  }
+
+  .delete-fee-btn svg {
+    width: 14px;
+    height: 14px;
+    fill: currentColor;
+  }
+
+  /* Modales uniformisées (même style que clients.html) */
+  .modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1050;
+  }
+
+  .modal-content {
+    background: white;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    width: 400px;
+    max-width: 90%;
+    text-align: center;
+    position: relative;
+  }
+
+  .modal-close {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #666;
+  }
+
+  .modal-close:hover {
+    color: #d81b60;
+  }
+
+  .modal-icon {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(90deg, #d81b60, #ff8a80);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    color: white;
+    font-size: 1.8rem;
+  }
+
+  .modal-title {
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 10px;
+  }
+
+  .modal-text {
+    color: #666;
+    margin-bottom: 30px;
+  }
+
+  .modal-button {
+    background: linear-gradient(90deg, #d81b60, #ff8a80);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 500;
+    margin: 0 7px;
+  }
+
+  .modal-button:hover {
+    transform: translateY(-2px);
+  }
+
+  .btn-cancel {
+    background: #e0e0e0;
+    color: #333;
+    border: 1px solid #ccc;
+    padding: 12px 24px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 500;
+    margin: 0 7px;
+  }
+
+  .btn-cancel:hover {
+    background: #d0d0d0;
+  }
+
+  .btn-action-rose {
+    background: linear-gradient(90deg, #d81b60, #ff8a80);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: transform 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+
+  .btn-action-rose:hover {
+    transform: translateY(-2px);
+  }
+
+  /* Pagination (même style que clients.html) */
+  .pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+  }
+
+  .pagination button {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    background: white;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 0.9rem;
+    min-width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+  }
+
+  .pagination button:hover:not(.disabled) {
+    background: linear-gradient(90deg, #d81b60, #ff8a80);
+    color: white;
+    transform: translateY(-2px);
+  }
+
+  .pagination button.active {
+    background: linear-gradient(90deg, #d81b60, #ff8a80);
+    color: white;
+    border-color: #d81b60;
+  }
+
+  .pagination button.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background: #f5f5f5;
+    color: #999;
+  }
+
+  .pagination .nav-btn {
+    padding: 8px 16px;
+    min-width: auto;
+    font-weight: 500;
+  }
+
+  .pagination .ellipsis {
+    background: none;
+    border: none;
+    cursor: default;
+    padding: 8px 4px;
+  }
+
+  .pagination .ellipsis:hover {
+    background: none;
+    transform: none;
+  }
+
+  /* Client autocomplete styles */
+  .client-autocomplete {
+    position: relative;
+  }
+
+  .autocomplete-suggestions {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border: 1px solid #ddd;
+    border-top: none;
+    border-radius: 0 0 5px 5px;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 1000;
+    display: none;
+  }
+
+  .autocomplete-suggestion {
+    padding: 10px;
+    cursor: pointer;
+    border-bottom: 1px solid #eee;
+  }
+
+  .autocomplete-suggestion:hover {
+    background: #f8f9fa;
+  }
+
+  .autocomplete-suggestion:last-child {
+    border-bottom: none;
+  }
+
+  /* Notification de nouveau client */
+  .new-client-notification {
+    background: #e7f3ff;
+    border: 1px solid #b3d9ff;
+    color: #004085;
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 5px;
+    font-size: 0.9rem;
+  }
+
+  @media (max-width: 992px) {
+    .kpi-card {
+      min-width: calc(50% - 20px);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .kpi-card {
+      min-width: 100%;
+    }
+    .slide-over {
+      width: 100%;
+    }
+    .table-controls {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .search-filters {
+      width: 100%;
+    }
+    .export-btn {
+      margin-top: 10px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .page-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 15px;
+    }
+    .date-filter {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+    }
+    .date-filter select {
+      width: 100%;
+    }
+    .modal-content {
+      padding: 20px;
+    }
+  }
+</style>
+{% endblock %} 
+
+{% block content %}
+<div class="content-area">
+  <div class="page-header">
+    <h1 class="page-title">FACTURATION</h1>
+    <button class="new-invoice-btn" id="new-invoice-btn">
+      Nouvelle proforma +
+    </button>
+  </div>
+
+  <div class="date-filter">
+    <label>Filtrer par :</label>
+    <select id="year-filter">
+      {% for year in available_years %}
+      <option value="{{ year }}" {% if year == selected_year %}selected{% endif %}>{{ year }}</option>
+      {% endfor %}
+    </select>
+    <select id="period-filter">
+      <option value="jour">Jour</option>
+      <option value="semaine">Semaine</option>
+      <option value="mois">Mois</option>
+      <option value="annee">Année</option>
+    </select>
+  </div>
+
+  <div class="kpi-section">
+    <div class="kpi-card">
+      <h3>Chiffre d'affaires</h3>
+      <div class="value">{{ kpi_ca }}</div>
+      <div class="kpi-trend {% if kpi_ca_trend > 0 %}trend-up{% elif kpi_ca_trend < 0 %}trend-down{% endif %}">
+        {% if kpi_ca_trend > 0 %}+{% elif kpi_ca_trend < 0 %}-{% endif %}{{ kpi_ca_trend|abs }}%
+      </div>
+    </div>
+    <div class="kpi-card">
+      <h3>Factures</h3>
+      <div class="value">{{ kpi_factures }}</div>
+      <div class="kpi-trend {% if kpi_factures_trend > 0 %}trend-up{% elif kpi_factures_trend < 0 %}trend-down{% endif %}">
+        {% if kpi_factures_trend > 0 %}+{% elif kpi_factures_trend < 0 %}-{% endif %}{{ kpi_factures_trend|abs }}%
+      </div>
+    </div>
+    <div class="kpi-card">
+      <h3>Devis</h3>
+      <div class="value">{{ kpi_devis }}</div>
+      <div class="kpi-trend {% if kpi_devis_trend > 0 %}trend-up{% elif kpi_devis_trend < 0 %}trend-down{% endif %}">
+        {% if kpi_devis_trend > 0 %}+{% elif kpi_devis_trend < 0 %}-{% endif %}{{ kpi_devis_trend|abs }}%
+      </div>
+    </div>
+    <div class="kpi-card">
+      <h3>À traiter</h3>
+      <div class="value">{{ kpi_a_traiter }}</div>
+      <div class="kpi-trend {% if kpi_a_traiter_trend > 0 %}trend-up{% elif kpi_a_traiter_trend < 0 %}trend-down{% endif %}">
+        {% if kpi_a_traiter_trend > 0 %}+{% elif kpi_a_traiter_trend < 0 %}-{% endif %}{{ kpi_a_traiter_trend|abs }}%
+      </div>
+    </div>
+  </div>
+
+  <div class="chart-container">
+    {% if has_chart_data %}
+    <canvas id="caChart"></canvas>
+    {% else %}
+    <div class="no-data-message">
+      AUCUNE DONNÉE DISPONIBLE POUR LE MOMENT
+    </div>
+    {% endif %}
+  </div>
+
+  <div class="table-section">
+    <div class="table-controls">
+      <div class="search-filters">
+        <button class="export-btn1">Proforma</button>
+        <select id="status-filter">
+          <option value="">Tous les statuts</option>
+          <option value="en_attente">En attente</option>
+          <option value="en_cours">En cours</option>
+          <option value="partiel">Partielle</option>
+          <option value="termine">Terminé</option>
+        </select>
+      </div>
+      <button class="export-btn" id="export-btn">Exporter</button>
+    </div>
+
+    <div class="table-info">
+      <span id="proforma-count">{{ proformas_count }}</span> Proforma, pour un montant total de
+      <span id="proforma-total-amount">{{ total_amount }}</span>
+    </div>
+
+    <table class="proforma-table">
+      <thead>
+        <tr>
+          <th>N° Proforma</th>
+          <th>Date</th>
+          <th>Client</th>
+          <th>Total TTC</th>
+          <th>Paiement en attente</th>
+          <th>Montant Restant</th>
+          <th>Statut</th>
+          <th>Créé par</th>
+          <th style="display: none;">Actions</th>
+        </tr>
+      </thead>
+      <tbody id="proforma-tbody">
+        {% for proforma in proformas %}
+        <tr data-proforma-id="{{ proforma.proforma_id }}" data-status="{{ proforma.etat }}" onclick="openProformaActionModal('{{ proforma.proforma_id }}', '{{ proforma.numero }}', '{{ proforma.etat }}')">
+          <td>{{ proforma.numero }}</td>
+          <td>{{ proforma.date_creation }}</td>
+          <td>{{ proforma.client_nom }}</td>
+          <td>{{ proforma.total_ttc|int|string|replace(',', ' ') }} FCFA</td>
+          <td>{{ proforma.montant_paye|int|string|replace(',', ' ') if proforma.montant_paye else '-' }} FCFA</td>
+          <td>{{ proforma.montant_restant|int|string|replace(',', ' ') if proforma.montant_restant else '-' }} FCFA</td>
+          <td>
+            <span class="status-badge status-{{ proforma.etat }}" onclick="event.stopPropagation(); showStatusModal('{{ proforma.proforma_id }}')">
+              {{ proforma.etat.replace('_', ' ').title() }}
+            </span>
+          </td>
+          <td>{{ proforma.created_by }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <div class="pagination" id="paginationContainer">
+      <!-- Pagination générée dynamiquement -->
+    </div>
+  </div>
+</div>
+<!-- Fin content-area -->
+
+<!-- Slide-over pour formulaire proforma -->
+<div class="slide-over" id="slide-over">
+  <div class="slide-over-header">
+    <h4 id="slide-over-title">Nouvelle Proforma</h4>
+    <button type="button" class="slide-over-close" id="slide-over-close">×</button>
+  </div>
+  <div class="slide-over-body">
+    <form id="proforma-form">
+      <div class="form-group">
+        <label for="proforma-date">Date <span class="required-asterisk">*</span></label>
+        <input type="date" id="proforma-date" class="form-control" value="{{ current_date }}" required />
+      </div>
+      
+      <div class="form-group client-autocomplete">
+        <label for="phone">Téléphone <span class="required-asterisk">*</span></label>
+        <input type="tel" id="phone" class="form-control" required />
+        <div id="client-suggestions" class="autocomplete-suggestions"></div>
+      </div>
+      
+      <div class="form-group">
+        <label for="clientName">Nom <span class="required-asterisk">*</span></label>
+        <input type="text" id="clientName" name="clientName" placeholder="Nom du client" required />
+      </div>
+      
+      <div class="form-group">
+        <label for="address">Adresse <span class="required-asterisk">*</span></label>
+        <input type="text" id="address" name="address" placeholder="Entrez l'adresse du client" required />
+      </div>
+      
+      <div class="form-group">
+        <label for="city">Ville <span class="required-asterisk">*</span></label>
+        <input type="text" id="city" name="city" placeholder="Entrez la ville" required />
+      </div>
+      
+      <div class="form-group">
+        <label for="client-country">Pays <span class="required-asterisk">*</span></label>
+        <input type="text" id="client-country" class="form-control" placeholder="Pays du client" required value="Cameroun" />
+      </div>
+      
+      <div class="form-group">
+        <label for="remise">Remise (%)</label>
+        <input type="number" id="remise" class="form-control" placeholder="Pourcentage de remise" min="0" max="100" value="0" />
+      </div>
+
+      <div class="form-group">
+        <label>Prestations <span class="required-asterisk">*</span></label>
+        <div id="articles-container">
+          <!-- Les lignes de prestation seront ajoutées dynamiquement -->
+        </div>
+        <a href="#" class="add-new-article" id="add-article-btn">+ Ajouter une prestation</a>
+      </div>
+
+      <div class="form-group">
+        <label>Frais supplémentaires</label>
+        <div id="supplementary-fees-container">
+          <!-- Les lignes de frais supplémentaires seront ajoutées dynamiquement -->
+        </div>
+        <a href="#" class="add-new-fee" id="add-fee-btn">+ Ajouter un frais</a>
+      </div>
+
+      <div class="total-section">
+        <div><span>Sous-total:</span><span id="sub-total">0 FCFA</span></div>
+        <div><span>Remise:</span><span id="discount-display">0 FCFA</span></div>
+        <div><span>Frais supplémentaires:</span><span id="supplementary-fees-display">0 FCFA</span></div>
+        <div><span>TVA (0%):</span><span id="tva-amount">0 FCFA</span></div>
+        <hr />
+        <div><span>Total TTC:</span><span id="total-ttc">0 FCFA</span></div>
+        <div><span>Montant en lettres:</span><span id="amount-in-words">Zéro franc CFA</span></div>
+      </div>
+
+      <button type="submit" class="save-btn">Enregistrer Proforma</button>
+    </form>
+  </div>
+</div>
+
+<!-- Modal d'actions proforma (même style que clients.html) -->
+<div class="modal-backdrop" id="proformaActionModal" style="display:none;">
+  <div class="modal-content">
+    <button class="modal-close" onclick="closeProformaActionModal()">×</button>
+    <div class="modal-icon">
+      <svg class="svg-icon" viewBox="0 0 24 24">
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14,2 14,8 20,8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10,9 9,9 8,9"></polyline>
+      </svg>
+    </div>
+    <h5 class="modal-title">Actions pour la proforma</h5>
+    <p id="proformaActionModalTitle" class="modal-text"></p>
+    <div style="display: flex; flex-direction: column; gap: 15px; margin-top: 20px;">
+      <button class="btn-action-rose" onclick="downloadProformaFromModal()">
+        <svg style="width: 16px; height: 16px; fill: white; margin-right: 8px;" viewBox="0 0 24 24">
+          <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
+        </svg>
+        Télécharger
+      </button>
+      <button class="btn-action-rose" onclick="editProformaFromModal()">
+        <svg style="width: 16px; height: 16px; fill: white; margin-right: 8px;" viewBox="0 0 24 24">
+          <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
+        </svg>
+        Modifier la proforma
+      </button>
+      <button class="modal-button" onclick="deleteProformaFromModal()">
+        <svg style="width: 16px; height: 16px; fill: white; margin-right: 8px;" viewBox="0 0 24 24">
+          <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
+        </svg>
+        Supprimer la proforma
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="newClientModal" style="display: none;">
+  <div class="modal-content">
+    <button class="modal-close" onclick="closeNewClientModal()">×</button>
+    <div class="modal-icon">
+      <svg class="svg-icon" viewBox="0 0 24 24">
+        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+      </svg>
+    </div>
+    <h5 class="modal-title">Nouveau client détecté</h5>
+    <p class="modal-text">Voulez-vous enregistrer ce nouveau client dans la base de données ?</p>
+    <div style="display: flex; gap: 15px; justify-content: center;">
+      <button class="btn-cancel" onclick="closeNewClientModal()">Non</button>
+      <button class="modal-button" onclick="confirmNewClient()">Oui, enregistrer</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Télécharger Document -->
+<div class="modal-backdrop" id="downloadModal" style="display: none;">
+  <div class="modal-content">
+    <button class="modal-close" onclick="closeDownloadModal()">×</button>
+    <div class="modal-icon">
+      <svg class="svg-icon" viewBox="0 0 24 24">
+        <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
+      </svg>
+    </div>
+    <h5 class="modal-title">Télécharger Document</h5>
+    <p class="modal-text">Quel type de document souhaitez-vous télécharger ?</p>
+    <div id="download-options">
+      <!-- Options générées dynamiquement selon le statut -->
+    </div>
+  </div>
+</div>
+
+<!-- Modal Modifier Statut -->
+<div class="modal-backdrop" id="statusModal" style="display: none;">
+  <div class="modal-content">
+    <button class="modal-close" onclick="closeStatusModal()">×</button>
+    <div class="modal-icon">
+      <svg class="svg-icon" viewBox="0 0 24 24">
+        <path d="M12 8v5l4.28 2.54 1-1.64-3.72-2.23V8z"/>
+      </svg>
+    </div>
+    <h5 class="modal-title" id="statusModalTitle">Modifier le statut</h5>
+    <div class="modal-text">
+      <div class="form-group">
+        <label for="new-status-select">Nouveau statut:</label>
+        <select id="new-status-select" class="form-control">
+          <option value="en_attente">En attente</option>
+          <option value="en_cours">En cours</option>
+          <option value="partiel">Partielle</option>
+          <option value="termine">Terminé</option>
+        </select>
+      </div>
+      
+      <div id="partialDeliverySection" style="display: none; margin-top: 15px;">
+        <p>Articles pour la livraison partielle :</p>
+        <div id="partialDeliveryItems"></div>
+        <div class="form-group">
+          <label for="montant-recu">Montant Reçu:</label>
+          <input type="number" id="montant-recu" class="form-control" value="0" min="0" />
+        </div>
+        <div>Reste à payer: <span id="reste-a-payer">0 FCFA</span></div>
+        <div class="form-group">
+          <label for="delivery-comment">Commentaire sur la livraison:</label>
+          <textarea id="delivery-comment" class="form-control" rows="3"></textarea>
+        </div>
+      </div>
+    </div>
+    <div style="display: flex; gap: 15px; justify-content: center; margin-top: 20px;">
+      <button class="btn-cancel" onclick="closeStatusModal()">Annuler</button>
+      <button class="modal-button" onclick="saveStatusChange()">Enregistrer</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Supprimer -->
+<div class="modal-backdrop" id="deleteModal" style="display: none;">
+  <div class="modal-content">
+    <button class="modal-close" onclick="closeDeleteModal()">×</button>
+    <div class="modal-icon">
+      <svg class="svg-icon" viewBox="0 0 24 24">
+        <path d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z"/>
+      </svg>
+    </div>
+    <h5 class="modal-title">Supprimer la proforma</h5>
+    <p class="modal-text">Êtes-vous sûr de vouloir supprimer cette proforma ? Cette action est irréversible.</p>
+    <div style="display: flex; gap: 15px; justify-content: center;">
+      <button class="btn-cancel" onclick="closeDeleteModal()">Annuler</button>
+      <button class="modal-button" onclick="confirmDeleteProforma()">Supprimer</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Confirmation Success -->
+<div class="modal-backdrop" id="successModal" style="display: none;">
+  <div class="modal-content">
+    <button class="modal-close" onclick="closeSuccessModal()">×</button>
+    <div class="modal-icon">
+      <svg class="svg-icon" viewBox="0 0 24 24">
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+      </svg>
+    </div>
+    <h5 class="modal-title" id="successTitle">Action réussie</h5>
+    <p class="modal-text" id="successMessage">L'action s'est déroulée avec succès.</p>
+    <button class="modal-button" onclick="closeSuccessModal()">OK</button>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    let iti = null;
+    let isEditMode = false;
+    let currentProformaId = null;
+    let currentPage = 1;
+    let totalPages = 1;
+
+    // Variables pour les données du backend avec valeurs par défaut
+    const availableYears = {{ available_years|default([])|safe }};
+    const selectedYear = {{ selected_year|default(2025) }};
+    const chartLabels = {{ chart_labels|default([])|safe }};
+    const chartValues = {{ chart_values|default([])|safe }};
+    const hasChartData = {{ has_chart_data|default(false)|tojson }};
+    const classesLivres = {{ classes_livres|default([])|safe }};
+    const formations = {{ formations|default([])|safe }};
+    const villesFournitures = {{ villes_fournitures|default([])|safe }};
+
+    // Initialiser l'application
+    initializeApp();
+
+    function initializeApp() {
+        console.log("Initializing app...");
+        initializePhoneInput();
+        initializeChart();
+        initializeEventListeners();
+        initializePagination();
+        updateKPITrends();
+    }
+
+    function initializePhoneInput() {
+        const phoneInput = document.getElementById("phone");
+        if (phoneInput) {
+            iti = window.intlTelInput(phoneInput, {
+                initialCountry: "cm",
+                separateDialCode: true,
+                utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
+                formatOnDisplay: true,
+                nationalMode: false,
+                autoHideDialCode: false,
+                autoPlaceholder: "polite",
+            });
+            console.log("Phone input initialized");
+        } else {
+            console.error("Phone input element not found");
+        }
+    }
+
+    function initializeChart() {
+        if (hasChartData && chartLabels.length > 0) {
+            const ctx = document.getElementById('caChart');
+            if (ctx) {
+                new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: chartLabels,
+                        datasets: [{
+                            label: 'Chiffre d\'affaires (FCFA)',
+                            data: chartValues,
+                            borderColor: '#d81b60',
+                            backgroundColor: 'rgba(216, 27, 96, 0.1)',
+                            tension: 0.4,
+                            fill: true
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    callback: function(value) {
+                                        return formatCurrency(value);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        }
+    }
+
+    function initializeEventListeners() {
+        console.log("Initializing event listeners...");
+        
+        // Bouton nouvelle proforma - LE PLUS IMPORTANT
+        const newInvoiceBtn = document.getElementById("new-invoice-btn");
+        if (newInvoiceBtn) {
+            console.log("Found new invoice button, adding event listener");
+            newInvoiceBtn.addEventListener("click", function(e) {
+                e.preventDefault();
+                console.log("New invoice button clicked!");
+                openNewProformaForm();
+            });
+        } else {
+            console.error("New invoice button not found!");
+        }
+        
+        // Fermer slide-over
+        const slideOverClose = document.getElementById("slide-over-close");
+        if (slideOverClose) {
+            slideOverClose.addEventListener("click", closeSlideOver);
+        }
+        
+        // Formulaire proforma
+        const proformaForm = document.getElementById("proforma-form");
+        if (proformaForm) {
+            proformaForm.addEventListener("submit", handleProformaSubmit);
+        }
+        
+        // Filtres
+        const yearFilter = document.getElementById("year-filter");
+        const periodFilter = document.getElementById("period-filter");
+        const statusFilter = document.getElementById("status-filter");
+        
+        if (yearFilter) yearFilter.addEventListener("change", handleFilters);
+        if (periodFilter) periodFilter.addEventListener("change", handleFilters);
+        if (statusFilter) statusFilter.addEventListener("change", handleFilters);
+        
+        // Téléphone auto-complétion CORRIGÉE
+        const phoneInput = document.getElementById("phone");
+        if (phoneInput) {
+            phoneInput.addEventListener("blur", checkExistingClient);
+            phoneInput.addEventListener("input", debounceCheckClient);
+        }
+        
+        // Boutons prestation
+        const addArticleBtn = document.getElementById("add-article-btn");
+        const addFeeBtn = document.getElementById("add-fee-btn");
+        
+        if (addArticleBtn) {
+            addArticleBtn.addEventListener("click", function (e) {
+                e.preventDefault();
+                console.log("Add article button clicked");
+                addPrestationRow();
+            });
+        }
+        
+        if (addFeeBtn) {
+            addFeeBtn.addEventListener("click", function (e) {
+                e.preventDefault();
+                console.log("Add fee button clicked");
+                addSupplementaryFeeRow();
+            });
+        }
+        
+        // Remise CORRIGÉE - calcul automatique
+        const remiseInput = document.getElementById("remise");
+        if (remiseInput) {
+            remiseInput.addEventListener("input", function() {
+                updateCalculations();
+                validateRemise(this);
+            });
+        }
+        
+        // Export
+        const exportBtn = document.getElementById("export-btn");
+        if (exportBtn) {
+            exportBtn.addEventListener("click", exportProformas);
+        }
+
+        console.log("Event listeners initialized successfully");
+    }
+
+    function initializePagination() {
+        generatePagination(currentPage, totalPages);
+    }
+
+    function generatePagination(page, total) {
+        const container = document.getElementById('paginationContainer');
+        if (!container) return;
+        
+        let html = '';
+
+        if (page > 1) {
+            html += `<button class="nav-btn" onclick="goToPage(${page - 1})">Précédent</button>`;
+        } else {
+            html += `<button class="nav-btn disabled">Précédent</button>`;
+        }
+
+        let startPage = Math.max(1, page - 2);
+        let endPage = Math.min(total, page + 2);
+
+        if (page <= 3) {
+            endPage = Math.min(5, total);
+        }
+        if (page >= total - 2) {
+            startPage = Math.max(1, total - 4);
+        }
+
+        if (startPage > 1) {
+            html += `<button onclick="goToPage(1)">1</button>`;
+            if (startPage > 2) {
+                html += `<button class="ellipsis">...</button>`;
+            }
+        }
+
+        for (let i = startPage; i <= endPage; i++) {
+            const activeClass = i === page ? 'active' : '';
+            html += `<button class="${activeClass}" onclick="goToPage(${i})">${i}</button>`;
+        }
+
+        if (endPage < total) {
+            if (endPage < total - 1) {
+                html += `<button class="ellipsis">...</button>`;
+            }
+            html += `<button onclick="goToPage(${total})">${total}</button>`;
+        }
+
+        if (page < total) {
+            html += `<button class="nav-btn" onclick="goToPage(${page + 1})">Suivant</button>`;
+        } else {
+            html += `<button class="nav-btn disabled">Suivant</button>`;
+        }
+
+        container.innerHTML = html;
+    }
+
+    function updateKPITrends() {
+        const trendElements = document.querySelectorAll('.kpi-trend');
+        trendElements.forEach(el => {
+            if (el.classList.contains('trend-up')) {
+                el.style.color = '#4CAF50';
+            } else if (el.classList.contains('trend-down')) {
+                el.style.color = '#F44336';
+            }
+        });
+    }
+
+    // FONCTION PRINCIPALE - OUVRIR NOUVEAU PROFORMA
+    function openNewProformaForm() {
+        console.log("Opening new proforma form...");
+        
+        isEditMode = false;
+        currentProformaId = null;
+        
+        const slideOverTitle = document.getElementById("slide-over-title");
+        const proformaForm = document.getElementById("proforma-form");
+        const proformaDate = document.getElementById("proforma-date");
+        const articlesContainer = document.getElementById("articles-container");
+        const feesContainer = document.getElementById("supplementary-fees-container");
+        const slideOver = document.getElementById("slide-over");
+        
+        if (!slideOver) {
+            console.error("Slide over element not found!");
+            return;
+        }
+        
+        // Réinitialiser le titre
+        if (slideOverTitle) {
+            slideOverTitle.textContent = "Nouvelle Proforma";
+        }
+        
+        // Reset form
+        if (proformaForm) {
+            proformaForm.reset();
+        }
+        
+        // Set current date
+        if (proformaDate) {
+            proformaDate.value = new Date().toISOString().split("T")[0];
+        }
+        
+        // Clear containers
+        if (articlesContainer) {
+            articlesContainer.innerHTML = "";
+        }
+        if (feesContainer) {
+            feesContainer.innerHTML = "";
+        }
+        
+        // Réinitialiser le téléphone
+        if (iti) {
+            iti.setCountry('cm');
+            const phoneInput = document.getElementById('phone');
+            if (phoneInput) phoneInput.value = '';
+        }
+        
+        // Clear client suggestions
+        const suggestions = document.getElementById('client-suggestions');
+        if (suggestions) {
+            suggestions.style.display = 'none';
+            suggestions.innerHTML = '';
+        }
+        
+        // Add default rows
+        addPrestationRow();
+        addSupplementaryFeeRow();
+        
+        // Update calculations
+        updateCalculations();
+        
+        // OUVRIR LE SLIDE-OVER
+        console.log("Adding 'open' class to slide-over");
+        slideOver.classList.add("open");
+        console.log("Slide-over should now be visible");
+    }
+
+    function closeSlideOver() {
+        console.log("Closing slide-over");
+        const slideOver = document.getElementById("slide-over");
+        if (slideOver) {
+            slideOver.classList.remove("open");
+        }
+    }
+
+    function handleFilters() {
+        const year = document.getElementById("year-filter").value;
+        const period = document.getElementById("period-filter").value;
+        const status = document.getElementById("status-filter").value;
+        
+        const params = new URLSearchParams();
+        if (year) params.append('year', year);
+        if (period) params.append('period', period);
+        if (status) params.append('status', status);
+        params.append('page', 1);
+
+        window.location.href = `/dashboard?${params}`;
+    }
+
+    // Fonctions de gestion des prestations CORRIGÉES
+    function addPrestationRow(data = {}) {
+        console.log("Adding prestation row with data:", data);
+        
+        const container = document.getElementById("articles-container");
+        if (!container) {
+            console.error("Articles container not found");
+            return;
+        }
+        
+        const section = document.createElement("div");
+        section.classList.add("prestation-section");
+        
+        section.innerHTML = `
+            <div class="prestation-header">
+                <select class="form-control prestation-type-select" required>
+                    <option value="">Sélectionnez un type</option>
+                    <option value="Livre" ${data.type === "Livre" ? "selected" : ""}>Livre</option>
+                    <option value="Fourniture" ${data.type === "Fourniture" ? "selected" : ""}>Fourniture</option>
+                    <option value="Service" ${data.type === "Service" ? "selected" : ""}>Service</option>
+                    <option value="Formation" ${data.type === "Formation" ? "selected" : ""}>Formation</option>
+                </select>
+                <button type="button" class="delete-prestation" style="display: none;">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
+                    </svg>
+                </button>
+            </div>
+            
+            <!-- Champs pour Livre -->
+            <div class="prestation-fields livre-fields">
+                <div class="field-row">
+                    <select class="form-control livre-nature">
+                        <option value="">Nature du livre</option>
+                        <option value="Homologué">Homologué</option>
+                        <option value="Académique">Académique</option>
+                        <option value="Autres">Autres</option>
+                    </select>
+                    <select class="form-control livre-classe">
+                        <option value="">Sélectionnez une classe</option>
+                    </select>
+                </div>
+                <div class="field-row">
+                    <select class="form-control livre-designation">
+                        <option value="">Sélectionnez un livre</option>
+                    </select>
+                    <input type="number" class="form-control livre-prix" placeholder="Prix" readonly>
+                    <input type="number" class="form-control livre-quantity" placeholder="Quantité" min="1" value="1">
+                </div>
+            </div>
+            
+            <!-- Champs pour Fourniture -->
+            <div class="prestation-fields fourniture-fields">
+                <div class="field-row">
+                    <select class="form-control fourniture-ville-select">
+                        <option value="">Ville de référence</option>
+                        ${villesFournitures.map(ville => `<option value="${ville}">${ville}</option>`).join('')}
+                    </select>
+                    <select class="form-control fourniture-designation">
+                        <option value="">Sélectionnez une fourniture</option>
+                    </select>
+                </div>
+                <div class="field-row">
+                    <input type="number" class="form-control fourniture-prix" placeholder="Prix" readonly>
+                    <input type="number" class="form-control fourniture-quantity" placeholder="Quantité" min="1" value="1">
+                </div>
+            </div>
+            
+            <!-- Champs pour Service -->
+            <div class="prestation-fields service-fields">
+                <div class="field-row">
+                    <select class="form-control service-nature-select">
+                        <option value="">Sélectionnez une nature</option>
+                        <option value="Mission d'Études">Mission d'Études</option>
+                        <option value="Mission d'Analyses">Mission d'Analyses</option>
+                        <option value="Mission de Conseils">Mission de Conseils</option>
+                        <option value="Autres">Autres</option>
+                    </select>
+                    <input type="text" class="form-control service-precisez" placeholder="Précisez la mission" style="display:none;">
+                </div>
+                <div class="field-row">
+                    <input type="number" class="form-control service-jours" placeholder="Nombre de jours" min="1" value="1">
+                    <input type="number" class="form-control service-prix" placeholder="Prix par jour" min="0">
+                </div>
+            </div>
+            
+            <!-- Champs pour Formation -->
+            <div class="prestation-fields formation-fields">
+                <div class="field-row">
+                    <select class="form-control formation-designation-select">
+                        <option value="">Sélectionnez une formation</option>
+                        ${formations.map(formation => `<option value="${formation.article_id}" data-designation="${formation.designation}">${formation.designation}</option>`).join('')}
+                    </select>
+                    <input type="text" class="form-control formation-precisez" placeholder="Précisez la formation" style="display:none;">
+                </div>
+                <div class="field-row">
+                    <input type="number" class="form-control formation-heures" placeholder="Nombre d'heures" min="1" value="1">
+                    <input type="number" class="form-control formation-prix" placeholder="Prix par heure" min="0">
+                </div>
+            </div>
+        `;
+        
+        container.appendChild(section);
+        attachPrestationEventListeners(section);
+        updateDeleteButtonsVisibility();
+        
+        console.log("Prestation row added successfully");
+    }
+
+    function attachPrestationEventListeners(section) {
+        const typeSelect = section.querySelector(".prestation-type-select");
+        const fields = {
+            livre: section.querySelector(".livre-fields"),
+            fourniture: section.querySelector(".fourniture-fields"),
+            service: section.querySelector(".service-fields"),
+            formation: section.querySelector(".formation-fields")
+        };
+
+        // Gestion changement de type
+        typeSelect.addEventListener("change", function() {
+            console.log("Type changed to:", this.value);
+            
+            Object.values(fields).forEach(field => {
+                if (field) field.classList.remove('show');
+            });
+            
+            const selectedType = this.value.toLowerCase();
+            if (fields[selectedType]) {
+                fields[selectedType].classList.add('show');
+                console.log(`Showing ${selectedType} fields`);
+            }
+            updateCalculations();
+        });
+
+        // CORRECTION: Gestion nature livre (pour filtrer les classes selon la nature)
+        const livreNatureSelect = section.querySelector(".livre-nature");
+        const livreClasseSelect = section.querySelector(".livre-classe");
+        const livreDesignationSelect = section.querySelector(".livre-designation");
+        
+        if (livreNatureSelect && livreClasseSelect && livreDesignationSelect) {
+            // Charger les classes selon la nature
+            livreNatureSelect.addEventListener("change", function() {
+                const nature = this.value;
+                console.log("Nature changed to:", nature);
+                
+                if (nature) {
+                    fetch(`/api/classes-by-nature?nature=${nature}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                livreClasseSelect.innerHTML = '<option value="">Sélectionnez une classe</option>';
+                                data.classes.forEach(classe => {
+                                    livreClasseSelect.innerHTML += `<option value="${classe}">${classe}</option>`;
+                                });
+                            }
+                        })
+                        .catch(error => console.error('Erreur:', error));
+                } else {
+                    livreClasseSelect.innerHTML = '<option value="">Sélectionnez une classe</option>';
+                    livreDesignationSelect.innerHTML = '<option value="">Sélectionnez un livre</option>';
+                }
+            });
+            
+            // Charger les livres selon nature + classe
+            livreClasseSelect.addEventListener("change", function() {
+                const nature = livreNatureSelect.value;
+                const classe = this.value;
+                console.log("Classe changed to:", classe, "for nature:", nature);
+                
+                if (nature && classe) {
+                    fetch(`/api/livres-by-nature-classe?nature=${nature}&classe=${classe}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                livreDesignationSelect.innerHTML = '<option value="">Sélectionnez un livre</option>';
+                                data.livres.forEach(livre => {
+                                    livreDesignationSelect.innerHTML += `<option value="${livre.article_id}" data-prix="${livre.prix}">${livre.designation}</option>`;
+                                });
+                            }
+                        })
+                        .catch(error => console.error('Erreur:', error));
+                } else {
+                    livreDesignationSelect.innerHTML = '<option value="">Sélectionnez un livre</option>';
+                }
+            });
+            
+            // Mettre à jour le prix quand on sélectionne un livre
+            livreDesignationSelect.addEventListener("change", function() {
+                const option = this.selectedOptions[0];
+                if (option && option.dataset.prix) {
+                    const prixInput = section.querySelector(".livre-prix");
+                    if (prixInput) {
+                        prixInput.value = option.dataset.prix;
+                        updateCalculations();
+                    }
+                }
+            });
+        }
+
+        // Gestion ville fourniture
+        const villeSelect = section.querySelector(".fourniture-ville-select");
+        const fournitureDesignationSelect = section.querySelector(".fourniture-designation");
+        if (villeSelect && fournitureDesignationSelect) {
+            villeSelect.addEventListener("change", function() {
+                const ville = this.value;
+                if (ville) {
+                    fetch(`/api/fournitures-by-ville/${ville}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                fournitureDesignationSelect.innerHTML = '<option value="">Sélectionnez une fourniture</option>';
+                                data.fournitures.forEach(fourniture => {
+                                    fournitureDesignationSelect.innerHTML += `<option value="${fourniture.article_id}" data-prix="${fourniture.prix}">${fourniture.designation}</option>`;
+                                });
+                            }
+                        });
+                }
+            });
+            
+            // Mettre à jour le prix des fournitures
+            fournitureDesignationSelect.addEventListener("change", function() {
+                const option = this.selectedOptions[0];
+                if (option && option.dataset.prix) {
+                    const prixInput = section.querySelector(".fourniture-prix");
+                    if (prixInput) {
+                        prixInput.value = option.dataset.prix;
+                        updateCalculations();
+                    }
+                }
+            });
+        }
+
+        // Gestion service nature - afficher "Précisez" si "Autres"
+        const serviceNatureSelect = section.querySelector(".service-nature-select");
+        const servicePrecisezInput = section.querySelector(".service-precisez");
+        if (serviceNatureSelect && servicePrecisezInput) {
+            serviceNatureSelect.addEventListener("change", function() {
+                servicePrecisezInput.style.display = this.value === "Autres" ? "block" : "none";
+            });
+        }
+
+        // Gestion formation - afficher "Précisez" si sélectionné
+        const formationSelect = section.querySelector(".formation-designation-select");
+        const formationPrecisezInput = section.querySelector(".formation-precisez");
+        if (formationSelect && formationPrecisezInput) {
+            formationSelect.addEventListener("change", function() {
+                formationPrecisezInput.style.display = this.value ? "block" : "none";
+            });
+        }
+
+        // Gestion quantités/heures/jours
+        section.querySelectorAll('input[type="number"]').forEach(input => {
+            input.addEventListener("input", updateCalculations);
+        });
+
+        // Bouton supprimer
+        const deleteBtn = section.querySelector(".delete-prestation");
+        if (deleteBtn) {
+            deleteBtn.addEventListener("click", function() {
+                section.remove();
+                updateCalculations();
+                updateDeleteButtonsVisibility();
+            });
+        }
+    }
+
+    function addSupplementaryFeeRow(data = {}) {
+        console.log("Adding supplementary fee row");
+        
+        const container = document.getElementById("supplementary-fees-container");
+        if (!container) {
+            console.error("Supplementary fees container not found");
+            return;
+        }
+        
+        const section = document.createElement("div");
+        section.classList.add("supplementary-fee-section");
+        
+        section.innerHTML = `
+            <select class="form-control fee-type" style="margin-right: 30px;">
+                <option value="Livraison" ${data.type === "Livraison" ? "selected" : ""}>Livraison</option>
+                <option value="Expédition" ${data.type === "Expédition" ? "selected" : ""}>Expédition</option>
+                <option value="Installation" ${data.type === "Installation" ? "selected" : ""}>Installation</option>
+                <option value="Autre" ${data.type === "Autre" ? "selected" : ""}>Autre</option>
+            </select>
+            <input type="number" class="form-control fee-amount" placeholder="Montant en FCFA" min="0" value="${data.amount || 0}">
+            <input type="text" class="form-control fee-comment" placeholder="Commentaire" style="display:none;" value="${data.comment || ''}">
+            <button type="button" class="delete-fee-btn" style="display:none;">
+                <svg viewBox="0 0 24 24">
+                    <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
+                </svg>
+            </button>
+        `;
+        
+        container.appendChild(section);
+        
+        // Event listeners
+        const typeSelect = section.querySelector(".fee-type");
+        const commentInput = section.querySelector(".fee-comment");
+        const amountInput = section.querySelector(".fee-amount");
+        const deleteBtn = section.querySelector(".delete-fee-btn");
+
+        typeSelect.addEventListener("change", function() {
+            commentInput.style.display = this.value === "Autre" ? "block" : "none";
+        });
+
+        amountInput.addEventListener("input", updateCalculations);
+
+        deleteBtn.addEventListener("click", function() {
+            section.remove();
+            updateCalculations();
+            updateSupplementaryFeeDeleteButtonsVisibility();
+        });
+        
+        updateSupplementaryFeeDeleteButtonsVisibility();
+        
+        console.log("Supplementary fee row added successfully");
+    }
+
+    function updateDeleteButtonsVisibility() {
+        const sections = document.querySelectorAll(".prestation-section");
+        sections.forEach(section => {
+            const deleteBtn = section.querySelector(".delete-prestation");
+            if (deleteBtn) {
+                deleteBtn.style.display = sections.length > 1 ? "block" : "none";
+            }
+        });
+    }
+
+    function updateSupplementaryFeeDeleteButtonsVisibility() {
+        const sections = document.querySelectorAll(".supplementary-fee-section");
+        sections.forEach(section => {
+            const deleteBtn = section.querySelector(".delete-fee-btn");
+            if (deleteBtn) {
+                deleteBtn.style.display = sections.length > 1 ? "block" : "none";
+            }
+        });
+    }
+
+    // CORRECTION: Calcul de remise automatique
+    function updateCalculations() {
+        let subTotal = 0;
+        
+        // Calculer sous-total des prestations
+        document.querySelectorAll(".prestation-section").forEach(section => {
+            const type = section.querySelector(".prestation-type-select").value;
+            let amount = 0;
+            
+            switch (type) {
+                case "Livre":
+                case "Fourniture":
+                    const prix = parseFloat(section.querySelector(`.${type.toLowerCase()}-prix`).value) || 0;
+                    const quantite = parseFloat(section.querySelector(`.${type.toLowerCase()}-quantity`).value) || 1;
+                    amount = prix * quantite;
+                    break;
+                case "Service":
+                    const prixJour = parseFloat(section.querySelector(".service-prix").value) || 0;
+                    const jours = parseFloat(section.querySelector(".service-jours").value) || 1;
+                    amount = prixJour * jours;
+                    break;
+                case "Formation":
+                    const prixHeure = parseFloat(section.querySelector(".formation-prix").value) || 0;
+                    const heures = parseFloat(section.querySelector(".formation-heures").value) || 1;
+                    amount = prixHeure * heures;
+                    break;
+            }
+            subTotal += amount;
+        });
+
+        // Calculer frais supplémentaires
+        let totalFees = 0;
+        document.querySelectorAll(".supplementary-fee-section").forEach(section => {
+            totalFees += parseFloat(section.querySelector(".fee-amount").value) || 0;
+        });
+
+        // CORRECTION: Calculer remise automatiquement
+        const remisePercent = parseFloat(document.getElementById("remise").value) || 0;
+        const remiseAmount = (subTotal * remisePercent) / 100;
+
+        // TVA fixe à 0
+        const tva = 0;
+
+        // Total TTC
+        const totalTTC = subTotal - remiseAmount + totalFees + tva;
+
+        // Mettre à jour l'affichage
+        const subTotalEl = document.getElementById("sub-total");
+        const discountDisplayEl = document.getElementById("discount-display");
+        const supplementaryFeesDisplayEl = document.getElementById("supplementary-fees-display");
+        const tvaAmountEl = document.getElementById("tva-amount");
+        const totalTTCEl = document.getElementById("total-ttc");
+        const amountInWordsEl = document.getElementById("amount-in-words");
+
+        if (subTotalEl) subTotalEl.textContent = formatCurrency(subTotal);
+        if (discountDisplayEl) discountDisplayEl.textContent = formatCurrency(remiseAmount);
+        if (supplementaryFeesDisplayEl) supplementaryFeesDisplayEl.textContent = formatCurrency(totalFees);
+        if (tvaAmountEl) tvaAmountEl.textContent = formatCurrency(tva);
+        if (totalTTCEl) totalTTCEl.textContent = formatCurrency(totalTTC);
+        if (amountInWordsEl) amountInWordsEl.textContent = numberToWords(totalTTC);
+    }
+
+    function validateRemise(input) {
+        const value = parseFloat(input.value);
+        if (value < 0) input.value = 0;
+        if (value > 100) input.value = 100;
+    }
+
+    // CORRECTION: Auto-complétion client améliorée
+    let clientCheckTimeout = null;
+    
+    function debounceCheckClient() {
+        clearTimeout(clientCheckTimeout);
+        clientCheckTimeout = setTimeout(checkExistingClient, 500);
+    }
+
+    function checkExistingClient() {
+        const phoneNumber = iti ? iti.getNumber() : document.getElementById("phone").value;
+        if (phoneNumber && phoneNumber.length >= 8) {
+            fetch("/api/check-client", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ phone: phoneNumber }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.exists) {
+                    // CORRECTION: Auto-compléter TOUS les champs disponibles
+                    const clientNameEl = document.getElementById("clientName");
+                    const addressEl = document.getElementById("address");
+                    const cityEl = document.getElementById("city");
+                    const countryEl = document.getElementById("client-country");
+
+                    if (clientNameEl && data.client.nom) clientNameEl.value = data.client.nom;
+                    if (addressEl && data.client.adresse) addressEl.value = data.client.adresse;
+                    if (cityEl && data.client.ville) cityEl.value = data.client.ville;
+                    if (countryEl && data.client.pays) countryEl.value = data.client.pays;
+                    
+                    // Afficher notification
+                    showClientFoundNotification(data.client.nom);
+                } else if (data.new_client) {
+                    // Afficher modal nouveau client
+                    const newClientModal = document.getElementById("newClientModal");
+                    if (newClientModal) {
+                        newClientModal.style.display = "flex";
+                    }
+                }
+            })
+            .catch(error => console.error("Erreur:", error));
+        }
+    }
+
+    function showClientFoundNotification(clientName) {
+        const phoneGroup = document.querySelector('#phone').closest('.form-group');
+        
+        // Supprimer notification existante
+        const existingNotif = phoneGroup.querySelector('.new-client-notification');
+        if (existingNotif) existingNotif.remove();
+        
+        // Ajouter nouvelle notification
+        const notification = document.createElement('div');
+        notification.className = 'new-client-notification';
+        notification.innerHTML = `✓ Client trouvé: ${clientName}. Informations auto-complétées.`;
+        phoneGroup.appendChild(notification);
+        
+        // Supprimer après 5 secondes
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.remove();
+            }
+        }, 5000);
+    }
+
+    function handleProformaSubmit(e) {
+        e.preventDefault();
+        console.log("Submitting proforma form...");
+        
+        const clientNameEl = document.getElementById("clientName");
+        const addressEl = document.getElementById("address");
+        const cityEl = document.getElementById("city");
+        const countryEl = document.getElementById("client-country");
+        const proformaDateEl = document.getElementById("proforma-date");
+        const remiseEl = document.getElementById("remise");
+
+        const formData = {
+            date: proformaDateEl ? proformaDateEl.value : new Date().toISOString().split('T')[0],
+            client: {
+                nom: clientNameEl ? clientNameEl.value : "",
+                telephone: iti ? iti.getNumber() : document.getElementById("phone").value,
+                adresse: addressEl ? addressEl.value : "",
+                ville: cityEl ? cityEl.value : "",
+                pays: countryEl ? countryEl.value : "Cameroun",
+            },
+            remise: remiseEl ? parseFloat(remiseEl.value) || 0 : 0,
+            articles: collectArticlesData(),
+            frais: collectFeesData(),
+        };
+
+        console.log("Form data collected:", formData);
+
+        const url = isEditMode ? `/api/proforma/${currentProformaId}` : "/api/proforma";
+        const method = isEditMode ? "PUT" : "POST";
+
+        fetch(url, {
+            method: method,
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(formData),
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                closeSlideOver();
+                showSuccessModal("Proforma enregistrée avec succès!");
+                setTimeout(() => location.reload(), 2000);
+            } else if (data.is_duplicate) {
+                alert(data.message);
+            } else {
+                alert("Erreur: " + data.message);
+            }
+        })
+        .catch(error => {
+            console.error("Erreur:", error);
+            alert("Erreur lors de l'enregistrement");
+        });
+    }
+
+    function collectArticlesData() {
+        const articles = [];
+        document.querySelectorAll(".prestation-section").forEach(section => {
+            const type = section.querySelector(".prestation-type-select").value;
+            if (!type) return;
+            
+            const article = { type };
+            
+            switch (type) {
+                case "Livre":
+                    const natureEl = section.querySelector(".livre-nature");
+                    const classeEl = section.querySelector(".livre-classe");
+                    const livreDesignationEl = section.querySelector(".livre-designation");
+                    const livrePrixEl = section.querySelector(".livre-prix");
+                    const livreQuantityEl = section.querySelector(".livre-quantity");
+
+                    article.nature = natureEl ? natureEl.value : "";
+                    article.classe = classeEl ? classeEl.value : "";
+                    article.designation = livreDesignationEl ? livreDesignationEl.options[livreDesignationEl.selectedIndex].text : "";
+                    article.prix = livrePrixEl ? parseFloat(livrePrixEl.value) || 0 : 0;
+                    article.quantite = livreQuantityEl ? parseInt(livreQuantityEl.value) || 1 : 1;
+                    break;
+                case "Fourniture":
+                    const villeEl = section.querySelector(".fourniture-ville-select");
+                    const fournitureDesignationEl = section.querySelector(".fourniture-designation");
+                    const fourniturePrixEl = section.querySelector(".fourniture-prix");
+                    const fournitureQuantityEl = section.querySelector(".fourniture-quantity");
+
+                    article.ville_reference = villeEl ? villeEl.value : "";
+                    article.designation = fournitureDesignationEl ? fournitureDesignationEl.options[fournitureDesignationEl.selectedIndex].text : "";
+                    article.prix = fourniturePrixEl ? parseFloat(fourniturePrixEl.value) || 0 : 0;
+                    article.quantite = fournitureQuantityEl ? parseInt(fournitureQuantityEl.value) || 1 : 1;
+                    break;
+                case "Service":
+                    const serviceNatureEl = section.querySelector(".service-nature-select");
+                    const servicePrecisezEl = section.querySelector(".service-precisez");
+                    const serviceJoursEl = section.querySelector(".service-jours");
+                    const servicePrixEl = section.querySelector(".service-prix");
+
+                    article.nature = serviceNatureEl ? serviceNatureEl.value : "";
+                    article.designation = servicePrecisezEl && servicePrecisezEl.style.display !== 'none' ? servicePrecisezEl.value : (serviceNatureEl ? serviceNatureEl.value : "");
+                    article.jours = serviceJoursEl ? parseInt(serviceJoursEl.value) || 1 : 1;
+                    article.prix = servicePrixEl ? parseFloat(servicePrixEl.value) || 0 : 0;
+                    break;
+                case "Formation":
+                    const formationDesignationEl = section.querySelector(".formation-designation-select");
+                    const formationPrecisezEl = section.querySelector(".formation-precisez");
+                    const formationHeuresEl = section.querySelector(".formation-heures");
+                    const formationPrixEl = section.querySelector(".formation-prix");
+
+                    article.designation = formationPrecisezEl && formationPrecisezEl.style.display !== 'none' ? formationPrecisezEl.value : (formationDesignationEl ? formationDesignationEl.options[formationDesignationEl.selectedIndex].text : "");
+                    article.heures = formationHeuresEl ? parseInt(formationHeuresEl.value) || 1 : 1;
+                    article.prix = formationPrixEl ? parseFloat(formationPrixEl.value) || 0 : 0;
+                    article.prix_total = article.prix * article.heures;
+                    break;
+            }
+            
+            articles.push(article);
+        });
+        return articles;
+    }
+
+    function collectFeesData() {
+        const fees = [];
+        document.querySelectorAll(".supplementary-fee-section").forEach(section => {
+            const typeEl = section.querySelector(".fee-type");
+            const amountEl = section.querySelector(".fee-amount");
+            const commentEl = section.querySelector(".fee-comment");
+
+            const type = typeEl ? typeEl.value : "";
+            const amount = amountEl ? parseFloat(amountEl.value) || 0 : 0;
+            const comment = commentEl ? commentEl.value : "";
+            
+            if (amount > 0) {
+                fees.push({ type, amount, comment });
+            }
+        });
+        return fees;
+    }
+
+    // Fonctions utilitaires améliorées
+    function formatCurrency(amount) {
+        if (amount === 0 || isNaN(amount)) return "0 FCFA";
+        return new Intl.NumberFormat("fr-FR").format(Math.round(amount)) + " FCFA";
+    }
+
+    function numberToWords(num) {
+        if (num === 0 || isNaN(num)) return "zéro franc CFA";
+        
+        const ones = ['', 'un', 'deux', 'trois', 'quatre', 'cinq', 'six', 'sept', 'huit', 'neuf', 'dix', 
+                     'onze', 'douze', 'treize', 'quatorze', 'quinze', 'seize', 'dix-sept', 'dix-huit', 'dix-neuf'];
+        const tens = ['', '', 'vingt', 'trente', 'quarante', 'cinquante', 'soixante', 'soixante-dix', 'quatre-vingt', 'quatre-vingt-dix'];
+        
+        function convertChunk(n) {
+            let result = '';
+            
+            if (n >= 100) {
+                const hundreds = Math.floor(n / 100);
+                if (hundreds === 1) {
+                    result += 'cent ';
+                } else {
+                    result += ones[hundreds] + ' cent ';
+                }
+                n %= 100;
+            }
+            
+            if (n >= 20) {
+                const tensDigit = Math.floor(n / 10);
+                result += tens[tensDigit];
+                n %= 10;
+                if (n > 0) {
+                    result += '-' + ones[n];
+                }
+            } else if (n > 0) {
+                result += ones[n];
+            }
+            
+            return result.trim();
+        }
+        
+        const integerPart = Math.floor(num);
+        
+        if (integerPart === 0) return "zéro franc CFA";
+        
+        let result = '';
+        
+        if (integerPart >= 1000000) {
+            const millions = Math.floor(integerPart / 1000000);
+            result += convertChunk(millions) + ' million' + (millions > 1 ? 's' : '') + ' ';
+        }
+        
+        const remainder = integerPart % 1000000;
+        if (remainder >= 1000) {
+            const thousands = Math.floor(remainder / 1000);
+            if (thousands === 1) {
+                result += 'mille ';
+            } else {
+                result += convertChunk(thousands) + ' mille ';
+            }
+        }
+        
+        const lastThree = remainder % 1000;
+        if (lastThree > 0) {
+            result += convertChunk(lastThree);
+        }
+        
+        return result.trim() + ' franc' + (integerPart > 1 ? 's' : '') + ' CFA';
+    }
+
+    // Fonctions globales pour les modales d'actions proforma
+    let currentModalProformaId = null;
+    let currentModalProformaStatus = null;
+
+    window.openProformaActionModal = function(proformaId, proformaNumber, status) {
+        currentModalProformaId = proformaId;
+        currentModalProformaStatus = status;
+        const titleEl = document.getElementById('proformaActionModalTitle');
+        const modal = document.getElementById('proformaActionModal');
+        
+        if (titleEl) {
+            titleEl.textContent = `Que souhaitez-vous faire avec la ${proformaNumber} ?`;
+        }
+        if (modal) {
+            modal.style.display = 'flex';
+        }
+    };
+
+    window.closeProformaActionModal = function() {
+        const modal = document.getElementById('proformaActionModal');
+        if (modal) {
+            modal.style.display = 'none';
+        }
+        currentModalProformaId = null;
+        currentModalProformaStatus = null;
+    };
+
+    window.downloadProformaFromModal = function() {
+        closeProformaActionModal();
+        showDownloadModal(currentModalProformaId, currentModalProformaStatus);
+    };
+
+    window.editProformaFromModal = function() {
+        closeProformaActionModal();
+        editProforma(currentModalProformaId);
+    };
+
+    window.deleteProformaFromModal = function() {
+        closeProformaActionModal();
+        showDeleteModal(currentModalProformaId);
+    };
+
+    window.showDownloadModal = function(proformaId, status) {
+        currentProformaId = proformaId;
+        const modal = document.getElementById("downloadModal");
+        const optionsContainer = document.getElementById("download-options");
+        
+        let options = '';
+        
+        if (status === 'en_attente') {
+            options = '<button class="modal-button" onclick="downloadDocument(\'proforma\')">Proforma</button>';
+        } else {
+            options = `
+                <button class="modal-button" onclick="downloadDocument('facture')">Facture</button>
+                <button class="modal-button" onclick="downloadDocument('bon')">Bon de livraison</button>
+            `;
+        }
+        
+        if (optionsContainer) {
+            optionsContainer.innerHTML = options;
+        }
+        if (modal) {
+            modal.style.display = "flex";
+        }
+    };
+
+    window.downloadDocument = function(type) {
+        window.open(`/api/proforma/${currentProformaId}/download/${type}`, '_blank');
+        closeDownloadModal();
+    };
+
+    window.closeDownloadModal = function() {
+        const modal = document.getElementById("downloadModal");
+        if (modal) {
+            modal.style.display = "none";
+        }
+    };
+
+    window.editProforma = function(proformaId) {
+        currentProformaId = proformaId;
+        isEditMode = true;
+        
+        fetch(`/api/proforma/${proformaId}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    populateFormWithData(data.proforma);
+                    const titleEl = document.getElementById("slide-over-title");
+                    const slideOver = document.getElementById("slide-over");
+                    
+                    if (titleEl) {
+                        titleEl.textContent = "Modifier Proforma";
+                    }
+                    if (slideOver) {
+                        slideOver.classList.add("open");
+                    }
+                }
+            })
+            .catch(error => console.error('Erreur:', error));
+    };
+
+    window.showDeleteModal = function(proformaId) {
+        currentProformaId = proformaId;
+        const modal = document.getElementById("deleteModal");
+        if (modal) {
+            modal.style.display = "flex";
+        }
+    };
+
+    window.closeDeleteModal = function() {
+        const modal = document.getElementById("deleteModal");
+        if (modal) {
+            modal.style.display = "none";
+        }
+    };
+
+    window.confirmDeleteProforma = function() {
+        fetch(`/api/proforma/${currentProformaId}`, { method: 'DELETE' })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    closeDeleteModal();
+                    showSuccessModal("Proforma supprimée avec succès!");
+                    setTimeout(() => location.reload(), 2000);
+                } else {
+                    alert(data.message);
+                }
+            })
+            .catch(error => console.error('Erreur:', error));
+    };
+
+    window.showStatusModal = function(proformaId) {
+        currentProformaId = proformaId;
+        const modal = document.getElementById("statusModal");
+        if (modal) {
+            modal.style.display = "flex";
+        }
+        
+        // Charger les articles pour livraison partielle si nécessaire
+        const statusSelect = document.getElementById("new-status-select");
+        if (statusSelect) {
+            statusSelect.addEventListener("change", function() {
+                const partialSection = document.getElementById("partialDeliverySection");
+                if (this.value === "partiel") {
+                    if (partialSection) {
+                        partialSection.style.display = "block";
+                    }
+                    loadPartialDeliveryItems(proformaId);
+                } else {
+                    if (partialSection) {
+                        partialSection.style.display = "none";
+                    }
+                }
+            });
+        }
+    };
+
+    window.closeStatusModal = function() {
+        const modal = document.getElementById("statusModal");
+        if (modal) {
+            modal.style.display = "none";
+        }
+    };
+
+    window.saveStatusChange = function() {
+        const newStatusEl = document.getElementById("new-status-select");
+        const montantRecuEl = document.getElementById("montant-recu");
+        const commentaireEl = document.getElementById("delivery-comment");
+        
+        const newStatus = newStatusEl ? newStatusEl.value : "";
+        const montantRecu = montantRecuEl ? montantRecuEl.value : "0";
+        const commentaire = commentaireEl ? commentaireEl.value : "";
+        
+        const updateData = { 
+            statut: newStatus, 
+            montant_recu: montantRecu, 
+            commentaire: commentaire 
+        };
+        
+        if (newStatus === "partiel") {
+            updateData.articles_livres = collectPartialDeliveryData();
+        }
+        
+        fetch(`/api/proforma/${currentProformaId}/status`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(updateData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                closeStatusModal();
+                showSuccessModal("Statut mis à jour avec succès!");
+                setTimeout(() => location.reload(), 2000);
+            } else {
+                alert(data.message);
+            }
+        })
+        .catch(error => console.error('Erreur:', error));
+    };
+
+    window.closeNewClientModal = function() {
+        const modal = document.getElementById("newClientModal");
+        if (modal) {
+            modal.style.display = "none";
+        }
+    };
+
+    window.confirmNewClient = function() {
+        closeNewClientModal();
+        // Enregistrer automatiquement le nouveau client
+        const clientData = {
+            nom: document.getElementById("clientName").value,
+            telephone: iti ? iti.getNumber() : document.getElementById("phone").value,
+            adresse: document.getElementById("address").value,
+            ville: document.getElementById("city").value,
+            pays: document.getElementById("client-country").value
+        };
+
+        fetch('/api/clients', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(clientData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showSuccessModal("Nouveau client enregistré avec succès!");
+            } else {
+                alert("Erreur lors de l'enregistrement du client: " + data.message);
+            }
+        })
+        .catch(error => console.error('Erreur:', error));
+    };
+
+    window.showSuccessModal = function(message) {
+        const messageEl = document.getElementById("successMessage");
+        const modal = document.getElementById("successModal");
+        
+        if (messageEl) {
+            messageEl.textContent = message;
+        }
+        if (modal) {
+            modal.style.display = "flex";
+        }
+    };
+
+    window.closeSuccessModal = function() {
+        const modal = document.getElementById("successModal");
+        if (modal) {
+            modal.style.display = "none";
+        }
+    };
+
+    window.goToPage = function(page) {
+        currentPage = page;
+        const statusEl = document.getElementById("status-filter");
+        const periodEl = document.getElementById("period-filter");
+        
+        const status = statusEl ? statusEl.value : "";
+        const period = periodEl ? periodEl.value : "";
+        
+        filterProformas(status, period);
+    };
+
+    function filterProformas(status, period) {
+        const params = new URLSearchParams();
+        if (status) params.append('status', status);
+        if (period) params.append('period', period);
+        params.append('page', currentPage);
+
+        fetch(`/api/proformas/filter?${params}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    updateProformaTable(data.proformas);
+                    updatePagination(data.pagination);
+                }
+            })
+            .catch(error => console.error('Erreur:', error));
+    }
+
+    function updateProformaTable(proformas) {
+        const tbody = document.getElementById('proforma-tbody');
+        if (!tbody) return;
+        
+        tbody.innerHTML = '';
+
+        proformas.forEach(proforma => {
+            const row = document.createElement('tr');
+            row.dataset.proformaId = proforma.proforma_id;
+            row.dataset.status = proforma.etat;
+            
+            row.innerHTML = `
+                <td>${proforma.numero}</td>
+                <td>${proforma.date_creation}</td>
+                <td>${proforma.client_nom}</td>
+                <td>${formatCurrency(proforma.total_ttc)}</td>
+                <td>${proforma.montant_paye ? formatCurrency(proforma.montant_paye) : '-'}</td>
+                <td>${proforma.montant_restant ? formatCurrency(proforma.montant_restant) : '-'}</td>
+                <td>
+                    <span class="status-badge status-${proforma.etat}" onclick="showStatusModal('${proforma.proforma_id}')">
+                        ${proforma.etat.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                    </span>
+                </td>
+                <td>${proforma.created_by}</td>
+                <td style="display: none;"></td>
+            `;
+            
+            row.onclick = function() {
+                openProformaActionModal(proforma.proforma_id, proforma.numero, proforma.etat);
+            };
+            
+            tbody.appendChild(row);
+        });
+
+        // Mettre à jour le compteur
+        document.getElementById('proforma-count').textContent = proformas.length;
+        const totalAmount = proformas.reduce((sum, p) => sum + p.total_ttc, 0);
+        document.getElementById('proforma-total-amount').textContent = formatCurrency(totalAmount);
+    }
+
+    function updatePagination(paginationData) {
+        currentPage = paginationData.page;
+        totalPages = paginationData.pages;
+        generatePagination(currentPage, totalPages);
+    }
+
+    function exportProformas() {
+        const statusEl = document.getElementById("status-filter");
+        const yearEl = document.getElementById("year-filter");
+        
+        const status = statusEl ? statusEl.value : "";
+        const year = yearEl ? yearEl.value : "";
+        
+        const params = new URLSearchParams();
+        if (status) params.append('status', status);
+        if (year) params.append('year', year);
+        
+        window.open(`/api/export/proformas?${params}`, '_blank');
+    }
+
+    function loadPartialDeliveryItems(proformaId) {
+        fetch(`/api/proforma/${proformaId}/articles`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const container = document.getElementById("partialDeliveryItems");
+                    if (container) {
+                        container.innerHTML = "";
+                        
+                        data.articles.forEach(article => {
+                            if (article.type === "Livre" || article.type === "Fourniture") {
+                                const itemDiv = document.createElement("div");
+                                itemDiv.className = "partial-item";
+                                itemDiv.innerHTML = `
+                                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                                        <input type="checkbox" class="item-checkbox" data-article-id="${article.id}">
+                                        <strong>${article.designation}</strong>
+                                        <span>Livré:</span>
+                                        <input type="number" class="form-control quantity-input" min="0" max="${article.quantite}" value="0" data-article-id="${article.id}" style="width: 80px;">
+                                        <span>sur ${article.quantite}</span>
+                                    </div>
+                                `;
+                                container.appendChild(itemDiv);
+                            }
+                        });
+                    }
+                }
+            })
+            .catch(error => console.error('Erreur:', error));
+    }
+
+    function collectPartialDeliveryData() {
+        const articlesLivres = [];
+        document.querySelectorAll(".partial-item").forEach(item => {
+            const checkbox = item.querySelector(".item-checkbox");
+            const quantityInput = item.querySelector(".quantity-input");
+            
+            if (checkbox && checkbox.checked) {
+                articlesLivres.push({
+                    article_id: checkbox.dataset.articleId,
+                    quantite_livree: parseInt(quantityInput.value) || 0
+                });
+            }
+        });
+        return articlesLivres;
+    }
+
+    function populateFormWithData(proforma) {
+        // Implémenter le remplissage du formulaire pour l'édition
+        const proformaDateEl = document.getElementById("proforma-date");
+        const clientNameEl = document.getElementById("clientName");
+        const addressEl = document.getElementById("address");
+        const cityEl = document.getElementById("city");
+        const countryEl = document.getElementById("client-country");
+        const remiseEl = document.getElementById("remise");
+
+        if (proformaDateEl) proformaDateEl.value = proforma.date_creation;
+        if (clientNameEl) clientNameEl.value = proforma.client.nom;
+        if (addressEl) addressEl.value = proforma.client.adresse || "";
+        if (cityEl) cityEl.value = proforma.client.ville || "";
+        if (countryEl) countryEl.value = proforma.client.pays || "Cameroun";
+        if (remiseEl) remiseEl.value = proforma.remise || 0;
+        
+        if (iti && proforma.client.telephone) {
+            iti.setNumber(proforma.client.telephone);
+        }
+        
+        // Remplir les articles et frais
+        const articlesContainer = document.getElementById("articles-container");
+        const feesContainer = document.getElementById("supplementary-fees-container");
+        
+        if (articlesContainer) articlesContainer.innerHTML = "";
+        if (feesContainer) feesContainer.innerHTML = "";
+        
+        if (proforma.articles) {
+            proforma.articles.forEach(article => addPrestationRow(article));
+        } else {
+            addPrestationRow();
+        }
+        
+        if (proforma.frais && proforma.frais.length > 0) {
+            proforma.frais.forEach(fee => addSupplementaryFeeRow(fee));
+        } else {
+            addSupplementaryFeeRow();
+        }
+        
+        updateCalculations();
+    }
+
+    // Gestion des événements clavier
+    document.addEventListener("keydown", function(e) {
+        if (e.key === "Escape") {
+            document.querySelectorAll(".modal-backdrop").forEach(modal => {
+                modal.style.display = "none";
+            });
+            const slideOver = document.getElementById("slide-over");
+            if (slideOver && slideOver.classList.contains("open")) {
+                closeSlideOver();
+            }
+        }
+    });
+
+    // Fermer modales en cliquant sur le backdrop
+    document.addEventListener("click", function(e) {
+        if (e.target.classList.contains("modal-backdrop")) {
+            e.target.style.display = "none";
+        }
+    });
+
+    console.log("JavaScript initialization complete");
+});
+</script>
+{% endblock %}

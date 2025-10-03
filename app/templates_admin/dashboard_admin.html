@@ -1,0 +1,11 @@
+{% extends 'index.html' %}
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+{% set me = admin if admin is defined else current_user %}
+<div class="container mt-4">
+  <h1 class="mb-4">Dashboard — Bienvenue {{ me.nom_utilisateur }} ({{ me.role|capitalize }})</h1>
+
+  
+</div>
+{% endblock %}
