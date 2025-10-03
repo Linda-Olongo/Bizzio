@@ -1,0 +1,8 @@
+ville livraison
+code article
+nom
+total ttc
+--
+page
+facture
+tél

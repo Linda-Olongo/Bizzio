@@ -1,0 +1,245 @@
+code,designation,prix,type_article
+FOUR0001,Cahiers de dessin 16 pages petit format,300,fourniture
+FOUR0002,Cahiers de dessin 32 pages petit format,500,fourniture
+FOUR0003,Cahiers de dessin 32 pages grand format,1000,fourniture
+FOUR0004,Paquet de cahier de dessin petit format,2000,fourniture
+FOUR0005,Paquet de cahier de dessin grand format,3500,fourniture
+FOUR0006,Cahiers double ligne banane,200,fourniture
+FOUR0007,Cahiers double ligne 32 pages,200,fourniture
+FOUR0008,Paquet cahiers double ligne banane,4000,fourniture
+FOUR0009,Paquet de cahiers double ligne 32 pages,2000,fourniture
+FOUR0010,Cahiers de 50 pages,250,fourniture
+FOUR0011,Cahiers de 100 pages,250,fourniture
+FOUR0012,Cahiers de 120 pages,300,fourniture
+FOUR0013,Cahiers de 144 pages,300,fourniture
+FOUR0014,Cahiers de 200 pages,350,fourniture
+FOUR0015,Cahiers de 288 pages,600,fourniture
+FOUR0016,Cahiers de 300 pages,600,fourniture
+FOUR0017,Cahiers de 400 pages,1000,fourniture
+FOUR0018,Cahiers TP sans format 100 pages,700,fourniture
+FOUR0019,Cahiers TP sans format 120 pages,700,fourniture
+FOUR0020,Cahiers TP sans format 144 pages,750,fourniture
+FOUR0021,Cahiers TP sans format 200 pages,750,fourniture
+FOUR0022,Cahiers TP sans format 288 pages,1300,fourniture
+FOUR0023,Cahiers TP sans format 300 pages,1500,fourniture
+FOUR0024,Cahiers TP sans format 400 pages,1800,fourniture
+FOUR0025,Cahiers TP avec format 100 pages,700,fourniture
+FOUR0026,Cahiers TP avec format 120 pages,700,fourniture
+FOUR0027,Cahiers TP avec format 144 pages,750,fourniture
+FOUR0028,Cahiers TP avec format 200 pages,750,fourniture
+FOUR0029,Cahiers TP avec format 288 pages,1300,fourniture
+FOUR0030,Cahiers TP avec format 300 pages,1500,fourniture
+FOUR0031,Cahiers TP avec format 400 pages,1800,fourniture
+FOUR0032,Paquet de cahiers de 50 pages,3000,fourniture
+FOUR0033,Paquet de cahiers de 100 pages,2000,fourniture
+FOUR0034,Paquet de cahiers de 120 pages,2500,fourniture
+FOUR0035,Paquet de cahiers de 144 pages,1500,fourniture
+FOUR0036,Paquet de cahiers de 200 pages,1700,fourniture
+FOUR0037,Paquet de cahiers de 288 pages,2800,fourniture
+FOUR0038,Paquet de cahiers de 300 pages,3000,fourniture
+FOUR0039,Paquet de cahiers de 400 pages,3000,fourniture
+FOUR0040,Paquet de cahiers TP sans format 100 pages,4500,fourniture
+FOUR0041,Paquet de cahiers TP sans format 120 pages,6000,fourniture
+FOUR0042,Paquet de cahiers TP sans format 144 pages,3500,fourniture
+FOUR0043,Paquet de cahiers TP sans format 200 pages,3500,fourniture
+FOUR0044,Paquet de cahiers TP sans format 288 pages,6000,fourniture
+FOUR0045,Paquet de cahiers TP sans format 300 pages,6500,fourniture
+FOUR0046,Paquet de cahiers TP sans format 400 pages,5000,fourniture
+FOUR0047,Paquet de cahiers TP avec format 100 pages,4500,fourniture
+FOUR0048,Paquet de cahiers TP avec format 120 pages,6000,fourniture
+FOUR0049,Paquet de cahiers TP avec format 144 pages,3500,fourniture
+FOUR0050,Paquet de cahiers TP avec format 200 pages,3500,fourniture
+FOUR0051,Paquet de cahiers TP avec format 288 pages,6000,fourniture
+FOUR0052,Paquet de cahiers TP avec format 300 pages,6500,fourniture
+FOUR0053,Paquet de cahiers TP avec format 400 pages,5000,fourniture
+FOUR0054,Leaves plain 20 LP,200,fourniture
+FOUR0055,Leaves plain 40 LP,300,fourniture
+FOUR0056,Leaves plain 60 LP,325,fourniture
+FOUR0057,Leaves plain 80 LP,350,fourniture
+FOUR0058,Leaves square 20 LS,200,fourniture
+FOUR0059,Leaves square 40 LS,300,fourniture
+FOUR0060,Leaves square 60 LS,325,fourniture
+FOUR0061,Leaves square 80 LS,350,fourniture
+FOUR0062,Ledger 200 petit format,1000,fourniture
+FOUR0063,Ledger 300 petit format,1500,fourniture
+FOUR0064,Ledger 400 petit format,1700,fourniture
+FOUR0065,Ledger 200 page grand format,1300,fourniture
+FOUR0066,Ledger 300 page grand format,1700,fourniture
+FOUR0067,Ledger 400 page grand format,2000,fourniture
+FOUR0068,Ledger 500 page grand format,2500,fourniture
+FOUR0069,Paquet de leaves plain 20 LP,2000,fourniture
+FOUR0070,Paquet de leaves plain 40 LP,2000,fourniture
+FOUR0071,Paquet de leaves plain 60 LP,2500,fourniture
+FOUR0072,Paquet de leaves plain 80 LP,1500,fourniture
+FOUR0073,Paquet de leaves square 20 LS,2000,fourniture
+FOUR0074,Paquet de leaves square 40 LS,2000,fourniture
+FOUR0075,Paquet de leaves square 60 LS,2500,fourniture
+FOUR0076,Paquet de leaves square 80 LS,1500,fourniture
+FOUR0077,Paquet de ledger 200 petit format,5500,fourniture
+FOUR0078,Paquet de ledger 300 petit format,6500,fourniture
+FOUR0079,Paquet de ledger 400 petit format,3500,fourniture
+FOUR0080,Paquet de ledger 500 petit format,4500,fourniture
+FOUR0081,Paquet de ledger 200 page grand format,5500,fourniture
+FOUR0082,Paquet de ledger 300 page grand format,6500,fourniture
+FOUR0083,Paquet de ledger 400 page grand format,3500,fourniture
+FOUR0084,Paquet de ledger 500 page grand format,4500,fourniture
+FOUR0085,Red en blue lines 20 pages,200,fourniture
+FOUR0086,Paquet Red en blue lines 20 pages,2000,fourniture
+FOUR0087,Red en blue lines 40 pages,250,fourniture
+FOUR0088,Paquet Red en blue lines 40 pages,3000,fourniture
+FOUR0089,Cahier Registre d’appel anglophone,2500,fourniture
+FOUR0090,Cahier de registre d’appel francophone,2500,fourniture
+FOUR0091,Bloc note GM,3000,fourniture
+FOUR0092,Bloc note PM,1500,fourniture
+FOUR0093,Cahier de texte (400 pages),4000,fourniture
+FOUR0094,Registre 1,1500,fourniture
+FOUR0095,Registre 2,2000,fourniture
+FOUR0096,Registre 3,2500,fourniture
+FOUR0097,Agrafeuses,1500,fourniture
+FOUR0098,Agrafe,500,fourniture
+FOUR0099,Ardoise grand model plastique,1000,fourniture
+FOUR0100,Ardoise grand model en bois,1000,fourniture
+FOUR0101,Ardoise petit model plastique,500,fourniture
+FOUR0102,Ardoise petit model en bois,500,fourniture
+FOUR0103,Boite académique,500,fourniture
+FOUR0104,Boite académique classe,2000,fourniture
+FOUR0105,Bâtonnet,500,fourniture
+FOUR0106,Bic bleu,200,fourniture
+FOUR0107,Bic rouge,200,fourniture
+FOUR0108,Bic noir,200,fourniture
+FOUR0109,Bic vert,200,fourniture
+FOUR0110,Schneider rouge,200,fourniture
+FOUR0111,Schneider bleu,200,fourniture
+FOUR0112,Schneider noir,200,fourniture
+FOUR0113,Schneider vert,200,fourniture
+FOUR0114,Boite de stylo Schneider bleu,5500,fourniture
+FOUR0115,Boite de Schneider rouge,5500,fourniture
+FOUR0116,Boite de Schneider vert,5500,fourniture
+FOUR0117,Boite de Schneider noir,5500,fourniture
+FOUR0118,Boite de stylo Bic bleu,4500,fourniture
+FOUR0119,Boite de stylo Bic rouge,4500,fourniture
+FOUR0120,Boite de stylo Bic noir,4500,fourniture
+FOUR0121,Boite de stylo Bic vert,4500,fourniture
+FOUR0122,Boite de craie blanche robert color,2000,fourniture
+FOUR0123,Boite de de couleur robert color,3000,fourniture
+FOUR0124,Boite de craie blanche royal color,1500,fourniture
+FOUR0125,Boite de de couleur royal,2000,fourniture
+FOUR0126,Couleur en plastique,500,fourniture
+FOUR0127,Couleur feutre,1500,fourniture
+FOUR0128,Colle à papier BOBO grand model,1000,fourniture
+FOUR0129,Colle à papier BOBO petit model,500,fourniture
+FOUR0130,Calculatrice simple (porpo),1000,fourniture
+FOUR0131,Calculatrice scientifique,4500,fourniture
+FOUR0132,Couverture de cahier dur petit format,250,fourniture
+FOUR0133,Couverture de cahier dure grand format,300,fourniture
+FOUR0134,Couverture de cahier léger petit format,100,fourniture
+FOUR0135,Couverture de cahier léger grand format,200,fourniture
+FOUR0136,Couverture livre,500,fourniture
+FOUR0137,Chemise,100,fourniture
+FOUR0138,Sous chemise,50,fourniture
+FOUR0139,Classeur,4500,fourniture
+FOUR0140,Classeur avec anneau,2000,fourniture
+FOUR0141,Chemise en plastique,3500,fourniture
+FOUR0142,Ciseau grand model,1500,fourniture
+FOUR0143,Ciseau petit model,500,fourniture
+FOUR0144,Corrector,1000,fourniture
+FOUR0145,Corrector Bic,500,fourniture
+FOUR0146,Crayon 2b,100,fourniture
+FOUR0147,Crayon hb,100,fourniture
+FOUR0148,Crayon 2hb,100,fourniture
+FOUR0149,Paquet de crayon HB,600,fourniture
+FOUR0150,Paquet de crayon 2b,600,fourniture
+FOUR0151,Paquet de crayon 2hb,600,fourniture
+FOUR0152,Effaçoire,500,fourniture
+FOUR0153,Enveloppe A4,50,fourniture
+FOUR0154,Papier mine métré,100,fourniture
+FOUR0155,Ram de format Double A,4500,fourniture
+FOUR0156,Ram de papier paper line,4000,fourniture
+FOUR0157,Gouache Giotto,1500,fourniture
+FOUR0158,Gomme maped,50,fourniture
+FOUR0159,Gomme autre,100,fourniture
+FOUR0160,Marqueur multicolore,500,fourniture
+FOUR0161,Taille crayon petit model,50,fourniture
+FOUR0162,Taille crayon grand model,100,fourniture
+FOUR0163,Taille crayon moyen model,300,fourniture
+FOUR0164,Papier canson,1500,fourniture
+FOUR0165,Règle graduée grand model,200,fourniture
+FOUR0166,Règle graduée petit model,100,fourniture
+FOUR0167,Règle graduée en bois,200,fourniture
+FOUR0168,Patte a modelé,1000,fourniture
+FOUR0169,Couleur crayon plastique,500,fourniture
+FOUR0170,Paquet de couleur crayon en bois,1500,fourniture
+FOUR0171,Scotch,200,fourniture
+FOUR0172,Facturier A5,1000,fourniture
+FOUR0173,Facturier A4,1800,fourniture
+FOUR0174,BIC,200,fourniture
+FOUR0175,Schneider,250,fourniture
+FOUR0176,Kit de règle,1500,fourniture
+FOUR0177,Trousse,1000,fourniture
+FOUR0178,Grande équerre,1500,fourniture
+FOUR0179,Grand rapporteur,1500,fourniture
+FOUR0180,Grand compas,2000,fourniture
+FOUR0181,Grande règle,1500,fourniture
+FOUR0182,Enveloppe A3,4000,fourniture
+FOUR0183,Enveloppe A6 court,700,fourniture
+FOUR0184,Enveloppe A6 long,1000,fourniture
+FOUR0185,Couvertures cahiers,0,fourniture
+FOUR0186,Couvertures cahiers transparentes,0,fourniture
+FOUR0187,Couvre-livres Adhésif rouleau (A),0,fourniture
+FOUR0188,Couvre-livres Adhésif rouleau (B),0,fourniture
+FOUR0189,Crayon BIC HB,0,fourniture
+FOUR0190,Crayon de couleur TIP TOP BG104-12,0,fourniture
+FOUR0191,Crayon HB conté,0,fourniture
+FOUR0192,Effaçoir T-167,0,fourniture
+FOUR0193,Emballage cadeaux,0,fourniture
+FOUR0194,Feuilles Mobiles,0,fourniture
+FOUR0195,Feutres (A),0,fourniture
+FOUR0196,Feutres (B),0,fourniture
+FOUR0197,Feutres GIOTTO Maxi-Washable,0,fourniture
+FOUR0198,Flutes,0,fourniture
+FOUR0199,Globe (A),0,fourniture
+FOUR0200,Globe (B),0,fourniture
+FOUR0201,Gomme,0,fourniture
+FOUR0202,Gouache GIOTTO,0,fourniture
+FOUR0203,Pinceau,0,fourniture
+FOUR0204,Tablier,0,fourniture
+FOUR0205,Ledger 300 pages,0,fourniture
+FOUR0206,Ledger 400 pages,0,fourniture
+FOUR0207,Ledger 500 pages,0,fourniture
+FOUR0208,Ledger 80 leaves,0,fourniture
+FOUR0209,Ledger 200 leaves SQ et PL,0,fourniture
+FOUR0210,Marqueurs,0,fourniture
+FOUR0211,Modeling clay DINOSAUR T500T-DI,0,fourniture
+FOUR0212,Name LABEL Smile,0,fourniture
+FOUR0213,Panoplis Géométries,0,fourniture
+FOUR0214,Papier crepon CANSON,0,fourniture
+FOUR0215,Pattes à modéler YOUQI,0,fourniture
+FOUR0216,Peinture Acrylic 500ml,0,fourniture
+FOUR0217,Pinceaux,0,fourniture
+FOUR0218,Plain and square 100 leaves,0,fourniture
+FOUR0219,Plastic Decor DOMS de 12,0,fourniture
+FOUR0220,Plumes,0,fourniture
+FOUR0221,Pot de colle Bobo,0,fourniture
+FOUR0222,Pat Bic Crystal,0,fourniture
+FOUR0223,Paquet de Bic Schneider,0,fourniture
+FOUR0224,Pat de Chemises cartonnées,0,fourniture
+FOUR0225,Pat de craie GIOTTO,0,fourniture
+FOUR0226,Rame de format (70g),0,fourniture
+FOUR0227,Red and blue lines 20 leaves R et B line,0,fourniture
+FOUR0228,Red and blue lines 40 leaves,0,fourniture
+FOUR0229,Red and blue lines 60 leaves,0,fourniture
+FOUR0230,Red and blue lines 80 leaves,0,fourniture
+FOUR0231,Règle 20 cm,0,fourniture
+FOUR0232,Regle 30 cm,0,fourniture
+FOUR0233,Rouleau couvre-livres,0,fourniture
+FOUR0234,Scissors,0,fourniture
+FOUR0235,Scotch (A),0,fourniture
+FOUR0236,Scotch (B),0,fourniture
+FOUR0237,Taille crayon,0,fourniture
+FOUR0238,Yeux artificiels,0,fourniture
+FOUR0239,Zip file,0,fourniture
+FOUR0240,Bloc Note,0,fourniture
+FOUR0241,Agenda,0,fourniture
+FOUR0242,Chemise A Rabat,0,fourniture
+FOUR0243,Chemise Cartonné,0,fourniture
+FOUR0244,Sous - Chemise,0,fourniture
