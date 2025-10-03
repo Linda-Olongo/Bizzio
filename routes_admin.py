@@ -1793,7 +1793,7 @@ def init_admin_routes(flask_app, database, models, mail_instance):
             # Vue globale - toutes les données depuis le début (pas de filtre de date) - INCLUANT FRAIS ET REMISES
             cur.execute("""
                 WITH proforma_totals AS (
-                    SELECT 
+                SELECT 
                         p.proforma_id,
                         p.ville,
                         SUM(pa.quantite) as total_quantity,
@@ -1840,25 +1840,35 @@ def init_admin_routes(flask_app, database, models, mail_instance):
                     "nb_ventes": int(nb_ventes),
                     "quantity": int(quantity),
                     "revenue": int(revenue),
-                    "percentage": percentage
+                    "percentage": float(percentage)
                 })
             
             cur.close()
             conn.close()
-            
-            return jsonify({
+
+            result = {
                 "success": True,
                 "villes": villes,
                 "total_ca": int(total_ca),
                 "has_data": len(villes) > 0
-            })
+            }
             
+            print(f"🔍 DEBUG SEGMENTATION VILLES - Résultat: {result}")
+            
+            return jsonify(result)
+
         except Exception as e:
             print(f"❌ Erreur admin_api_ventes_segmentation_villes: {e}")
             return jsonify({
                 "success": False,
                 "message": f"Erreur: {str(e)}"
             }), 500
+        finally:
+            try:
+                cur.close()
+                conn.close()
+            except Exception:
+                pass
 
     # ================== API LISTE GLOBALE DEVIS & FACTURES ==================
     @app.route('/admin/api/ventes/commandes-globales', methods=['GET'])
@@ -2310,12 +2320,30 @@ def init_admin_routes(flask_app, database, models, mail_instance):
         conn = get_db_connection()
         cur = conn.cursor()
         try:
-            # 1) Chiffre d'Affaires GLOBAL (factures terminées)
+            # 1) Chiffre d'Affaires GLOBAL (proformas terminées + factures terminées) - TOUS LES UTILISATEURS SECRÉTAIRES
             cur.execute(
                 """
-                SELECT COALESCE(SUM(f.montant_total), 0)
-                FROM factures f
-                WHERE f.statut IN ('termine','terminé','partiel')
+                SELECT COALESCE(SUM(
+                    CASE 
+                        WHEN p.etat IN ('termine', 'terminé', 'partiel') THEN
+                            COALESCE(
+                                (SELECT SUM(pa.quantite * a.prix) 
+                                FROM proforma_articles pa 
+                                JOIN articles a ON a.article_id = pa.article_id 
+                                WHERE pa.proforma_id = p.proforma_id), 0
+                            ) + COALESCE(p.frais, 0) - COALESCE(p.remise, 0)
+                        ELSE 0
+                    END
+                ), 0) +
+                COALESCE(SUM(
+                    CASE 
+                        WHEN f.statut IN ('termine', 'terminé', 'partiel') THEN f.montant_total 
+                        ELSE 0 
+                    END
+                ), 0)
+                FROM proformas p
+                FULL OUTER JOIN factures f ON f.client_id = p.client_id
+                WHERE (p.etat IN ('termine', 'terminé', 'partiel') OR f.statut IN ('termine', 'terminé', 'partiel'))
                 """
             )
             kpi_ca_total = int(cur.fetchone()[0] or 0)
