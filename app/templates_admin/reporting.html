@@ -1,0 +1,644 @@
+{% extends 'index.html' %}
+{% block title %}Reporting{% endblock %}
+{% block extra_css %}
+    <style>
+        .content-area {
+            padding: 30px;
+        }
+        
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        
+        .page-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #333;
+        }
+
+        /* Section Filtres */
+        .filters-section {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            margin-bottom: 30px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .filters-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .filters-row {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .filters-row .filter-group {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .filter-label {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #555;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .filter-select {
+            padding: 12px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            background: white;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .filter-select:focus {
+            border-color: #d81b60;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(216, 27, 96, 0.1);
+        }
+
+        .filter-select:hover {
+            border-color: #d81b60;
+        }
+
+        .active-filters {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #d81b60;
+            margin-top: 15px;
+        }
+
+        .active-filters-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+        }
+
+        .filter-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .filter-tag {
+            background: linear-gradient(135deg, #d81b60, #ff8a80);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .filter-tag .remove-btn {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 14px;
+            padding: 0;
+            margin-left: 4px;
+        }
+
+        .filter-tag .remove-btn:hover {
+            opacity: 0.8;
+        }
+
+        /* Section KPIs */
+        .kpi-section {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .kpi-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            border: 1px solid #f0f0f0;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .kpi-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+        }
+
+        .kpi-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #d81b60, #ff8a80);
+        }
+
+        .kpi-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .kpi-title {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .kpi-icon {
+            width: 24px;
+            height: 24px;
+            fill: #d81b60;
+            opacity: 0.7;
+        }
+
+        .kpi-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 8px;
+            line-height: 1.2;
+            text-align: center;
+        }
+
+        .kpi-trend {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .trend-up {
+            color: #4CAF50;
+        }
+
+        .trend-down {
+            color: #F44336;
+        }
+
+        .trend-neutral {
+            color: #666;
+        }
+
+        .trend-icon {
+            width: 16px;
+            height: 16px;
+        }
+
+        /* Loading states */
+        .loading-spinner {
+            width: 24px;
+            height: 24px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #d81b60;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .content-area {
+                padding: 20px 15px;
+            }
+            
+            .filters-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .kpi-section {
+                grid-template-columns: 1fr;
+            }
+            
+            .page-title {
+                font-size: 1.5rem;
+            }
+        }
+
+        /* Animations */
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="content-area">
+        <!-- En-tête de page -->
+        <div class="page-header">
+            <h1 class="page-title">REPORTING ANALYTIQUE</h1>
+        </div>
+
+        <!-- Section Filtres -->
+        <div class="filters-section fade-in">
+            <h2 class="filters-title">FILTRAGE TEMPOREL & MÉTIER</h2>
+
+            <!-- Première ligne : Année, Trimestre, Mois -->
+            <div class="filters-row">
+                <div class="filter-group">
+                    <label class="filter-label">Année</label>
+                    <select class="filter-select" id="filterAnnee">
+                        <option value="">Toutes les années</option>
+                        <!-- Options chargées dynamiquement -->
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label class="filter-label">Trimestre</label>
+                    <select class="filter-select" id="filterTrimestre">
+                        <option value="">Tous les trimestres</option>
+                        <option value="Q1">Q1 (Jan-Mar)</option>
+                        <option value="Q2">Q2 (Avr-Juin)</option>
+                        <option value="Q3">Q3 (Juil-Sep)</option>
+                        <option value="Q4">Q4 (Oct-Déc)</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label class="filter-label">Mois</label>
+                    <select class="filter-select" id="filterMois">
+                        <option value="">Tous les mois</option>
+                        <option value="01">Janvier</option>
+                        <option value="02">Février</option>
+                        <option value="03">Mars</option>
+                        <option value="04">Avril</option>
+                        <option value="05">Mai</option>
+                        <option value="06">Juin</option>
+                        <option value="07">Juillet</option>
+                        <option value="08">Août</option>
+                        <option value="09">Septembre</option>
+                        <option value="10">Octobre</option>
+                        <option value="11">Novembre</option>
+                        <option value="12">Décembre</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Deuxième ligne : Ville, Prestation, Agent -->
+            <div class="filters-row">
+                <div class="filter-group">
+                    <label class="filter-label">Ville</label>
+                    <select class="filter-select" id="filterVille">
+                        <option value="">Toutes les villes</option>
+                        <!-- Options chargées dynamiquement -->
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label class="filter-label">Prestation</label>
+                    <select class="filter-select" id="filterType">
+                        <option value="">Tous les types</option>
+                        <!-- Options chargées dynamiquement -->
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label class="filter-label">Agent</label>
+                    <select class="filter-select" id="filterAgent">
+                        <option value="">Tous les agents</option>
+                        <!-- Options chargées dynamiquement -->
+                    </select>
+                </div>
+            </div>
+
+            <!-- Filtres Actifs -->
+            <div class="active-filters" id="activeFilters" style="display: none;">
+                <div class="active-filters-title">FILTRES SÉLECTIONNÉS :</div>
+                <div class="filter-tags" id="filterTags">
+                    <!-- Généré dynamiquement -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Section KPIs -->
+        <div class="kpi-section fade-in">
+            <div class="kpi-card">
+                <div class="kpi-header">
+                    <h3 class="kpi-title">Chiffre d'Affaires</h3>
+                    <svg class="kpi-icon" viewBox="0 0 24 24">
+                        <path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/>
+                    </svg>
+                </div>
+                <div class="kpi-value" id="kpi-ca">-</div>
+            </div>
+
+            <div class="kpi-card">
+                <div class="kpi-header">
+                    <h3 class="kpi-title">Ventes</h3>
+                    <svg class="kpi-icon" viewBox="0 0 24 24">
+                        <path d="M7 18c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12L8.1 13h7.45c.75 0 1.41-.41 1.75-1.03L21.7 4H5.21l-.94-2H1zm16 16c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/>
+                    </svg>
+                </div>
+                <div class="kpi-value" id="kpi-ventes">-</div>
+            </div>
+
+            <div class="kpi-card">
+                <div class="kpi-header">
+                    <h3 class="kpi-title">Articles</h3>
+                    <svg class="kpi-icon" viewBox="0 0 24 24">
+                        <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
+                    </svg>
+                </div>
+                <div class="kpi-value" id="kpi-articles">-</div>
+            </div>
+
+            <div class="kpi-card">
+                <div class="kpi-header">
+                    <h3 class="kpi-title">Nouveaux Clients</h3>
+                    <svg class="kpi-icon" viewBox="0 0 24 24">
+                        <path d="M16 4c0-1.11.89-2 2-2s2 .89 2 2-.89 2-2 2-2-.89-2-2zm4 18v-6h2.5l-2.54-7.63A1.5 1.5 0 0 0 18.54 8H17c-.8 0-1.54.37-2.01.99L14 10l-1-2H9l-1 2v8h2v6h4z"/>
+                    </svg>
+                </div>
+                <div class="kpi-value" id="kpi-satisfaction">-</div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Variables globales
+let currentFilters = {};
+
+// Initialisation
+document.addEventListener('DOMContentLoaded', function() {
+    console.log("🚀 Reporting page loaded");
+    
+    initializeFilters();
+    loadReportingData();
+    setupEventListeners();
+});
+
+// Initialiser les filtres
+function initializeFilters() {
+    // Charger les options dynamiques depuis l'API
+    loadFilterOptions();
+    
+    // Appliquer les filtres par défaut
+    applyDefaultFilters();
+}
+
+// Charger les options des filtres
+async function loadFilterOptions() {
+    try {
+        const response = await fetch('/admin/api/reporting/filter-options');
+        const data = await response.json();
+        
+        if (data.success) {
+            populateFilterOptions(data.options);
+        }
+    } catch (error) {
+        console.error('Erreur lors du chargement des options de filtres:', error);
+    }
+}
+
+// Remplir les options des filtres
+function populateFilterOptions(options) {
+    // Années
+    const anneeSelect = document.getElementById('filterAnnee');
+    anneeSelect.innerHTML = '<option value="">Toutes les années</option>';
+    if (options.annees) {
+        options.annees.forEach(annee => {
+            anneeSelect.innerHTML += `<option value="${annee}">${annee}</option>`;
+        });
+    }
+    
+    // Villes
+    const villeSelect = document.getElementById('filterVille');
+    villeSelect.innerHTML = '<option value="">Toutes les villes</option>';
+    if (options.villes) {
+        options.villes.forEach(ville => {
+            villeSelect.innerHTML += `<option value="${ville}">${ville}</option>`;
+        });
+    }
+    
+    // Types de prestations
+    const typeSelect = document.getElementById('filterType');
+    typeSelect.innerHTML = '<option value="">Tous les types</option>';
+    if (options.types) {
+        options.types.forEach(type => {
+            typeSelect.innerHTML += `<option value="${type}">${type}</option>`;
+        });
+    }
+    
+    // Agents
+    const agentSelect = document.getElementById('filterAgent');
+    agentSelect.innerHTML = '<option value="">Tous les agents</option>';
+    if (options.agents) {
+        options.agents.forEach(agent => {
+            agentSelect.innerHTML += `<option value="${agent.id}">${agent.nom}</option>`;
+        });
+    }
+}
+
+// Appliquer les filtres par défaut
+function applyDefaultFilters() {
+    currentFilters = {
+        annee: '',
+        trimestre: '',
+        mois: '',
+        ville: '',
+        type: '',
+        agent: ''
+    };
+    
+    updateActiveFilters();
+}
+
+// Configurer les écouteurs d'événements
+function setupEventListeners() {
+    // Filtres
+    document.querySelectorAll('.filter-select').forEach(select => {
+        select.addEventListener('change', handleFilterChange);
+    });
+}
+
+// Gérer les changements de filtres
+function handleFilterChange(event) {
+    const filterId = event.target.id.replace('filter', '').toLowerCase();
+    currentFilters[filterId] = event.target.value;
+    
+    updateActiveFilters();
+    loadReportingData();
+}
+
+// Mettre à jour les filtres actifs
+function updateActiveFilters() {
+    const activeFiltersDiv = document.getElementById('activeFilters');
+    const filterTagsDiv = document.getElementById('filterTags');
+    
+    const activeFilters = Object.entries(currentFilters)
+        .filter(([key, value]) => value && value !== '')
+        .map(([key, value]) => ({ key, value }));
+    
+    if (activeFilters.length === 0) {
+        activeFiltersDiv.style.display = 'none';
+        return;
+    }
+    
+    activeFiltersDiv.style.display = 'block';
+    
+    filterTagsDiv.innerHTML = activeFilters.map(({ key, value }) => {
+        const label = getFilterLabel(key, value);
+        return `
+            <div class="filter-tag">
+                ${label}
+                <button class="remove-btn" onclick="removeFilter('${key}')">×</button>
+            </div>
+        `;
+    }).join('');
+}
+
+// Obtenir le label d'un filtre
+function getFilterLabel(key, value) {
+    const labels = {
+        annee: `Année: ${value}`,
+        trimestre: `Trimestre: ${value}`,
+        mois: `Mois: ${getMonthName(value)}`,
+        ville: `Ville: ${value}`,
+        type: `Type: ${getTypeLabel(value)}`,
+        agent: `Agent: ${getAgentName(value)}`
+    };
+    return labels[key] || `${key}: ${value}`;
+}
+
+// Obtenir le nom du mois
+function getMonthName(monthNumber) {
+    const months = {
+        '01': 'Janvier', '02': 'Février', '03': 'Mars', '04': 'Avril',
+        '05': 'Mai', '06': 'Juin', '07': 'Juillet', '08': 'Août',
+        '09': 'Septembre', '10': 'Octobre', '11': 'Novembre', '12': 'Décembre'
+    };
+    return months[monthNumber] || monthNumber;
+}
+
+// Obtenir le label du type
+function getTypeLabel(type) {
+    const types = {
+        'service': 'Services',
+        'formation': 'Formations',
+        'livre': 'Livres',
+        'fourniture': 'Fournitures'
+    };
+    return types[type] || type;
+}
+
+// Obtenir le nom de l'agent
+function getAgentName(agentId) {
+    const agentSelect = document.getElementById('filterAgent');
+    const options = agentSelect.options;
+    for (let i = 0; i < options.length; i++) {
+        if (options[i].value === agentId) {
+            return options[i].text;
+        }
+    }
+    return agentId; // Retourner l'ID si le nom n'est pas trouvé
+}
+
+// Supprimer un filtre
+function removeFilter(filterKey) {
+    currentFilters[filterKey] = '';
+    document.getElementById(`filter${filterKey.charAt(0).toUpperCase() + filterKey.slice(1)}`).value = '';
+    updateActiveFilters();
+    loadReportingData();
+}
+
+// Charger les données de reporting
+async function loadReportingData() {
+    try {
+        showLoadingState();
+        
+        const params = new URLSearchParams(currentFilters);
+        const response = await fetch(`/admin/api/reporting/data?${params}`);
+        const data = await response.json();
+        
+        if (data.success) {
+            updateKPIs(data.kpis);
+        } else {
+            console.error('Erreur lors du chargement des données:', data.message);
+            showErrorState();
+        }
+    } catch (error) {
+        console.error('Erreur réseau:', error);
+        showErrorState();
+    }
+}
+
+// Mettre à jour les KPIs
+function updateKPIs(kpis) {
+    document.getElementById('kpi-ca').textContent = formatCurrency(kpis.ca);
+    document.getElementById('kpi-ventes').textContent = formatNumber(kpis.ventes);
+    document.getElementById('kpi-articles').textContent = formatNumber(kpis.articles);
+    document.getElementById('kpi-satisfaction').textContent = formatNumber(kpis.nouveaux_clients);
+}
+
+// Fonction supprimée - plus de tendances
+
+// États de chargement
+function showLoadingState() {
+    document.querySelectorAll('.kpi-value').forEach(el => {
+        el.innerHTML = '<div class="loading-spinner"></div>';
+    });
+}
+
+function showErrorState() {
+    document.querySelectorAll('.kpi-value').forEach(el => {
+        el.textContent = 'Erreur';
+    });
+}
+
+// Fonctions utilitaires
+function formatCurrency(amount) {
+    if (!amount || amount === 0) return '0 FCFA';
+    return `${parseInt(amount).toLocaleString('fr-FR')} FCFA`;
+}
+
+function formatNumber(number) {
+    if (!number || number === 0) return '0';
+    return parseInt(number).toLocaleString('fr-FR');
+}
+</script>
+{% endblock %}
