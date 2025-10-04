@@ -1482,11 +1482,11 @@ def init_routes(flask_app, database, models, mail_instance):
             conn = get_db_connection()
             cur = conn.cursor()
             
-            # Dates par défaut - Mois actuel seulement (logique originale)
+            # Dates par défaut - Utiliser une période plus large pour inclure toutes les données
             if not date_debut:
-                date_debut = datetime.now().replace(day=1).date()  # Premier jour du mois actuel
+                date_debut = datetime.now().replace(month=1, day=1).date()  # Début de l'année
             if not date_fin:
-                date_fin = datetime.now().date()  # Date actuelle
+                date_fin = datetime.now().date()
             
             print(f"🔍 DEBUG KPI - Ville: {ville}, User: {user_id}")
             print(f"🔍 DEBUG KPI - Période: {date_debut} à {date_fin}")
@@ -1532,7 +1532,7 @@ def init_routes(flask_app, database, models, mail_instance):
             result_factures = cur.fetchone()
             factures = result_factures[0] if result_factures else 0
             
-            # Devis (en_attente/en_cours + montant_restant des partiels) - TOUTES LES DONNÉES
+            # Devis (en_attente/en_cours + montant_restant des partiels)
             cur.execute("""
                 SELECT COALESCE(SUM(
                     CASE 
@@ -1550,24 +1550,21 @@ def init_routes(flask_app, database, models, mail_instance):
                 FROM proformas p
                 WHERE p.ville = %s
                 AND p.etat IN ('en_attente', 'en_cours', 'partiel')
-            """, [ville])
+                AND p.date_creation >= %s AND p.date_creation <= %s
+            """, [ville, date_debut, date_fin])
             result_devis = cur.fetchone()
             devis = result_devis[0] if result_devis else 0
             
-            # À traiter (nb en_attente/en_cours/partiel) - TOUTES LES DONNÉES
+            # À traiter (nb en_attente/en_cours/partiel)
             cur.execute("""
                 SELECT COUNT(*)
                 FROM proformas p
                 WHERE p.ville = %s
                 AND p.etat IN ('en_attente', 'en_cours', 'partiel')
-            """, [ville])
+                AND p.date_creation >= %s AND p.date_creation <= %s
+            """, [ville, date_debut, date_fin])
             result_a_traiter = cur.fetchone()
             a_traiter = result_a_traiter[0] if result_a_traiter else 0
-            
-            print(f"🔍 DEBUG KPI - Chiffre d'affaires: {chiffre_affaires}")
-            print(f"🔍 DEBUG KPI - Factures: {factures}")
-            print(f"🔍 DEBUG KPI - Devis: {devis}")
-            print(f"🔍 DEBUG KPI - À traiter: {a_traiter}")
             
             cur.close()
             conn.close()
@@ -1993,11 +1990,7 @@ def init_routes(flask_app, database, models, mail_instance):
                 # ✅ UTILISER LES PROFORMAS FILTRÉES
                 proformas=valid_proformas,  # ← CHANGEMENT ICI
                 total_amount=format_currency(total_amount),
-                proformas_count=len(valid_proformas),
-                
-                # Variables pour le résumé (utilise la logique JavaScript)
-                # a_traiter_count=kpi_data['a_traiter'],
-                # devis_amount=format_currency(kpi_data['devis']),
+                proformas_count=len(valid_proformas),  # ← CHANGEMENT ICI
                 
                 available_years=available_years,
                 selected_year=selected_year,
@@ -2026,12 +2019,10 @@ def init_routes(flask_app, database, models, mail_instance):
             conn = get_db_connection()
             cur = conn.cursor()
             
-            # Calculer 12 mois glissants à partir du mois précédent (pour inclure septembre)
+            # Calculer du mois actuel jusqu'à 11 mois dans le futur
             now = datetime.now()
-            
-            # Période glissante de 12 mois à partir du mois précédent
-            start_date = now.replace(day=1) - relativedelta(months=1)  # Premier jour du mois précédent
-            end_date = start_date + relativedelta(months=11) + relativedelta(day=31)  # 12 mois plus tard
+            start_date = now.replace(day=1)  # Premier jour du mois actuel
+            end_date = (now.replace(day=1) + relativedelta(months=11) + relativedelta(day=31))  # Dernier jour dans 11 mois
 
             print(f"🔍 DEBUG CA EVOLUTION - Période FUTURE: {start_date} à {end_date}")
 
@@ -2078,9 +2069,9 @@ def init_routes(flask_app, database, models, mail_instance):
             nb_factures = []
             ca_montants = []
 
-            # Générer les mois selon la période calculée (12 mois)
-            current_date = start_date  # Commencer par la date de début calculée
-            for i in range(12):  # 12 mois
+            # Générer TOUJOURS 12 mois, même sans données
+            current_date = now.replace(day=1)  # Commencer par le mois actuel
+            for i in range(12):
                 year = current_date.year
                 month = current_date.month
 
@@ -5342,42 +5333,31 @@ def init_routes(flask_app, database, models, mail_instance):
             conn = get_db_connection()
             cur = conn.cursor()
             
-            # Calculer 12 mois glissants à partir du mois précédent (pour inclure septembre)
+            # Date actuelle - mois en cours
             now = datetime.now()
             
-            # Période glissante de 12 mois à partir du mois précédent
-            start_date = now.replace(day=1) - relativedelta(months=1)  # Premier jour du mois précédent
-            end_date = start_date + relativedelta(months=11) + relativedelta(day=31)  # 12 mois plus tard
+            # Période étendue pour capturer toutes les données existantes et futures
+            start_date = now.replace(day=1).date()
+            end_date = (now + relativedelta(months=12)).date()
             
-            print(f"🔍 DEBUG MONTHLY EVOLUTION - Période glissante: {start_date} à {end_date}")
+            print(f"🔍 DEBUG MONTHLY EVOLUTION - Période future: {start_date} à {end_date}")
             
             cur.execute("""
-                WITH proforma_totals AS (
+                WITH monthly_stats AS (
                     SELECT 
-                        p.proforma_id,
                         EXTRACT(YEAR FROM p.date_creation) as year,
                         EXTRACT(MONTH FROM p.date_creation) as month,
                         SUM(pa.quantite) as total_quantity,
-                        SUM(pa.quantite * a.prix) as articles_total,
-                        COALESCE(p.frais, 0) as frais,
-                        COALESCE(p.remise, 0) as remise
+                        SUM(pa.quantite * a.prix) as total_revenue
                     FROM proformas p
                     JOIN proforma_articles pa ON pa.proforma_id = p.proforma_id
                     JOIN articles a ON a.article_id = pa.article_id
+                    
                     WHERE p.date_creation >= %s 
                     AND p.date_creation <= %s
                     AND p.etat = 'termine'
                     AND p.ville = %s
-                    GROUP BY p.proforma_id, EXTRACT(YEAR FROM p.date_creation), EXTRACT(MONTH FROM p.date_creation), p.frais, p.remise
-                ),
-                monthly_stats AS (
-                    SELECT 
-                        year,
-                        month,
-                        SUM(total_quantity) as total_quantity,
-                        SUM(articles_total + frais - remise) as total_revenue
-                    FROM proforma_totals
-                    GROUP BY year, month
+                    GROUP BY EXTRACT(YEAR FROM p.date_creation), EXTRACT(MONTH FROM p.date_creation)
                     ORDER BY year, month
                 )
                 SELECT year, month, total_quantity, total_revenue FROM monthly_stats
@@ -5387,7 +5367,7 @@ def init_routes(flask_app, database, models, mail_instance):
             print(f"🔍 DEBUG API - Résultats trouvés: {len(results)} mois avec données")
             print(f"🔍 DEBUG API - Raw results: {results}")
             
-            # Générer les mois selon la période calculée (12 mois)
+            # NOUVELLE LOGIQUE : Générer 12 mois à partir du mois actuel
             labels = []
             quantities = []
             revenues = []
@@ -5395,18 +5375,18 @@ def init_routes(flask_app, database, models, mail_instance):
             # Créer le dictionnaire des données par (année, mois)
             monthly_data = {(int(row[0]), int(row[1])): (row[2], row[3]) for row in results}
             
-            # LABELS AVEC ANNÉE
-            month_names = {
-                1: 'Janv', 2: 'Févr', 3: 'Mars', 4: 'Avr', 5: 'Mai', 6: 'Juin',
-                7: 'Juil', 8: 'Août', 9: 'Sept', 10: 'Oct', 11: 'Nov', 12: 'Déc'
-            }
-            
-            # Générer les mois selon la période calculée (12 mois)
-            current_date = start_date  # Commencer par la date de début calculée
+            # COMMENCER DU MOIS ACTUEL ET S'INCRÉMENTER
+            current_date = now.replace(day=1)  # Premier jour du mois actuel
             
             for i in range(12):
                 year = current_date.year
                 month = current_date.month
+                
+                # LABELS AVEC ANNÉE
+                month_names = {
+                    1: 'Janv', 2: 'Févr', 3: 'Mars', 4: 'Avr', 5: 'Mai', 6: 'Juin',
+                    7: 'Juil', 8: 'Août', 9: 'Sept', 10: 'Oct', 11: 'Nov', 12: 'Déc'
+                }
                 
                 labels.append(f"{month_names[month]} {year}")
                 
@@ -5415,7 +5395,7 @@ def init_routes(flask_app, database, models, mail_instance):
                 quantities.append(int(data[0]) if data[0] else 0)
                 revenues.append(int(data[1]) if data[1] else 0)
                 
-                # Passer au mois suivant
+                # ✅ PASSER AU MOIS SUIVANT
                 current_date = current_date + relativedelta(months=1)
             
             cur.close()
@@ -6252,12 +6232,9 @@ def init_routes(flask_app, database, models, mail_instance):
             conn = get_db_connection()
             cur = conn.cursor()
 
-            # Calculer 12 mois glissants à partir du mois précédent (pour inclure septembre)
             now = datetime.now()
-            
-            # Période glissante de 12 mois à partir du mois précédent
-            start_date = now.replace(day=1) - relativedelta(months=1)  # Premier jour du mois précédent
-            end_date = start_date + relativedelta(months=11) + relativedelta(day=31)  # 12 mois plus tard
+            start_date = now.replace(day=1).date()
+            end_date = (now + relativedelta(months=12)).date()
 
             # 1) FACTURES
             try:
@@ -6326,8 +6303,7 @@ def init_routes(flask_app, database, models, mail_instance):
             labels, ventes_series, ca_series = [], [], []
             month_names = {1:'Janv',2:'Févr',3:'Mars',4:'Avr',5:'Mai',6:'Juin',7:'Juil',8:'Août',9:'Sept',10:'Oct',11:'Nov',12:'Déc'}
 
-            # Générer les mois selon la période calculée (12 mois)
-            current = start_date  # Commencer par la date de début calculée
+            current = now.replace(day=1)
             for _ in range(12):
                 y, m = current.year, current.month
                 labels.append(f"{month_names[m]} {y}")
@@ -6492,12 +6468,6 @@ def init_routes(flask_app, database, models, mail_instance):
             where_clause_proforma = "WHERE " + " AND ".join(where_conditions_proforma)
             where_clause_facture = "WHERE " + " AND ".join(where_conditions_facture)
 
-            print(f"🔍 DEBUG VENTES COMMANDES - Ville: {ville}, User: {user_id}")
-            print(f"🔍 DEBUG VENTES COMMANDES - Where proforma: {where_clause_proforma}")
-            print(f"🔍 DEBUG VENTES COMMANDES - Where facture: {where_clause_facture}")
-            print(f"🔍 DEBUG VENTES COMMANDES - Params proforma: {params_proforma}")
-            print(f"🔍 DEBUG VENTES COMMANDES - Params facture: {params_facture}")
-
             # Compter le total (proformas + factures)
             count_query = f"""
                 SELECT 
@@ -6507,7 +6477,6 @@ def init_routes(flask_app, database, models, mail_instance):
             # Utiliser les paramètres séparés pour chaque requête
             cur.execute(count_query, params_proforma + params_facture)
             total_count = cur.fetchone()[0]
-            print(f"🔍 DEBUG VENTES COMMANDES - Total count: {total_count}")
             total_pages = math.ceil(total_count / rows_per_page) if total_count > 0 else 1
 
             # Récupérer les proformas ET factures avec pagination
@@ -6524,8 +6493,7 @@ def init_routes(flask_app, database, models, mail_instance):
                         FROM proforma_articles pa 
                         JOIN articles a ON a.article_id = pa.article_id 
                         WHERE pa.proforma_id = p.proforma_id
-                    ) + COALESCE(p.frais, 0) - COALESCE(p.remise, 0), 0) as total_ttc,
-                    p.date_creation as sort_date
+                    ) + COALESCE(p.frais, 0) - COALESCE(p.remise, 0), 0) as total_ttc
                 FROM proformas p
                 LEFT JOIN clients c ON c.client_id = p.client_id
                 LEFT JOIN utilisateurs u ON u.user_id = p.cree_par
@@ -6540,22 +6508,17 @@ def init_routes(flask_app, database, models, mail_instance):
                     COALESCE(c.nom, 'Client supprimé') as client_nom,
                     LOWER(f.statut) as etat,
                     COALESCE(f.agent, 'N/A') as created_by,
-                    f.montant_total as total_ttc,
-                    f.date_facture as sort_date
+                    f.montant_total as total_ttc
                 FROM factures f
                 LEFT JOIN clients c ON c.client_id = f.client_id
                 {where_clause_facture}
                 
-                ORDER BY sort_date DESC
+                ORDER BY date_creation DESC
                 LIMIT %s OFFSET %s
             """
             
-            print(f"🔍 DEBUG VENTES COMMANDES - Query: {query}")
-            print(f"🔍 DEBUG VENTES COMMANDES - All params: {params_proforma + params_facture + [rows_per_page, offset]}")
-            
             cur.execute(query, params_proforma + params_facture + [rows_per_page, offset])
             commandes_data = cur.fetchall()
-            print(f"🔍 DEBUG VENTES COMMANDES - Commandes trouvées: {len(commandes_data)}")
 
             # Calculer les totaux pour le résumé - inclure TOUTES les commandes de la ville, pas seulement celles de l'utilisateur
             summary_where_conditions_proforma = ["p.ville = %s", "p.etat NOT IN ('en_cours', 'en_attente')"]
