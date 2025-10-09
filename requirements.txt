@@ -1,0 +1,73 @@
+# Core Flask dependencies
+Flask==2.3.2
+Flask-Mail==0.10.0
+Flask-Session==0.8.0
+Flask-SQLAlchemy==3.1.1
+Werkzeug==2.3.6
+Jinja2==3.1.6
+MarkupSafe==3.0.2
+itsdangerous==2.2.0
+click==8.1.8
+blinker==1.9.0
+
+# Database
+SQLAlchemy==2.0.41
+psycopg2-binary==2.9.9
+
+# Web server
+gunicorn==22.0.0
+
+# Data processing
+pandas==2.2.3
+numpy==2.0.2
+openpyxl==3.1.5
+XlsxWriter==3.2.3
+
+# PDF processing
+PyPDF2==3.0.1
+pdfplumber==0.11.6
+PyMuPDF==1.26.0
+pdfkit==1.0.0
+weasyprint==65.1
+
+# Web scraping and automation
+selenium==4.35.0
+selenium-wire==5.1.0
+undetected-chromedriver==3.5.5
+webdriver-manager==4.0.2
+playwright==1.54.0
+beautifulsoup4==4.13.4
+lxml==6.0.0
+requests==2.32.3
+
+# Image processing
+Pillow==11.2.1
+
+# Phone number validation
+phonenumbers==9.0.10
+
+# Date/time utilities
+python-dateutil==2.9.0.post0
+pytz==2025.2
+
+# Environment variables
+python-dotenv==1.0.0
+
+# Logging
+python-json-logger==3.3.0
+
+# Number to words conversion
+num2words==0.5.14
+
+# AI/ML
+google-generativeai==0.8.3
+
+# Security
+cryptography==45.0.3
+certifi==2025.8.3
+urllib3==2.5.0
+
+# Utilities
+tqdm==4.67.1
+packaging==25.0
+six==1.17.0
