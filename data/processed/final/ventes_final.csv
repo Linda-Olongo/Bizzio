@@ -1,0 +1,680 @@
+vente_id,client_id,nom,telephone,commande,montant,adresse,frais_livraison,bon_fidelite,ville,annee
+VTE3YEXL,CLT9CC0T,(None),,(None),0,(None),0,0,Douala,2022
+VTEI0LXD,CLTM1SND,Tchouba Steve,+237655694596,« 2 capitaines d’industries…. »,10000,Akwa,0,0,Douala,2022
+VTEAL6VW,CLT64T3M,Gael,+237679513678,"Sil-Cp
+« Mon cahier… »",2000,Makèpe,0,0,Douala,2022
+VTE7VFM0,CLTHF8DW,Jules,+237679797905,« Le Ghômala… »,6000,Mboppi,0,0,Douala,2022
+VTE1NNJY,CLTL25D5,Ngouana Francis,+237697482355,« L’Urgence de la pensée… »,10000,Bonamoussadi,0,0,Douala,2022
+VTEQAGVC,CLTUMHYT,Isselel Aina,+237691963867,"CM2
+(R. Gineste)",0,(None),0,0,Douala,2022
+VTEZBJSF,CLTDBACI,Fongue Sadrack,+237690967588,« 2 capitaines d’industries…. »,0,(None),0,0,Douala,2022
+VTEWBYC2,CLT35X3S,Ntatuh Jude,+237679991239,Fournitures,0,Bonabéri,0,0,Douala,2022
+VTEF1WUS,CLT86KS5,Noueu Guy,+237675830303,"SIL, CE1, CM1",0,(None),0,0,Douala,2022
+VTEU2F5K,CLTJKXUQ,Biyaga Vicky,+237677999331,Form 5,0,(None),0,0,Douala,2022
+VTENKKFY,CLTYTB02,Kaga Brigitte,+237698607659,Class 2 & 5,35000,(None),0,0,Douala,2022
+VTE1XC0D,CLT5JMDE,Fogus Yannick,+237678621262,SIL au CM2 (vieux livres de Fçais),0,(None),0,0,Douala,2022
+VTE60SGX,CLTW2R8X,Ngaaleu Eric,+237655575232,"« L’urgence … »
+« Les règles…. »",17000,Bonanjo,0,0,Douala,2022
+VTEM9FFJ,CLTX9MOB,Eo,+237677672303,Fournitures,0,Ancièn 3è,0,0,Douala,2022
+VTE2SO16,CLT1WG12,Koueka Rodrigue,+237680497137,5ème,12000,Total Logbaba,0,0,Douala,2022
+VTESLB1P,CLTISSO8,Anderson,+237690501397,SIL,12700,Bonanjo,0,0,Douala,2022
+VTEGA0JB,CLTISSO8,Anderson,+237690501397,CP,11700,Bonanjo,0,0,Douala,2022
+VTEDQGYC,CLTUMHYT,Isselel Aina,+237691963867,6è,43200,Bonanjo,0,0,Douala,2022
+VTEUHNV4,CLTUMHYT,Isselel Aina,+237691963867,3è,55300,Bonanjo,0,0,Douala,2022
+VTE8WJBU,CLT3B4UC,Gilliam Njoh,+237679907120,Class 4,11550,Bonabéri,0,0,Douala,2022
+VTE1XE2N,CLT3B4UC,Gilliam Njoh,+237679907120,CE2,8000,Bonabéri,0,0,Douala,2022
+VTESS1DI,CLTX9MOB,Eo,+237677672303,Fournitures,20450,Ancien 3è,0,0,Douala,2022
+VTERQORX,CLT1CG0V,Banga Saint,+237654057828,(None),0,Bonanjo,0,0,Douala,2022
+VTEOALKJ,CLTJZ30Q,Ebai Brithel,+237677314515,Class 1,12400,Cité Sic,0,0,Douala,2022
+VTEEYCHV,CLTBEEYW,Kaze Parfait,+237696207798,« Deux capitaines … »,0,Bonanjo,0,0,Douala,2022
+VTEYLS4S,CLTSB5R3,Atibias Ines,+237691125256,CM2,13450,Ndogpassi 2,0,0,Douala,2022
+VTEXPH9W,CLTPV9C6,Koke Ignatius,+237682881605,Class 4,0,Bonabéri - Békoko,0,0,Douala,2022
+VTE1EIRN,CLT8WMJW,Thia Herve,+237690020437,CE2,12900,Yansoki,0,0,Douala,2022
+VTEC9JL5,CLT6WVUZ,Dipita Serge,+237696055473,5è,26700,Besseke,0,0,Douala,2022
+VTE9QK2K,CLTH1HFW,Fobasso Jules,+237670583135,5è,26700,Besseke,0,0,Douala,2022
+VTE8NK97,CLTE2AV5,Dibobe Nicole,+237694423435,Class 4,10650,Akwa - Nord,0,0,Douala,2022
+VTEYVKSM,CLTE2AV5,Dibobe Nicole,+237694423435,6è,39600,Akwa - Nord,0,0,Douala,2022
+VTEP4EML,CLT4XTM6,Ada Carole,+237677769841,"CE1, CM1 & Class 6",52200,Bonabéri,0,0,Douala,2022
+VTES19A2,CLTHHHBA,Atangana Charles,+237677548934,5è,18950,Ndogbati,0,0,Douala,2022
+VTELSTMS,CLTHHHBA,Atangana Charles,+237677548934,Class 2,8400,Ndogbati,0,0,Douala,2022
+VTELMX5C,CLTQ5GPE,Nyake Hortense,+237691861701,6ème,45400,Bonanjo,0,0,Douala,2022
+VTE6GNAX,CLTKZC2Q,Ebene Heran,+237696292931,6ème,0,Bonaberi,0,0,Douala,2022
+VTEOQ92M,CLTS3I3F,Atio Nathalie,+237699362631,6ème,54800,Akwa,0,0,Douala,2022
+VTEJROM2,CLTNCHHJ,Pii Santos Elisa,+237690434639,2nde SES,38800,Makèpe,0,0,Douala,2022
+VTE7AIEX,CLTNCHHJ,Pii Santos Elisa,+237690434639,CM2,26250,Makèpe,0,0,Douala,2022
+VTER5GX8,CLT4QCAZ,Etoa Rouald,+237677550612,5ème,24600,Ndogbong,0,0,Douala,2022
+VTETOAAS,CLT78E28,Kaadeu Linda,+237698602878,Fournitures,95600,Dakar,0,0,Douala,2022
+VTEALH5E,CLT96BM9,Billy D Thierr,+237658035204,"Maternelle/CM1, CE1, Class 3, etc..",241900,Bonanjo,0,0,Douala,2022
+VTEAAT28,CLTJ3EH4,Baho Serges,+237677121033,Class V & VI,111000,Bonanjo,0,0,Douala,2022
+VTEYSF97,CLT6ABDG,Essoba Arina,+237691002019,"Pre-Nursery, Class 2 & CP",95950,Akwa,0,0,Douala,2022
+VTECA966,CLT87AGP,Etindele Elise,+237690045838,Sil/Class 1,26900,Bonabéri,0,0,Douala,2022
+VTED2NLQ,CLT9GW6X,Ndjidda Sadjo,+237694188800,"Class 2, 5 & CP",69150,Bonabéri,0,0,Douala,2022
+VTEGVTKR,CLTUMTSQ,Moutebe,+237677755272,CM1 & Form 1,49250,Yaticka - Yassa,0,0,Douala,2022
+VTEZD0Y4,CLTMQTUG,Vanecka,+237697437725,"G.s, SIL & CM1",42850,Bonamoussadi,0,0,Douala,2022
+VTEIKCSI,CLTFYQTU,Mohamadou Sani Client,+237677550304,"3è, Form 1 & 4è",140000,Akwa,0,0,Douala,2022
+VTEA727U,CLTMQTUG,Vanecka,+237697437725,4è,40350,Bonamoussadi,0,0,Douala,2022
+VTEROP3F,CLTZ7MQ6,Klait,+237676723619,"Ps, Gs, Nursery 2 & Class 2",33600,Bonabéri,0,0,Douala,2022
+VTEZHM96,CLTJ3EH4,Baho Serges,+237677121033,Class 5 & 6,111000,Bonanjo,0,0,Douala,2022
+VTEDW2F4,CLTRLIO2,Aissatou Moutome,+237695534397,"Cm2, CE2 & CP",143000,Bonanjo,0,0,Douala,2022
+VTENY2S9,CLT2ABOC,Etoundi Stella,+237694133356,6è & CE2,48600,Kotto,0,0,Douala,2022
+VTESYJ9O,CLTFYQTU,Mohamadou Sani Client,+237677550304,Class 3 & 5,52500,Akwa,0,0,Douala,2022
+VTEEOXVF,CLTNBDZ4,Koloko,+237681500912,"6è, 4è, CE1 & Maternelle",120000,Bonakouamouang,0,0,Douala,2022
+VTEXCIQI,CLTXLNMS,Arcel,+237694851306,Class 1,11400,Bonamoussadi,0,0,Douala,2022
+VTE14Q6Z,CLTC5PNN,Nolla,+237655435910,5è,45000,Saint-Michel,0,0,Douala,2022
+VTE6M3EN,CLTZ3TUL,Jacques Eric Eboa,+237677550754,SIL & CM2,25500,MTN (Direct° Générale),0,0,Douala,2022
+VTE0TW9Q,CLT3OGDY,Bouli Diane,+237699948214,"Class 5, CM1 & CE1",47250,Makèpe,0,0,Douala,2022
+VTEOTBTG,CLTK8D5J,Fouekeng Carole Prospect Campagne Scolaire,+237694918978,Class 2 & CP,34200,Akwa,0,0,Douala,2022
+VTE721C5,CLTUPX8T,Annie,+237677495411,"Class 1,4, SIL & CE2",35500,Makèpe,0,0,Douala,2022
+VTEAUAI7,CLTWXFCG,Christelle,+237677550227,"4è, 5è & 6è",72600,Bonabéri,0,0,Douala,2022
+VTEBS0WI,CLT91HOX,Bethanie,+237694230759,Nursery 2 & Fourn.,43350,Makèpe,0,0,Douala,2022
+VTEWS8P4,CLT7RK0F,Francois Tonga Xavier,+237691398691,4è,53650,Bonanjo,0,0,Douala,2022
+VTEAIZRR,CLTPBAQ0,Laglane Nadege,+237694887529,Form 1 & Class 4,66650,Akwa,0,0,Douala,2022
+VTEUIJEC,CLTGL5TP,Eyidi,+237690951761,Sil,11300,Bali,0,0,Douala,2022
+VTE26HOJ,CLTPDU4V,Talipouo Ghislain,+237699980022,CM2,37850,Bonanjo,0,0,Douala,2022
+VTE63OW0,CLT0PPC8,Evezo,+237695268419,"CP, CE1, CE2  & Fourn.",61450,Bonanjo,0,0,Douala,2022
+VTEES45M,CLTMQTUG,Vanecka,+237697437725,CM1 & Gs,20600,Bonamoussadi,0,0,Douala,2022
+VTEGL5BS,CLTS8X7N,Prunelle Of God,+237694580128,Sil/Class 1,37700,Mboppi,0,0,Douala,2022
+VTE70WZ8,CLTMXQ6X,Kueda,+237676359158,6è,0,Logbessou,0,0,Douala,2022
+VTEZCJOL,CLTK5RV3,Rodrigue Adoule,+237693885834,"CE1, Class 3 & 3è Esp",35000,Village,0,0,Douala,2022
+VTEWIRZA,CLTASHFT,Dieudonne,+237677288069,"4è, CM2 & Class 6",141050,Makèpe Missokè,0,0,Douala,2022
+VTESLM1Q,CLTRZ8RB,Louise Pachouli Wa,+237677526339,Form 5,45500,CCC,0,0,Douala,2022
+VTE50YKW,CLTVY64C,Rodrigue,+237697472853,CM2,40950,Malangue,0,0,Douala,2022
+VTEHKR3C,CLTEPY6Y,Djoeni Serge,+237682972243,"Class 4,5 & Nursery 2",27800,Bonamoussadi,0,0,Douala,2022
+VTEMWL38,CLTMC3PG,Laurette,+237694751773,"CE1, CP, CM2 & SIL",58450,Bonabéri,0,0,Douala,2022
+VTE7XN7Y,CLT8ZZSZ,Affo,+237678935877,Fournitures,13650,Bonapriso,0,0,Douala,2022
+VTEXLQAR,CLTN6Y2R,Celestin,+237677085849,4è Esp,49250,Yassa,0,0,Douala,2022
+VTES61E2,CLTXLNMS,Arcel,+237694851306,Nursery 2,7800,Bonabéri,0,0,Douala,2022
+VTENEOVF,CLT3VT8Z,Cedric Gaetan,+237674836728,Form 1,16800,Logpom,0,0,Douala,2022
+VTE5ZK7M,CLTF22Y2,Je Suis Un Ancien Pauvre Client,+237690404149,Nursery 2 & Maternelle 2,17000,Makèpe Missokè,0,0,Douala,2022
+VTEL407E,CLT3DT4L,Bayig Espoir,+237694825813,6è & CM2,29250,Makèpe,0,0,Douala,2022
+VTEXUM5O,CLTMS783,Gilles Auguste,+237698829603,Nursery 1,35050,Bonamoussadi,0,0,Douala,2022
+VTEQER3A,CLTA71LK,Eilie,+237697713259,CE1,14900,Bali,0,0,Douala,2022
+VTEXC7KH,CLTQR3WH,Idriss Kao,+237697553544,CE1,12400,Cité Sic,0,0,Douala,2022
+VTE9R1X3,CLTZKAX1,Kali Eta,+237696689008,6è,11500,Ndogbong,0,0,Douala,2022
+VTEVKXCI,CLTMS783,Gilles Auguste,+237698829603,Nursery 1,8400,Bonamoussadi,0,0,Douala,2022
+VTERUOXJ,CLTU1GL5,Joel,+237694878850,6è,14400,Makèpe,0,0,Douala,2022
+VTE50H7F,CLT2LQEY,Idriss,+237674437371,"CP, CE1, CM1 & 4è",43500,Logpom,0,0,Douala,2022
+VTEREG7J,CLT3VT8Z,Cedric Gaetan,+237674836728,Form 1,4000,Logpom,0,0,Douala,2022
+VTEQFDEV,CLTF3UG4,Eba Cyrille,+237674826101,1ère Esp.,27100,Bonanjo,0,0,Douala,2022
+VTEQVA1Q,CLTHVDTS,Ndjoo Lydie,+237694268901,6è,4500,Nkondi,0,0,Douala,2022
+VTE9YCF4,CLTN6Y2R,Celestin,+237677085849,"5è, 1ère Esp & 1ère D",80700,Yassa,0,0,Douala,2022
+VTEW3Y9Q,CLTA5AOY,Nwete,+237691891393,Sil & Class 2,24200,Bépanda,0,0,Douala,2022
+VTEOS15P,CLTCL5A8,Patrick Roger,+237672251563,2nde A Esp,34900,Akwa-Nord,0,0,Douala,2022
+VTEDRL23,CLTPDODA,Bekono Jean,+237698009083,4è,11600,Ndogpassi 2,0,0,Douala,2022
+VTEDBJRS,CLTYK1U6,Onanena Client,+237691531770,Class 2,16800,Nyalla,0,0,Douala,2022
+VTEXPKEK,CLTZ7MQ6,Klait,+237676723619,CP & Class 2,9050,Bonaberi,0,0,Douala,2022
+VTE2PEQO,CLTKPOQD,Tchouene,+237677995144,3ème,12950,Akwa,0,0,Douala,2022
+VTECVTGB,CLT20GKT,Socarrea Ettraba Sa,+237679538330,(None),547330,(None),0,0,Douala,2023
+VTE2W0YP,CLTOSTGS,Adforc,+237656929292,(None),394250,(None),0,0,Douala,2023
+VTEZ809Q,CLTOSTGS,Adforc,+237656929292,(None),576000,(None),0,0,Douala,2023
+VTE5BAGY,CLTFF9H4,Upoca,,Livres et fournitures,1059852,(None),0,0,Douala,2023
+VTEZ01WX,CLTYH0NY,The Seeds,,Livres africains,293000,Yaoundé,0,0,Yaoundé,2023
+VTELITOF,CLT8BLYG,Gael Kaetia,+237658790900,Cf liste livres seconde main,78000,Mokolo,750,0,Yaoundé,2023
+VTE6IY79,CLT902E2,Othniel,+237657192950,Form 1,13000,Efoulan,0,0,Yaoundé,2023
+VTENSUVC,CLTWQ2EJ,Sarah Jong,+237679888414,CLASS 2 & Class 4,3300,Simbock,0,0,Yaoundé,2023
+VTEH3WKA,CLTYBW9T,Commande Gael,+237672284452,"Class 2, Class 5, Form 2",19600,Mvog-Betsi,0,0,Yaoundé,2023
+VTEZVV77,CLTYBW9T,Commande Gael,+237672284452,(None),104000,Mokolo,900,0,Yaoundé,2023
+VTEXLTMO,CLT902E2,Othniel,+237657192950,Form 1,4900,Efoulan,0,0,Yaoundé,2023
+VTE9JQHR,CLTYBW9T,Commande Gael,+237672284452,(None),71500,Mokolo,0,0,Yaoundé,2023
+VTEMIAOR,CLTYBW9T,Commande Gael,+237672284452,(None),49000,Mokolo,1300,0,Yaoundé,2023
+VTEHVKUR,CLTYBW9T,Commande Gael,+237672284452,(None),25000,Mokolo,900,0,Yaoundé,2023
+VTESMDHE,CLTYBW9T,Commande Gael,+237672284452,(None),10000,Mokolo,950,0,Yaoundé,2023
+VTETU7Y0,CLTPUQJ0,Association Alhonas,+237633614249,De la SIL au CM2 avec fournitures,5927472,(None),0,0,Nanga,2023
+VTERHZ8J,CLTBFIZ3,Jules Keghie,+237649179943,De la Maternelle 1 au CM2,410000,(None),53000,0,Tonga,2023
+VTE8IZ7O,CLTNK1E0,Vente Boutique,,Cahier de 32 pages,125,Efoulan,0,0,Yaoundé,2023
+VTEOJXZG,CLT2HIHK,Zoni,,(None),6400,Efoulan,0,0,Yaoundé,2023
+VTEN7VTC,CLTXSMTP,Aa,,(None),25350,Efoulan,0,0,Yaoundé,2023
+VTEXFZ8S,CLT0AWX9,Ekotto,,(None),31800,Efoulan,0,0,Yaoundé,2023
+VTEYLYP1,CLTTKDWM,Arelle,,(None),5300,Efoulan,0,0,Yaoundé,2023
+VTE8SYGH,CLTNK1E0,Vente Boutique,,"1 bic, 4 formats",300,Efoulan,0,0,Yaoundé,2023
+VTEYG70N,CLTNK1E0,Vente Boutique,,Cahier 50 pages,200,Efoulan,0,0,Yaoundé,2023
+VTE1C962,CLT0QMP3,Obele Astride,,Form 1,26100,Efoulan,0,0,Yaoundé,2023
+VTECPWGF,CLTXDKWG,Egoue Joël,,SIL,10300,Efoulan,0,0,Yaoundé,2023
+VTE07FXS,CLTKABK5,Engongodo,,(None),7000,Efoulan,0,0,Yaoundé,2023
+VTE9WJ7K,CLTSF90A,Barga Foe,,(None),19950,Efoulan,0,0,Yaoundé,2023
+VTE3X9G5,CLTXM0I3,Avouzoua,,(None),10500,Efoulan,0,0,Yaoundé,2023
+VTEJ9300,CLTCDOYX,Vandouou,,(None),10600,Efoulan,0,0,Yaoundé,2023
+VTEKLJXK,CLT9H9W6,Doriane,,(None),7700,Efoulan,0,0,Yaoundé,2023
+VTE3YS3K,CLTWZXE0,Poualeu Boutique,,(None),12100,Efoulan,0,0,Yaoundé,2023
+VTE6UB65,CLTNK1E0,Vente Boutique,,"bic bleu, chemise cartonnée",350,Efoulan,0,0,Yaoundé,2023
+VTE6IUA7,CLTNK1E0,Vente Boutique,,"Cahier de 200 pages TP, Chemise cartonnée",1200,Efoulan,0,0,Yaoundé,2023
+VTEEOQL6,CLTV4H7T,Eyenga Urielle,,(None),12000,Efoulan,0,0,Yaoundé,2023
+VTE7QVK0,CLTUE3FF,Belle,+237675546346,"Livres, fournitures",8400,Efoulan,0,0,Yaoundé,2023
+VTE7GF9Z,CLTE9UP0,Eguia,,(None),16700,Efoulan,0,0,Yaoundé,2023
+VTE2R4KQ,CLTNK1E0,Vente Boutique,,"Bic, chemise",250,Efoulan,0,0,Yaoundé,2023
+VTE8O1HV,CLTOWV1M,Boukaka,,(None),12100,Efoulan,0,0,Yaoundé,2023
+VTECYYS5,CLTTW315,Bibou,,(None),13700,Efoulan,0,0,Yaoundé,2023
+VTEOQ54R,CLTUE3FF,Belle,+237675546346,"Class 3 , Class 5 WB, fournitures",24900,Efoulan,0,0,Yaoundé,2023
+VTEFLS65,CLT7FLV9,Fred,,(None),22350,Efoulan,0,0,Yaoundé,2023
+VTEAJHYM,CLTNK1E0,Vente Boutique,,"1 cahier 200 pages CD, bic bleu",1050,Efoulan,0,0,Yaoundé,2023
+VTEPMFEC,CLT1VPN2,Francoise,+237693491803,(None),45000,Efoulan,8000,0,Yaoundé,2023
+VTEKJSNG,CLTFIGR0,Zeugueu,,(None),30200,Efoulan,0,0,Yaoundé,2023
+VTED5C92,CLT3YMWY,Arlyse,,(None),14600,Efoulan,0,0,Yaoundé,2023
+VTE8W794,CLTPNYO9,Freddy,,(None),24800,Efoulan,0,0,Yaoundé,2023
+VTEMTQ5O,CLTUKYN8,Tsala,,(None),32350,Efoulan,0,0,Yaoundé,2023
+VTE9E9WL,CLTOUUVN,Ekobena Tiphanie,,(None),36100,Efoulan,0,0,Yaoundé,2023
+VTETM454,CLT3UJGI,Charly,,(None),4500,Efoulan,0,0,Yaoundé,2023
+VTEM74OX,CLTNK1E0,Vente Boutique,,livres,24750,Efoulan,0,0,Yaoundé,2023
+VTEUZWH6,CLTNK1E0,Vente Boutique,,livres,33900,Efoulan,0,0,Yaoundé,2023
+VTEGY802,CLTXP5L2,Chantal,,(None),9500,Efoulan,0,0,Yaoundé,2023
+VTEHIYU1,CLTNK1E0,Vente Boutique,,(None),300,Efoulan,0,0,Yaoundé,2023
+VTENRUM9,CLTTFLL4,Olivier,,(None),2000,Efoulan,0,0,Yaoundé,2023
+VTEI4ZNB,CLTNK1E0,Vente Boutique,,"livres, fournitures",42300,Efoulan,0,0,Yaoundé,2023
+VTEDV47Y,CLTNK1E0,Vente Boutique,,(None),32750,Efoulan,0,0,Yaoundé,2023
+VTEHNU63,CLTNK1E0,Vente Boutique,,(None),1900,Efoulan,0,0,Yaoundé,2023
+VTEETTIO,CLTD5ETN,Olinga,+237696265908,"FORM 1, FORM III, FORM IV",77000,Efoulan,0,0,Yaoundé,2023
+VTEO4OY6,CLTMAKUU,Belibi Fotso,+237696100982,CEI,7900,Efoulan,0,0,Yaoundé,2023
+VTEV8HN3,CLTNK1E0,Vente Boutique,,(None),4850,Efoulan,0,0,Yaoundé,2023
+VTEJZ1L5,CLTNK1E0,Vente Boutique,,(None),3050,Efoulan,0,0,Yaoundé,2023
+VTELTXZW,CLTNK1E0,Vente Boutique,,(None),41825,Efoulan,0,0,Yaoundé,2023
+VTEVV0H0,CLTNK1E0,Vente Boutique,,(None),2500,Efoulan,0,0,Yaoundé,2023
+VTE3PLL5,CLTNK1E0,Vente Boutique,,(None),40650,Efoulan,0,0,Yaoundé,2023
+VTEVAAXP,CLTNK1E0,Vente Boutique,,"livres, fournitures",15950,Efoulan,0,0,Yaoundé,2023
+VTEIBL17,CLTNK1E0,Vente Boutique,,(None),56400,Efoulan,0,0,Yaoundé,2023
+VTEFQCYK,CLTNK1E0,Vente Boutique,,(None),10000,Efoulan,0,0,Yaoundé,2023
+VTEV47KB,CLTNK1E0,Vente Boutique,,(None),55100,Efoulan,0,0,Yaoundé,2023
+VTEGEQTI,CLTNK1E0,Vente Boutique,,(None),10350,Efoulan,0,0,Yaoundé,2023
+VTELJNT6,CLTNK1E0,Vente Boutique,,livres,63150,Efoulan,0,0,Yaoundé,2023
+VTEJ3VOW,CLTNK1E0,Vente Boutique,,(None),20600,Efoulan,0,0,Yaoundé,2023
+VTEADJGH,CLTNK1E0,Vente Boutique,,(None),6000,Efoulan,0,0,Yaoundé,2023
+VTE0659C,CLTNK1E0,Vente Boutique,,(None),3600,Efoulan,0,0,Yaoundé,2023
+VTEE0TJP,CLTNK1E0,Vente Boutique,,(None),1750,Efoulan,0,0,Yaoundé,2023
+VTE31GJ2,CLTNK1E0,Vente Boutique,,(None),2000,Efoulan,0,0,Yaoundé,2023
+VTEFP3JI,CLTNK1E0,Vente Boutique,,(None),30900,Efoulan,0,0,Yaoundé,2023
+VTE39PTB,CLTNK1E0,Vente Boutique,,(None),12500,Efoulan,0,0,Yaoundé,2023
+VTEFHEOP,CLTNK1E0,Vente Boutique,,(None),11900,Efoulan,0,0,Yaoundé,2023
+VTE3O486,CLTGFCX8,Vogo Assogo,,CP,11300,Efoulan,0,0,Yaoundé,2023
+VTESZSPW,CLTNK1E0,Vente Boutique,,(None),18650,Efoulan,0,0,Yaoundé,2023
+VTEXXDTG,CLTOWV1M,Boukaka,,(None),12100,Efoulan,0,0,Yaoundé,2023
+VTEUR1CQ,CLTNK1E0,Vente Boutique,,"1 cahier 200 pages CD, bic bleu",1050,Efoulan,0,0,Yaoundé,2023
+VTES77OX,CLTNK1E0,Vente Boutique,,(None),12150,Efoulan,0,0,Yaoundé,2023
+VTEGESZJ,CLTNK1E0,Vente Boutique,,(None),1400,Efoulan,0,0,Yaoundé,2023
+VTE8WD0S,CLTNK1E0,Vente Boutique,,2 paquets de cahiers de 200p,4000,Efoulan,0,0,Yaoundé,2023
+VTEJGW9R,CLTNK1E0,Vente Boutique,,(None),3600,Efoulan,0,0,Yaoundé,2023
+VTE9AAFI,CLTNK1E0,Vente Boutique,,fournitures,1400,Efoulan,0,0,Yaoundé,2023
+VTEZKJVL,CLTNK1E0,Vente Boutique,,(None),5000,Efoulan,0,0,Yaoundé,2023
+VTEGWXID,CLTNK1E0,Vente Boutique,,Livres,4500,Efoulan,0,0,Yaoundé,2023
+VTEY4FEE,CLTNK1E0,Vente Boutique,,"Bic, chemise",250,Efoulan,0,0,Yaoundé,2023
+VTE77QAU,CLTNK1E0,Vente Boutique,,"Cahier de 200 pages TP, Chemise cartonnée",1200,Efoulan,0,0,Yaoundé,2023
+VTE59H07,CLTJ4WKO,Yolande,+237677836217,"6ème, CE1, 2nde C,",71100,Titi Garage,1000,20000,Yaoundé,2023
+VTEQTREN,CLTNH4Z2,Nadege Ndomo,+237676659110,4ème,28950,(None),900,20000,Yaoundé,2023
+VTEJQAW9,CLTLZGEE,Efouba,+237694540015,4ème,13350,MINFI,200,0,Yaoundé,2023
+VTEBZUDS,CLTTLP78,Bingana,+237678783779,3ème + fournitures,48000,Nyom,1600,0,Yaoundé,2023
+VTEZ6N4Y,CLT7CCX8,Ebaa,+237675083693,"6ème, CE2, Class 2",32800,Hippodrome,400,0,Yaoundé,2023
+VTERLM7V,CLT1CSX1,Annick Nzoukwa,+237655820104,"Class 6, Class 2 + fournitures",38450,Simbock,550,0,Yaoundé,2023
+VTE966GG,CLT7NJUJ,Okoua,+237696736227,6ème,37300,Fougerole,1050,0,Yaoundé,2023
+VTELSZLN,CLTCO6TV,Essiane,+237691941812,"CE2, CM1, CM2",43700,TKC,1100,5000,Yaoundé,2023
+VTENRKAQ,CLTNBIXZ,Artial,+237679278429,"CM1, 6ème, SIL",64250,Hôtel de ville (Avenue des Banques),400,0,Yaoundé,2023
+VTETMY62,CLTC0LWF,Luc Marcellin Owona,+237698151884,4ème ESP + fournitures,37000,Nkoabang,1100,0,Yaoundé,2023
+VTEIKZCM,CLTCD2AI,Corine,+237699484829,4ème ALL,33000,Montée des sœurs,0,0,Yaoundé,2023
+VTERPNO1,CLTASOZ8,Ngo,+237698443737,2nde C,41100,Eleveur,1550,5000,Yaoundé,2023
+VTEG4AKX,CLT3UJ0V,Nkot,+237698802908,CM2,12850,Entrée Cité Verte,800,0,Yaoundé,2023
+VTE89J19,CLTZ6LZK,Biyag Arie,+237696417109,Form 4 + couverture (4),17000,Efoulan,0,0,Yaoundé,2023
+VTE0KPSD,CLTOIB97,Daasebe Djakebah,+237694546481,"Maternelle 1&2, SIL, CE2",27700,Nlongkak,600,0,Yaoundé,2023
+VTEALVYH,CLTBRTII,Bibouth,+237653280320,"4ème ALL, couverture",49200,Mobile Essos,800,5000,Yaoundé,2023
+VTEC1SCY,CLTBRTII,Bibouth,+237653280320,CP*2 + couverture,21200,Mobile Essos,0,0,Yaoundé,2023
+VTE7HI6W,CLTRBTJ6,Djoubissie,+237696938927,"Maternelle 2, CE1, Form 2",87300,Montée Anne Rouge,1000,0,Yaoundé,2023
+VTEXTZ2H,CLTDX7WS,Ouar Iyabano,+237697784992,"Class 4, CM2, 6ème",62450,Ntinga village,2300,0,Yaoundé,2023
+VTEV5DC2,CLTVBAOX,Akete,+237677428218,"CM2, CE1, 5ème",43450,MINTRANSPORT,500,5000,Yaoundé,2023
+VTEPSPNI,CLTZWXGT,Jefferson,+237690904588,6ème + fournitures et couverture,52100,Efoulan,0,0,Yaoundé,2023
+VTETVCJO,CLTVF3KG,Nyongui,+237696295334,"CM1, 3ème ALL",44600,Efoulan,0,0,Yaoundé,2023
+VTEKUPEY,CLTQLIEX,Ayaba,+237674634599,"Nursery 1, Class 2, Class 1 + fournitures",65550,Coron,600,0,Yaoundé,2023
+VTEV430L,CLTU86HX,Thoas Nkou,+237652411138,"SIL, Class 4, CM2, 5ème, Association village (M1-CM2)",290100,Nsimeyong,500,5000,Yaoundé,2023
+VTE1I5CE,CLT6KYQF,Henriette,+237699646332,2nde C,22600,MINRESI (face paroisse Marie Gocker),300,20000,Yaoundé,2023
+VTEWU0IJ,CLTTGRNS,Clarisse,+237699874537,"3ème ALL, 2nde C",73700,Mvog Ada,750,20000,Yaoundé,2023
+VTEY1P0X,CLTUCHBZ,Belibi,+237674178616,"SIL, Class 5, 3ème ESP",64450,Fougerole,0,0,Yaoundé,2023
+VTENRYM1,CLT4DLCG,Line Ndengue,+237660997850,"CM1, 3ème Chinois, 1ère C + couverture",76600,Akonolinga par Mimboman,1000,5000,Yaoundé,2023
+VTE79KRL,CLTS6XEG,Olive Isekin,+237674281111,CE2,12700,Motée des sœurs,0,0,Yaoundé,2023
+VTE9PH23,CLTV2INW,Ange,+237697857270,Maternelle,3000,Montée Chapelle Obili,500,0,Yaoundé,2023
+VTEKYHLL,CLTUOO99,Dobi,+237654393333,"Class 1,3&5",37800,Bertoua,0,0,Yaoundé,2023
+VTEALOLW,CLT7UE6W,Yannick Eda,+237620002652,"CM2, fournitures + couverture",12150,Obobogo,0,5000,Yaoundé,2023
+VTEWZ3F1,CLTATTH9,Linus Endjana,+237674252008,CE1 + fournitures,12400,Happi,0,0,Yaoundé,2023
+VTEJDQA6,CLTIW39V,Carole,+237677809339,Form 2,15800,Eleveur,0,20000,Yaoundé,2023
+VTEPBKFX,CLTCJ9LL,Benjain Dountio,+237676002602,1ère D,47250,Etokoss / Ambassade du Niger,0,0,Yaoundé,2023
+VTE7K0GE,CLTI25M0,Arcel Dikound,+237695165459,Tle A4 Chinois Achat livres seconde main),37700,Messassi,0,0,Yaoundé,2023
+VTEXQEJ8,CLTN4DZ7,Aandjou Carine,+237697786306,"Maternelle 1, 5ème",42350,"Montée des
+sœurs",0,5000,Yaoundé,2023
+VTEJAM5X,CLTGS859,Nanga,+237693597045,Class 5,13100,Obobogo,0,0,Yaoundé,2023
+VTEUXL60,CLT8KNC9,Deutcha,+237654818407,4ème ESP & Livre CE1,57450,Chapelle Essos,0,0,Yaoundé,2023
+VTEOQ0R9,CLT5IUW4,Nathalie,+237699948431,CP & CE2,5600,Jouvence,0,20000,Yaoundé,2023
+VTEITGPD,CLTGCKXW,Feuri Olivier,+237696113195,5ème,7200,Efoulan,0,0,Yaoundé,2023
+VTEVTDR9,CLT1E0A1,Eyenga,+237698403069,"Class 4, CE2, CM1, couverture",34100,Essos (Montée Madison),0,0,Yaoundé,2023
+VTEG2T04,CLTA2QPA,Tonfack,+237696961844,"6ème, 3ème Chinois",80250,NgoaEkelle,0,0,Yaoundé,2023
+VTE357G6,CLTQ0LGT,Lock,+237693059798,"Class 5, Nursery 2",16100,Carrefour Nkolbisson,0,0,Yaoundé,2023
+VTEIDGQF,CLTS41R0,Vanessa,+237674477810,"SIL, Class 1",18600,Bafoussam,1000,0,Yaoundé,2023
+VTEU5695,CLTVRUSZ,Kade,+237699842440,"5ème & 4ème avec fournitures,",121275,"Bastos, ISMP",0,5000,Yaoundé,2023
+VTEKEQ81,CLTAQ1VS,Formuh Fabian,+237678165379,Class 2,12400,Mimboman,0,0,Yaoundé,2023
+VTEG24RN,CLTDNB2K,Gerard,+237674555577,Class 3,17800,(None),0,0,Yaoundé,2023
+VTEQ1I2E,CLTMYNOK,Ngaba Whilhe,,CP & Class 2 + couverture,7300,Efoulan,0,0,Yaoundé,2023
+VTEAS3T1,CLT4709V,Ngaska,+237697303607,Vente livres + Couverture,39600,Efoulan,0,0,Yaoundé,2023
+VTE96D2P,CLT07PXO,Bongeun,+237696546855,6ème & CE1 avec fournitures + couverture,58925,Obobogo,950,0,Yaoundé,2023
+VTE29B4S,CLTT9I1E,Jean Marcel Okeng,+237677222485,"3ème *2 ALL&ESP, Maternelle 1, CM1 + fournitures",239100,"Bastos, ISMP",0,0,Yaoundé,2023
+VTEMRW22,CLTJEOXV,Abassa,+237698068565,"6ème, Form 2",76600,Carrefour Warda,0,0,Yaoundé,2023
+VTEE9TOB,CLTUDCTG,Bella,+237674449096,CM2 avec fournitures,40250,CNPS Etoug- Ebe,0,0,Yaoundé,2023
+VTEP7ZQS,CLT9R5CR,Odile,+237699971292,"6ème, Tle D + fournitures",64500,Simbock,0,20000,Yaoundé,2023
+VTEQHBPD,CLT9H9W6,Doriane,,(None),27300,Efoulan,0,0,Yaoundé,2023
+VTEWL7QS,CLT33O7Y,Josiane,+237695086941,Class 2,14800,Immeuble Ekang,0,0,Yaoundé,2023
+VTEUUBFK,CLT52XB9,Alberta Laure,+237694639208,"Class 2, Nursery 1, CM1",18700,Carrefour Nkolbisson,0,0,Yaoundé,2023
+VTENIIKY,CLT3FHUL,Ndo,+237671758168,Form 4,63700,Efoulan,0,0,Yaoundé,2023
+VTECBLTB,CLT3AD21,Taka,+237699185247,"Class 3, Class 6, 4ème",61500,Efoulan Pont,400,5000,Yaoundé,2023
+VTEA2Y2W,CLT5AC6D,Biloungou Daniela,+237699646584,"CM1, CM2, 6ème, 5ème, 1ère C, Form 5 + fournitures",211250,Ekoundoum,2500,0,Yaoundé,2023
+VTECC8O4,CLTM851T,Jeanne Ornella,+237697761982,Form 1,30000,Efoulan,0,0,Yaoundé,2023
+VTEKNCG0,CLTDNB2K,Gerard,+237674555577,Class 3,17800,Nouvelle route Nkolbisson,0,0,Yaoundé,2023
+VTEG7MN9,CLTO1NI4,Eyenga,,"CM1, Class 1, CE1, Maternelle 1, Nursery 1",34400,Efoulan,0,0,Yaoundé,2023
+VTEARI9Z,CLTIF5XR,Nga Ntede,+237696858188,"Class 1, Class 6",24350,Transformateur Ngousso,0,0,Yaoundé,2023
+VTE7BNEG,CLTJRZYV,Eyinga,+237691785568,CE2,13300,MINSANTE,0,0,Yaoundé,2023
+VTEJQE6W,CLTCJHSK,Paki,+237699010181,Form 1,24550,Manguier,0,0,Yaoundé,2023
+VTES8E2X,CLT1FG97,Ndee Alissia,+237655158365,"Maternelle 2, CP",14300,"Etoudi, 6ème",0,0,Yaoundé,2023
+VTEVS1JY,CLTIEZEE,Kaeni Clauvis,+237673683373,"CM2, Nursery 2",16150,Palais des sports,0,0,Yaoundé,2023
+VTEOGO6R,CLT1QQW9,Be Dissake,+237698402662,Fournitures 6ème,25250,NgoaEkelle,0,0,Yaoundé,2023
+VTEARG08,CLTON92J,Etoundi Esther,+237679294551,Maternelle Bilingue,82900,Total Nkoldongo,300,0,Yaoundé,2023
+VTEANJ8O,CLTWQ0XF,Ntap,+237693530909,Form 1 &Form 3,84550,Elig Essono Rue Ceper,0,0,Yaoundé,2023
+VTE2MZJZ,CLTVXRYT,Bingue,+237695932405,Class 2,12400,Awae- Concorde,0,0,Yaoundé,2023
+VTEGM494,CLT95ZL4,Stephane Pep,+237695662301,"Class 5, fournitures",63900,Simbock,0,0,Yaoundé,2023
+VTEH046N,CLTCVG64,Norbert,+237678233396,"CM I, Form 5",40850,Bastos,0,0,Yaoundé,2023
+VTEV75V4,CLTGYJ9F,King Patick,+237675465586,6ème,15400,Bastos,0,0,Yaoundé,2023
+VTEV0BTX,CLTG3PRJ,Berthe,+237699856642,1ère D,27100,Efoulan,0,0,Yaoundé,2023
+VTEBYGQ4,CLTSWVTL,Fouda Priscilia,+237690973436,FORM I,37100,Cité Verte,0,0,Yaoundé,2023
+VTEFNRLF,CLTOE25G,Nie Axie,+237691070064,"3ème ALL, 5ème, CM1, CE1",57825,Mendong,0,0,Yaoundé,2023
+VTEPGJ4U,CLTOFKAY,Abomo,+237655398220,SIL,5500,Efoulan,0,0,Yaoundé,2023
+VTE2A6YF,CLTASOZ8,Ngo,+237698443737,4ème ESP,43750,Tam tam,0,0,Yaoundé,2023
+VTEFQIJ8,CLTRWPRH,Motemi,+237699892579,"Class 2, Class 4",40000,Efoulan,0,5000,Yaoundé,2023
+VTEQPQRY,CLTXNXE8,Complexe Bilingue,+237690679876,"CM2, 2nde C",10100,Efoulan,0,0,Yaoundé,2023
+VTES5V3B,CLT9M7DH,Owona,,4ème ALL,50300,Schelle Nsimeyong,300,0,Yaoundé,2023
+VTEK5Z26,CLT687GL,Bakoto Jean Arie,+237674121849,Fournitures et 1 livre SIL,36700,Efoulan,0,0,Yaoundé,2023
+VTEKXR8J,CLTWYX3I,Ebou Webe,+237699928853,"6ème, CEI, Maternelle 2",48000,Expédition Bafoussam,1000,0,Yaoundé,2023
+VTEB82QW,CLTOFKAY,Abomo,+237655398220,"Class 1, Class 3",20300,Efoulan,0,0,Yaoundé,2023
+VTE93GO8,CLT5YNZ3,Lea Bibai,+237695757564,Class 4 + fournitures,80150,Efoulan,0,0,Yaoundé,2023
+VTEUFADB,CLT6WKC6,Laurence Zoa,+237674704970,Class 6,16100,Odza,0,0,Yaoundé,2023
+VTEKW8M7,CLTRDKFR,Carine Foe,+237695881503,"Maternelle 1ère année, fournitures",23400,Commissariat d’Efoulan,0,0,Yaoundé,2023
+VTEUT49S,CLT16A5D,Herve Ngoue,+237699614851,Fournitures,215150,Efoulan,0,0,Yaoundé,2023
+VTE1E41B,CLT9RGKO,Gerard Gan,+237699580188,Class III,18100,Efoulan,0,0,Yaoundé,2023
+VTE2PASP,CLTP8XS4,Denise Ngoumou,+237673265846,Fournitures,800,Nkomo,0,0,Yaoundé,2023
+VTEYRF6X,CLTSK5F3,Zibi,+237696463201,Form II,39050,Total Ebom,0,0,Yaoundé,2023
+VTEAQY90,CLT7UE6W,Yannick Eda,+237620002652,Fournitures,6150,Obobogo,0,0,Yaoundé,2023
+VTE1QO4E,CLTO9OL8,Andje,+237697489009,Class 5,20600,Pharmacie du Soleil,0,0,Yaoundé,2023
+VTEEMXK0,CLTCVRDA,Bibai Eugenie,+237679223386,"Form 3, Form 5, Lowersixth",104500,Efoulan,0,0,Yaoundé,2023
+VTEG6JQQ,CLTASOZ8,Ngo,+237698443737,1ère D,43750,Jouvence,0,0,Yaoundé,2023
+VTEG9DF6,CLTSK5F3,Zibi,+237696463201,Class 4,3500,Efoulan,0,0,Yaoundé,2023
+VTEBHD3R,CLT6KYQF,Henriette,+237699646332,Maternelle 1ère année + fournitures,25200,Face Marie Gocker (Camair),0,0,Yaoundé,2023
+VTEEQ1F1,CLT9NMGP,Arnaud,+237696372251,"CEII, Maternelle 2",15400,Elig-Essono,600,0,Yaoundé,2023
+VTET0RPA,CLTOEP6H,Erica,+237690830861,"2nde C, Tle D",40400,Efoulan,0,0,Yaoundé,2023
+VTEK9LPT,CLT89V9Q,Alice Balamaken,+237670809288,CP,16900,Mimboman,1300,0,Yaoundé,2023
+VTED8R4G,CLTOXST3,Enguevalerie,+237695076863,"Class 5, Class 2, Class 4 + Fournitures",83650,Mimboman,0,0,Yaoundé,2023
+VTE7LYH3,CLTNH4Z2,Nadege Ndomo,+237676659110,Couverture livres et cahiers,5000,Efoulan,0,0,Yaoundé,2023
+VTE0FNG8,CLTFTRCC,Arceline,+237650744013,Class 1,11400,Petit marché Odza,0,0,Yaoundé,2023
+VTE4U0EH,CLTQ80L2,Bouil Celine,+237697157432,"CE II, 2nde A ESP, 6ème",30900,Essos Elyse Bar,0,0,Yaoundé,2023
+VTEVPWI9,CLT76C60,Eyom Laure,+237651840489,"Class 5, Class 6, 1ère D",46550,Awae,0,0,Yaoundé,2023
+VTEEN4B2,CLTWHVMD,Christiane,+237694714485,6ème,34100,Niquese,0,0,Yaoundé,2023
+VTEHYMUI,CLTITR8M,Owona Nnomo Stephanie,+237694173287,"Class 4, Nursery 2",102950,Awae,0,0,Yaoundé,2023
+VTEL8OTK,CLTOFKAY,Abomo,+237655398220,5ème,4500,Efoulan Boutique,0,0,Yaoundé,2023
+VTE8B1E1,CLT3GKXC,Essoba,+237677894021,Class 4,12350,MINCOM,0,0,Yaoundé,2023
+VTE06N6M,CLTCW55J,Tiani Anne Marie,+237699815928,"Form 3, Form 1",138800,Nkolbisson,0,0,Yaoundé,2023
+VTE2YF1I,CLTCP1ON,Ndongo,+237694399171,Form 1,36100,Montée Lac,0,0,Yaoundé,2023
+VTE6F9IA,CLT8O7HY,Addja Inna,+237699970603,CEI,8200,Biyem-assi,0,0,Yaoundé,2023
+VTEVR3C3,CLT1M8QW,Syrienne Timo,+237670164291,"CLASS II, Class 4, fournitures",42000,Omnisports,0,0,Yaoundé,2023
+VTET0TK9,CLTFTRT5,Southia Ousane,+237657245457,"6ème, 5ème",42400,Nkolbisson,0,0,Yaoundé,2023
+VTE9VF9A,CLTM851T,Jeanne Ornella,+237697761982,Form 1,14500,Efoulan,0,0,Yaoundé,2023
+VTEM6IFV,CLTUT69L,Fotue,+237670122952,"Class 1, Class 2",21100,Cité de la paix,0,0,Yaoundé,2023
+VTEQUMYB,CLTZ1KTL,Essoba,+237691030338,SIL & Class 1 + fournitures,26500,Vogt FNE,100,0,Yaoundé,2023
+VTEIPICB,CLTMDLML,Arel Ngantchi,+237655086975,"Class 6, Class 2",34250,Efoulan Boutique,0,0,Yaoundé,2023
+VTEODRTZ,CLTFTRT5,Southia Ousane,+237657245457,"6ème, 5ème, CMI",54250,Nkolbisson Carrefour Ayene,0,0,Yaoundé,2023
+VTEO3UHO,CLTJBT6C,Diane Ngassa,+237675055786,"Form 2, Nursery 1, CP, Class 5 avec couverture des livres, fournitures",100000,Marché Central,0,0,Yaoundé,2023
+VTEMFODN,CLT00ZXR,Jong Sarah,+237670013687,Class 2 & 4,20800,Simbock,0,0,Yaoundé,2023
+VTEXQFYD,CLT5U9EK,Flore Ekane,+237650595343,Class 3,12300,Simbock,0,0,Yaoundé,2023
+VTEMVJKO,CLT3MI2J,Evelyne,+237677342929,Tle D,41200,Dovv Simbock,0,20000,Yaoundé,2023
+VTEC54GK,CLTGS859,Nanga,+237693597045,Fournitures,26500,Obobogo,0,0,Yaoundé,2023
+VTELXCPC,CLTD071V,Akon Anne Paule,+237697151583,"SIL, fournitures",30750,Nsam Escale,400,0,Yaoundé,2023
+VTEBSWG6,CLTNMPDK,Awomo,+237695156995,SIL,11300,Hôtel de Ville,0,0,Yaoundé,2023
+VTEM1XSP,CLTJ8HR3,Christ Lexan,+237696801239,"Class 5, workbook",26100,Pharmacie du soleil,0,0,Yaoundé,2023
+VTELAKPQ,CLTZY4CB,Abongo,+237653661379,Class 4,11350,Efoulan,0,0,Yaoundé,2023
+VTEZ0FII,CLTHS4ZJ,Ayissi Belibi,+237696903168,"SIL*2, CEI",33000,Odza Total Borne 10,0,0,Yaoundé,2023
+VTE00VWR,CLT8Z4WH,Amos,+237655697643,Maternelle 1 & Nursery 1,7000,TKC,0,0,Yaoundé,2023
+VTEQARWY,CLT5RGP0,Client,+237695329696,CP,11300,Mballa 2 Jamot,0,0,Yaoundé,2023
+VTENWT9S,CLT4709V,Ngaska,+237697303607,Livre Histoire 4ème,1000,Entrée Simbock,0,0,Yaoundé,2023
+VTELB052,CLTHS4ZJ,Ayissi Belibi,+237696903168,"6ème, 1ère C",38700,Expédition Akonolinga,0,0,Yaoundé,2023
+VTETV09M,CLTD071V,Akon Anne Paule,+237697151583,"SIL, Fournitures",9700,Nsam Escale,0,0,Yaoundé,2023
+VTE8GD8X,CLTI25M0,Arcel Dikound,+237695165459,6ème,10700,Dispensaire Messassi,0,0,Yaoundé,2023
+VTEKUC3E,CLT2ISIT,Laura,+237671451181,Class 3 & 5,22400,Nkolbisson,0,0,Yaoundé,2023
+VTENJ81N,CLTMI4DP,Ada,+237695765640,2nde Chinois,30800,Efoulan,0,0,Yaoundé,2023
+VTEL1B7S,CLTQEQUS,Blanche Takeugne,+237697718405,1ère A4 ALL,23200,Vogt,0,0,Yaoundé,2023
+VTE8LSNY,CLTANV3N,Vanessa Yondjo,+237694052239,Class 1 & Maternelle 1,15400,OdzaMinkan,0,0,Yaoundé,2023
+VTE0HLVO,CLTSHCAP,Babi,+237694433700,"Class 6, CE2",23250,Efoulan,0,0,Yaoundé,2023
+VTEXFKNT,CLTD3JJA,Sebastien,+237677208338,CMI & CEI,11100,Odza,0,0,Yaoundé,2023
+VTE19MOC,CLTYBW9T,Commande Gael,+237672284452,"Class 2, Class 5, Form 2",19600,Mvog-Betsi,0,0,Yaoundé,2023
+VTEE59R3,CLT3AD21,Taka,+237699185247,(None),9000,(None),0,0,Yaoundé,2023
+VTEDWVAE,CLTXA2KR,Kiong,+237696074141,"Class 1, Class 4, 5ème",74350,Elig Essono,0,0,Yaoundé,2023
+VTEG2ZUX,CLTCXSVC,Boris Owounou,+237696972315,FOURNITURES,5200,Crédit Foncier,0,0,Yaoundé,2023
+VTEVMUU4,CLT3AD21,Taka,+237699185247,UPPERSIXTH,37200,Efoulan chapelle,300,0,Yaoundé,2023
+VTE7PQ77,CLTB37GG,Nka,+237671694585,6ème,11900,Maetur,0,0,Yaoundé,2023
+VTEHUCOH,CLTXDBHE,Diane,+237693023957,CMII,12150,Efoulan,0,0,Yaoundé,2023
+VTEKUQ8R,CLTNR1UI,Jeanne,+237699196571,CEII,12400,Camp Militaire Simbock,0,0,Yaoundé,2023
+VTE2BAEI,CLT2574Z,Glory,+237676612694,"Class 3, Class 5, Class 6",20400,MINSANTE,0,0,Yaoundé,2023
+VTEWBM6V,CLT9NMGP,Arnaud,+237696372251,"CEII, Maternelle 2",8200,Elig Essono,0,0,Yaoundé,2023
+VTE61CAG,CLTJLUP6,Cleent Fokou,+237675069788,CLASS 3,14700,Expédition Limbé,1500,0,Yaoundé,2023
+VTE59B6K,CLTCJ9LL,Benjain Dountio,+237676002602,Petite section,28750,Bastos,0,0,Yaoundé,2023
+VTE26S7L,CLTFTRT5,Southia Ousane,+237657245457,Class 3,12800,Nkolbisson,0,0,Yaoundé,2023
+VTE6KF9V,CLTPVKKC,Ulrich,+237655700833,"Class 4, Form 3, CM II",50000,Odza,0,0,Yaoundé,2023
+VTE7EKHZ,CLTU4JJU,Defo,+237653812126,Uppersixth,49000,Mvolye,0,0,Yaoundé,2023
+VTEMEQ5K,CLTGHMMO,Eyada,+237699738288,CMI,12200,Odza,0,0,Yaoundé,2023
+VTEJ7JK1,CLT8QBW3,Kemogne,+237674732704,"CE1, Form 2",13000,Ngousso,0,0,Yaoundé,2023
+VTEXDZ0A,CLTLRK5X,Edia Zabo,+237690753999,CEII,12400,DGSN,0,0,Yaoundé,2023
+VTEM0YLF,CLTQ59NO,Ongandji,+237697323240,"6ème, CP",47600,Ekounou UCAC,0,0,Yaoundé,2023
+VTETISB5,CLT2IAFC,Thompson,+237683074065,Class 1 & 6,23200,Essos,0,0,Yaoundé,2023
+VTEM5QRT,CLTIW39V,Carole,+237677809339,WorkbookForm 2,5500,Eleveur,0,0,Yaoundé,2023
+VTEUWB7F,CLTBJY4E,Nyo Serge,+237699988096,"Class 2, Form 3, Class 5",24000,Efoulan,0,0,Yaoundé,2023
+VTEN7NER,CLTGS859,Nanga,+237693597045,CMI + fournitures,8250,Obobogo,0,0,Yaoundé,2023
+VTEXZVHW,CLT2574Z,Glory,+237676612694,"Livrets d’activités, Class 3 & 5",5000,MINSANTE,0,0,Yaoundé,2023
+VTEJJCBY,CLT57EQH,Ngalamo,+237678099320,Fournitures,30000,Total Essos,0,0,Yaoundé,2023
+VTEEAD3Z,CLT0IYLD,Tchokoakoua,+237692231927,"Maternelle 1, CE1, CE2, CM2",38950,Collège Vogt,0,0,Yaoundé,2023
+VTEW3KHZ,CLTS3FB8,Carine Ngassa,+237699903872,Class 6 + fournitures,32850,Montée Jouvence,0,0,Yaoundé,2023
+VTESIRR3,CLTOFKAY,Abomo,+237655398220,CM II,3100,Efoulan,0,0,Yaoundé,2023
+VTE3OM3N,CLTOWCZB,Ichel Gouater,+237699949637,Tle,10450,Yaoundé Kennedy,0,0,Yaoundé,2023
+VTEJAU7P,CLTWX22N,Paela Sobze,+237690600509,Class 3,5000,Simbock,0,0,Yaoundé,2023
+VTERC84S,CLTLXSOI,Victorine,+237677691127,Fournitures,143200,Nyom,3900,0,Yaoundé,2023
+VTE46OPI,CLT00YHN,Elisheva Freddie,+237697832928,Form II,16500,Hippodrome,600,0,Yaoundé,2023
+VTE41R09,CLTQ59NO,Ongandji,+237697323240,CM II,13150,Mballa II,300,0,Yaoundé,2023
+VTEOUBNM,CLTEM5JL,Sabinei,+237655176933,"Class 3, CE I",15100,Ekoundoum,1150,0,Yaoundé,2023
+VTEJU873,CLTMY8YF,Sorelle,+237690449918,3ème,12600,Obobogo,100,0,Yaoundé,2023
+VTEFK5KR,CLT6TFIA,Abessolo,+237652338356,Maternelle 1 & 2,37000,Mimboman,0,0,Yaoundé,2023
+VTE14FV5,CLTOFKAY,Abomo,+237655398220,5ème,11000,Efoulan,0,0,Yaoundé,2023
+VTELBLXZ,CLTTLP78,Bingana,+237678783779,3ème ESP,4900,Nyom,1550,0,Yaoundé,2023
+VTEIUYBQ,CLT6TFIA,Abessolo,+237652338356,Maternelle 1 & 2,37000,Mimboman,0,0,Yaoundé,2023
+VTEYRM2N,CLTOFKAY,Abomo,+237655398220,5ème,11000,Efoulan,0,0,Yaoundé,2023
+VTEVVVK4,CLTTLP78,Bingana,+237678783779,3ème ESP,4900,Nyom,1550,0,Yaoundé,2023
+VTE80QBS,CLTINGBM,Murielle,+237658641752,SIL,5000,Efoulan Boutique,0,0,Yaoundé,2023
+VTEJ4F8N,CLTCTHIH,Franck,+237696445750,Fournitures,9050,Hôtel de ville,0,0,Yaoundé,2023
+VTEUUKH4,CLT316IS,Eric Eyala,+237697369216,CE I,6400,Nsam,0,0,Yaoundé,2023
+VTEAXH2Q,CLTPM7LG,So So Jenny,+237657982169,Fournitures,6600,Efoulan,0,0,Yaoundé,2023
+VTEZZCEK,CLTDLMY9,Elae,+237675034675,"Class 5, Form 3, Uppersixth",92050,Efoulan,0,0,Yaoundé,2023
+VTE12VVV,CLT1E0A1,Eyenga,+237698403069,Class 4,6500,Essos,0,0,Yaoundé,2023
+VTEQF3JS,CLTI7BAO,Elouni,+237699259955,Class 4,2500,ART,500,0,Yaoundé,2023
+VTE413C9,CLT2AKEW,Fatia,+237693589909,Class 1,6800,Simbock,0,0,Yaoundé,2023
+VTE17AHR,CLTDXZ9J,Van Epiphanie,+237690939423,CEI et Form 3,18000,Essos,850,0,Yaoundé,2023
+VTEGVYDX,CLTQW7V6,Clarisse Chami,+237676757928,5ème,5000,Pakita,0,0,Yaoundé,2023
+VTEFZ40H,CLTT8S9D,Lady Nancy,+237690136570,4ème,3000,Education,500,0,Yaoundé,2023
+VTEGB3IG,CLTS3S46,Essoumaviviane,+237671960720,"Achat : 6ème, CE2 Echange",8300,Efoulan,0,0,Yaoundé,2023
+VTEY06BF,CLTSHCAP,Babi,+237694433700,Form 3,5000,Efoulan,0,0,Yaoundé,2023
+VTEOTVFA,CLTBJY4E,Nyo Serge,+237699988096,Class 6,5225,Efoulan,0,0,Yaoundé,2023
+VTEPIKJU,CLTE9Q9A,Diane Ngassa,+237695739150,"Nursery 1, CP, Class 5, Form 2, fournitures",161000,Marché Central 1/ Nkolbisson 2,0,0,Yaoundé,2023
+VTEHCHZ7,CLT7311T,Eric,+237677920739,"CM2, Class 6, Tle",418600,Expedition bafoussam,3000,0,Yaoundé,2023
+VTELIP3V,CLT4J457,Irlene Noa,+237696332682,SIL,4000,Efoulan,0,0,Yaoundé,2023
+VTEI9S20,CLT07PXO,Bongeun,+237696546855,CE1,1600,Efoulan,0,0,Yaoundé,2023
+VTEU46IE,CLTKODRZ,Foe,+237620213263,6ème & 2nde C,40000,Soa,0,0,Yaoundé,2023
+VTE7Q65F,CLTXNXE8,Complexe Bilingue,+237690679876,1ère,87100,Efoulan,0,0,Yaoundé,2023
+VTE4JE73,CLT22W9S,Ng Delivery,+237694704008,Dictionnaires,14000,Efoulan,0,0,Yaoundé,2023
+VTEZOQPK,CLTGHMMO,Eyada,+237699738288,CM1,3500,Efoulan,0,0,Yaoundé,2023
+VTEJCKZ8,CLTSHCAP,Babi,+237694433700,Form 3,20000,Efoulan,0,0,Yaoundé,2023
+VTETWZZ4,CLTDLMY9,Elae,+237675034675,Class 6,10000,Efoulan,0,0,Yaoundé,2023
+VTEM8VNS,CLT4J4ZW,Revel,+237670095922,CM2,60000,Efoulan,0,0,Yaoundé,2023
+VTEMXX1Z,CLT14O1C,Ndongo,,Uppersixth,5000,Efoualn,0,0,Yaoundé,2023
+VTEJSN04,CLTS6XEG,Olive Isekin,+237674281111,CM1,4500,Montée des sœurs,0,0,Yaoundé,2023
+VTE9RJ0S,CLTILWZK,Ngue Yvan,+237654274610,Form 4,4000,Efoulan,0,0,Yaoundé,2023
+VTE7GGRK,CLTC8KRI,Ebanda,+237656141983,CP,6500,Efoulan,0,0,Yaoundé,2023
+VTEYYHI1,CLTSHCAP,Babi,+237694433700,Form 3,20000,Efoulan,0,0,Yaoundé,2023
+VTEBB30V,CLTB077J,ASSOCIATION FAMILLE KEGHIE,,VENTE FILIALE,419100,FILIALE Yaoundé,0,0,Yaoundé,2024
+VTE6G50A,CLT7A1OP,PETIT ECOLIER,,VENTE FILIALE,2498850,FILIALE Yaoundé,0,0,Yaoundé,2024
+VTEK19JF,CLTOD35J,ADFORCE : ASSOCIATION DES FEMMES D'ORANGE CAMEROUN,,VENTE FILIALE,1269975,FILIALE Yaoundé,0,0,Yaoundé,2024
+VTEX53XM,CLTSZN1S,ASSOCIATION ALHONAS,,VENTE FILIALE,3602310,FILIALE Yaoundé,0,0,Yaoundé,2024
+VTE1QW2R,CLTXXGU9,PRESTATAIRE ENEO DOUALA,,VENTE FILIALE,3320950,FILIALE Douala,0,0,Douala,2024
+VTEB0NKA,CLTFB87M,SONECO SARL,,VENTE FILIALE,640000,FILIALE Yaoundé,0,0,Yaoundé,2024
+VTE13FRL,CLTFT9DT,SOCCAREMA,,VENTE FILIALE,262105,FILIALE Douala,0,0,Douala,2024
+VTEXO681,CLT1VOOK,Dibobe Nicole,,(None),30732,(None),0,0,Douala,2024
+VTEI48RT,CLT1VOOK,Dibobe Nicole,,(None),36593,(None),0,0,Douala,2024
+VTEQKJCI,CLTJ0JWF,Etoa Rouald,,(None),45000,(None),0,0,Douala,2024
+VTEFKDF6,CLTFAZVK,Tonga Xavier,,(None),50650,(None),0,0,Douala,2024
+VTE12G9I,CLTM1AK4,Arie Jo,,(None),14850,(None),0,0,Douala,2024
+VTEFDF0Q,CLTM1AK4,Arie Jo,,(None),7500,(None),0,0,Douala,2024
+VTE87OY9,CLTRHVG0,Bikobo Joel,,(None),44550,(None),0,0,Douala,2024
+VTE2IEV1,CLTFA1RU,Aude,,(None),18750,(None),0,0,Douala,2024
+VTEZKJAQ,CLTAJMPH,Epee Justo,,(None),87570,(None),0,0,Douala,2024
+VTEEGN40,CLTAJMPH,Epee Justo,,(None),13915,(None),0,0,Douala,2024
+VTERP0U6,CLTHY4OA,Ngondi Christian,,(None),22261,(None),0,0,Douala,2024
+VTEI9CVQ,CLTUQRRZ,Niee Axie,,(None),75627,(None),0,0,Douala,2024
+VTE2WVXR,CLTJE0Q2,Aina,,(None),4000,(None),0,0,Douala,2024
+VTE0O3M4,CLT2M6SU,Ngoje Stéphanie,,(None),37700,(None),0,0,Douala,2024
+VTE1HOJ4,CLTBKZ3E,Nkantio Leslie,,(None),88000,(None),0,0,Douala,2024
+VTE7SBQZ,CLTHAV9P,Ndedi Rosine,,(None),32540,(None),0,0,Douala,2024
+VTEV8NRV,CLTRCBCJ,Atio Nathalie,,(None),92200,(None),0,0,Douala,2024
+VTEUKQ88,CLTNCLAR,Nlend Arc,,(None),31000,(None),0,0,Douala,2024
+VTEJ4AQ1,CLTR2WFY,Back Geraine,,(None),20000,(None),0,0,Douala,2024
+VTEGDB02,CLTAH1NP,Sione,,(None),55600,(None),0,0,Douala,2024
+VTEINMBM,CLTEGNB7,Ichelle,,(None),15100,(None),0,0,Douala,2024
+VTEM2DTD,CLT6375M,Ndoun Athias,,(None),21600,(None),0,0,Douala,2024
+VTE3J4V4,CLTQVGJ5,Bintou,,(None),12750,(None),0,0,Douala,2024
+VTEOTEMU,CLTL76P2,Ngouou Foe,,(None),13340,(None),0,0,Douala,2024
+VTE6LLE2,CLTL76P2,Ngouou Foe,,(None),4500,(None),0,0,Douala,2024
+VTE77O8A,CLTCS9BC,Abang,,(None),13750,(None),0,0,Douala,2024
+VTECQQDF,CLTCS9BC,Abang,,(None),16175,(None),0,0,Douala,2024
+VTE1RTLE,CLTIU8JS,Njaka Déborah,,(None),31065,(None),0,0,Douala,2024
+VTESMO28,CLTVO1RM,Njoh Estelle,,(None),30352,(None),0,0,Douala,2024
+VTE4OFC3,CLTCQON7,Boe Agnès,,(None),29975,(None),0,0,Douala,2024
+VTE32KCW,CLTCQON7,Boe Agnès,,(None),6580,(None),0,0,Douala,2024
+VTEOVJP4,CLTJKIUW,Boten Luc,,(None),9000,(None),0,0,Douala,2024
+VTEBJQ9Z,CLTJKIUW,Boten Luc,,(None),11000,(None),0,0,Douala,2024
+VTEUC2Y7,CLTS5YLF,Rodrigues,,(None),2500,(None),0,0,Douala,2024
+VTEK4SS9,CLTWU8HZ,Aissatou,,(None),12900,(None),0,0,Douala,2024
+VTE43IZ2,CLTWU8HZ,Aissatou,,(None),33100,(None),0,0,Douala,2024
+VTEIROO6,CLTWU8HZ,Aissatou,,(None),30700,(None),0,0,Douala,2024
+VTE2Y5MC,CLTH15LX,Tsafack Billy,,(None),42995,(None),0,0,Douala,2024
+VTEV453U,CLTH15LX,Tsafack Billy,,(None),10250,(None),0,0,Douala,2024
+VTE4P3VN,CLT046CJ,Djoko Yonnic,,(None),31000,(None),0,0,Douala,2024
+VTEC8ENI,CLT046CJ,Djoko Yonnic,,(None),44500,(None),0,0,Douala,2024
+VTEWCLUX,CLTMYGGZ,Binya Valérie,,(None),29520,(None),0,0,Douala,2024
+VTEGT9TY,CLTHY4OA,Ngondi Christian,,(None),9900,(None),0,0,Douala,2024
+VTEJT7BA,CLTGFEML,Geraine,,(None),11550,(None),0,0,Douala,2024
+VTELPCZG,CLT5FLFH,BOPACE SARL,,VENTE FILIALE,435340,FILIALE Yaoundé,0,0,Yaoundé,2024
+VTELFTDN,CLT8N3IN,Abena Yvana,+237697996592,FOURNITURES,21200,(None),0,0,Yaoundé,2024
+VTEUWTWD,CLT8N3IN,Abena Yvana,+237697996592,CLASS1 / FORM1,6550,(None),0,0,Yaoundé,2024
+VTE1X1AW,CLTO9OL8,Andje,+237697489009,CLASS 6,14950,PHARMACIE SOLEIL,1000,0,Yaoundé,2024
+VTE79YPA,CLT5YOLA,Annie,+237691266617,3e,41400,MONTEE DES SŒURS,1000,0,Yaoundé,2024
+VTEZ35BY,CLTJEOXV,Abassa,+237698068565,5e/FORM 3,86200,FRANCO HOTEL,1000,0,Yaoundé,2024
+VTEFW695,CLTTUQ5L,Ayissi,+237677107803,Tle C,37000,SOA,2000,0,Yaoundé,2024
+VTE69MZJ,CLTAC39M,Baila Aurice,,6e,33300,"ENTREE PRINTEMPS
+BAR ESSOS",1000,0,Yaoundé,2024
+VTEVWAE9,CLTU0HIK,Bella,+237696978728,CM1,16600,ODZA,1000,0,Yaoundé,2024
+VTELV1YD,CLTTGRNS,Clarisse,+237699874537,1ER C / 2ND C,75600,ELIG ESSONO PJ,0,0,Yaoundé,2024
+VTEBEMMA,CLTJ8HR3,Christ Lexan,+237696801239,CLASS 1/ CLASS 3,7750,PHARMACIE SOLEIL,1000,0,Yaoundé,2024
+VTETGHVY,CLTJ8HR3,Christ Lexan,+237696801239,CM1,14300,PHARMACIE SOLEIL,1000,0,Yaoundé,2024
+VTE0LCR4,CLTJ8HR3,Christ Lexan,+237696801239,CM1,14300,PHARMACIE SOLEIL,1000,0,Yaoundé,2024
+VTE30IAA,CLTIW8C1,Yabou,+237696170020,"NURSERY 1/ 3e
+FOURNITURES",26400,"FINANCIAL HOUSE
+MOKOLO",1000,0,Yaoundé,2024
+VTEP3APE,CLTA2QPA,Tonfack,+237696961844,(None),34600,(None),0,0,Yaoundé,2024
+VTEZG2HS,CLTUZOAM,Angele Fleur Pep,+237696365770,FOURNITURES,54700,EMANA,0,0,Yaoundé,2024
+VTEUNTEB,CLTUZOAM,Angele Fleur Pep,+237696365770,FOURNITURES,107700,EMANA,0,0,Yaoundé,2024
+VTEQRL11,CLTUZOAM,Angele Fleur Pep,+237696365770,FOURNITURES,15750,EMANA,0,0,Yaoundé,2024
+VTEUDVE6,CLTUZOAM,Angele Fleur Pep,+237696365770,FOURNITURES,45700,EMANA,0,0,Yaoundé,2024
+VTEQ4GQP,CLTUZOAM,Angele Fleur Pep,+237696365770,FOURNITURES,11750,EMANA,0,0,Yaoundé,2024
+VTEKRYBZ,CLTHM1ER,Chai Joseph,+237699766655,CLASS 3/SIL/FORM 4,170700,OLEZOA,1000,0,Yaoundé,2024
+VTEYYZ78,CLTCR67P,Elae,+237699359170,"UPPER SIXTH / FORM 1/
+FORM 4",125200,(None),0,0,Yaoundé,2024
+VTE6KRUW,CLTHQAGI,Eloundou,+237691090801,CE2,11300,(None),0,0,Yaoundé,2024
+VTE7EJ8R,CLTWX2CY,Engoue,,CP,10300,(None),0,0,Yaoundé,2024
+VTEEP9D5,CLT1E0A1,Eyenga,+237698403069,DICTIONNAIRES,10000,(None),0,0,Yaoundé,2024
+VTEVZLFD,CLT1E0A1,Eyenga,+237698403069,CM2/CM1/CLASSV,55500,(None),0,0,Yaoundé,2024
+VTEQJPAP,CLTF6NBO,Johan Ecole,+237690132388,CARTONS DE CRAIE,213000,NGOUSSO,0,0,Yaoundé,2024
+VTE7J9UE,CLTI6JCA,Jules Taka,+237677367372,CM1/SIL,26400,ELIG ESSONO PJ,1000,0,Yaoundé,2024
+VTEN1J17,CLTLQU06,Kadepierre,+237699838460,FORM 4,111950,(None),0,0,Yaoundé,2024
+VTEI4C70,CLTGYJ9F,King Patick,+237675465586,SIL,16300,ETOA MEKI,1000,0,Yaoundé,2024
+VTET1R3P,CLTGYJ9F,King Patick,+237675465586,5e,18000,ETOA MEKI,1000,0,Yaoundé,2024
+VTEUV4XJ,CLTO4YC8,Kouakafranklin,+237691175874,CE1,10000,MENDONG,0,0,Yaoundé,2024
+VTEY93XS,CLTZPNFX,Kouthoas,+237652441138,"CP/CM1/CM2/CE2/2ND/1
+er",100000,TAM TAM,1000,0,Yaoundé,2024
+VTEBCJSD,CLTZPNFX,Kouthoas,+237652441138,"CP/CM1/CM2/CE2/2ND/1
+er",35500,TAM TAM,1000,0,Yaoundé,2024
+VTEO4738,CLTNBIXZ,Artial,+237679278429,CP/CM2/5e,28150,HOTEL DE VILLE,1000,0,Yaoundé,2024
+VTE2SDCT,CLTNBIXZ,Artial,+237679278429,CP/CM2/5e,26000,HOTEL DE VILLE,1000,0,Yaoundé,2024
+VTEX4HEI,CLTLOK5W,Bia,,(None),4300,(None),0,0,Yaoundé,2024
+VTED4K9B,CLTY121M,Bida,+237670884923,(None),11800,(None),0,0,Yaoundé,2024
+VTEW6A5F,CLTY121M,Bida,+237670884923,class 1,27300,(None),0,0,Yaoundé,2024
+VTE5EGZK,CLTUZO4O,Edjogo Yves,+237670623949,"LIVRE LATIN 6e/
+FOURNITURES",8000,"COMMISSARIAT
+BASTOS",1000,0,Yaoundé,2024
+VTERY68V,CLTRWPRH,Motemi,+237699892579,4e esp,40700,(None),0,5000,Yaoundé,2024
+VTEAX63G,CLTBRTII,Bibouth,+237653280320,5e/4e ALL/3e ALL,59300,"MOBILE ESSO
+IMMEUBLE HAWAI CITY",1000,0,Yaoundé,2024
+VTECNCJW,CLT14O1C,Ndongo,,(None),7000,(None),0,0,Yaoundé,2024
+VTE29BIT,CLT9RGKO,Gerard Gan,+237699580188,CLASS 4,16500,(None),0,0,Yaoundé,2024
+VTEYYOH8,CLT9RGKO,Gerard Gan,+237699580188,CLASS 4,5000,(None),0,0,Yaoundé,2024
+VTEDCBUH,CLTASOZ8,Ngo,+237698443737,1ER C/CM2,50750,ELEVEUR TRADEX,1000,0,Yaoundé,2024
+VTE2Y49V,CLTASOZ8,Ngo,+237698443737,CLASS 5/CM1,24250,ELEVEUR TRADEX,1000,0,Yaoundé,2024
+VTE9G8B3,CLTILWZK,Ngue Yvan,+237654274610,FORM V,56000,(None),0,0,Yaoundé,2024
+VTEUJQCP,CLT72Q77,Guas,+237655432076,FOURNITURES,68900,CHAPELLE TKC,1000,0,Yaoundé,2024
+VTEQ9M18,CLT72Q77,Guas,+237655432076,"CLASS 1/ CLASS 2 / CLASS
+3 FOURNITURES",50750,(None),0,0,Yaoundé,2024
+VTEK9ZIY,CLT72Q77,Guas,+237655432076,PAQUETS DE CAHIERS,112500,(None),0,0,Yaoundé,2024
+VTERLFDZ,CLTS399F,Obele,+237697501222,FORM 2,18400,(None),0,0,Yaoundé,2024
+VTEA9YY1,CLTS399F,Obele,+237697501222,FORM 2,9250,(None),0,0,Yaoundé,2024
+VTEGEJV1,CLTS399F,Obele,+237697501222,FORM2/1ER D,17800,(None),0,0,Yaoundé,2024
+VTEAN6QN,CLTT9I1E,Jean Marcel Okeng,+237677222485,1ER C/ CM2/ NURSERY 2,84550,BRIQUETTERIE,1000,0,Yaoundé,2024
+VTE0HMUY,CLTNMPDK,Awomo,+237695156995,(None),10000,(None),0,0,Yaoundé,2024
+VTEBCY5V,CLTRECYL,Owono,+237691007714,(None),4000,(None),0,0,Yaoundé,2024
+VTEDKTT2,CLTCXSVC,Boris Owounou,+237696972315,CLASS 1,7150,CREDIT FONCIER,1000,0,Yaoundé,2024
+VTECQ3NO,CLTCXSVC,Boris Owounou,+237696972315,CLASS 1,4000,CREDIT FONCIER,1000,0,Yaoundé,2024
+VTEME6H3,CLTJGJXV,Chantal Fassel,+237677582408,CM2,20200,NKOUABANG,1000,0,Yaoundé,2024
+VTEEJ355,CLTW5K5D,Paty,+237698569830,CM1/ CM2,26250,CHAPELLE TKC,1000,0,Yaoundé,2024
+VTE8JO61,CLT9R5CR,Odile,+237699971292,5e,43000,"SIMBOCK APRES
+NEPTUNE",1000,0,Yaoundé,2024
+VTECT507,CLTLNZTX,Silas,+237694456266,FORM1,14500,(None),0,0,Yaoundé,2024
+VTEJ5HVW,CLTCVG64,Norbert,+237678233396,CM2/LOWER SIXTH,39200,BASTOS,1000,0,Yaoundé,2024
+VTEWBXV1,CLTCVG64,Norbert,+237678233396,LOWER SIXTH/ CM2,39200,BASTOS,1000,0,Yaoundé,2024
+VTESJ5TN,CLTTX4TT,Takeu,,(None),20000,(None),0,0,Yaoundé,2024
+VTEZA4HG,CLTZ79K4,Geraud Tasse,+237682442192,(None),0,(None),0,20000,Yaoundé,2024
+VTEM1L3J,CLTWAGDE,Yacheu Jean Paul,+237677735188,TLE C,53700,HYPPODROME,1000,0,Yaoundé,2024
+VTELG6C3,CLTNMPDK,Awomo,+237695156995,CLASS 2,6200,(None),0,0,Yaoundé,2024
+VTEVCI25,CLTU4JJU,Defo,+237653812126,UPPER SIXTH,46500,BASTOS,1000,0,Yaoundé,2024
+VTEKD2TT,CLTOHOYO,Donfack,+237691139098,1er C/ 6e,38100,NYOM,2000,0,Yaoundé,2024
+VTE5AIC7,CLTKODRZ,Foe,+237620213263,1ER C/ 5e,45800,SOA,2500,0,Yaoundé,2024
+VTE3XSFA,CLTUT69L,Fotue,+237670122952,"CLASS 3/ CLASS 2
+BILINGUE",26550,"CITE DE LA PAIX ABOU
+FORAGE 1000",0,0,Yaoundé,2024
+VTECN05V,CLTPYSW8,Bida,+237696679830,4e ALL,11800,ODZA PLANETE PONCE,1000,0,Yaoundé,2024
+VTEJJBDG,CLT5BBH9,Edjo Aurelie,+237697015083,CLASS 6,25775,OBILI,1000,0,Yaoundé,2024
+VTE9LCNY,CLTUZO4O,Edjogo Yves,+237670623949,CE2*2; 6e ;  NURSERY 2,52000,CHAPELLE MESSA,1000,0,Yaoundé,2024
+VTE03XH0,CLTUZO4O,Edjogo Yves,+237670623949,CE2*2; 6e ;,8300,"COMMISSARIAT
+BASTOS",1000,0,Yaoundé,2024
+VTE0LQGW,CLTVXRYT,Bingue,+237695932405,NURSERY 1/ CLASS 3,16250,AWAE,1500,0,Yaoundé,2024
+VTEGAJAN,CLTIXDP8,Abang Arie,+237658980041,FOURNITURES,8350,(None),0,0,Yaoundé,2024
+VTE25AEK,CLTIXDP8,Abang Arie,+237658980041,(None),69500,(None),0,0,Yaoundé,2024
+VTEZGS9R,CLT8N3IN,Abena Yvana,+237697996592,SIL,32450,(None),0,0,Yaoundé,2024
+VTEF27G9,CLTMI4DP,Ada,+237695765640,CLASS 1,7900,(None),0,0,Yaoundé,2024
+VTEX11MT,CLTVBAOX,Akete,+237677428218,6E/4ALL,68150,ELIG ESSONO,1000,0,Yaoundé,2024
+VTER167I,CLTQGLBD,Akete,+237677428219,4e,3700,ELIG ESSONO,0,0,Yaoundé,2024
+VTEU91NM,CLTN4DZ7,Aandjou Carine,+237697786306,FOURNITURES,45000,(None),0,0,Yaoundé,2024
+VTEC533O,CLTZM8WW,Annick,+237658760154,SIL,39000,BIYEM ASSI,1000,0,Yaoundé,2024
+VTERJR6V,CLTDLLOW,Atangana,+237675264547,"nur2/class3/5e/2nd A/1er
+A",98450,POSTE CENTRALE,1000,0,Yaoundé,2024
+VTE4G241,CLTXM0I3,Avouzoua,,LIVRES,9000,(None),0,0,Yaoundé,2024
+VTE2XZIV,CLTRILLL,Besse,+237695415451,CLASS V,8500,(None),0,0,Yaoundé,2024
+VTE4ERNW,CLTCVRDA,Bibai Eugenie,+237679223386,(None),88900,(None),0,0,Yaoundé,2024
+VTE19864,CLTTLP78,Bingana,+237678783779,2ND A / 2ND C,74100,NYOM,1000,0,Yaoundé,2024
+VTEYDJQF,CLTGDXQD,Blandiine,+237690896513,(None),8350,(None),0,0,Yaoundé,2024
+VTEBFNBE,CLTGDXQD,Blandiine,+237690896513,NURSERY 2,18750,(None),0,0,Yaoundé,2024
+VTE2JKVR,CLT07PXO,Bongeun,+237696546855,CE2/ FORM 3,33000,OBOGOBOGO,1000,0,Yaoundé,2024
+VTELDHDM,CLT07PXO,Bongeun,+237696546855,5e + founitures,58200,OBOGOBOGO,1000,0,Yaoundé,2024
+VTELP0UE,CLTN4DZ7,Aandjou Carine,+237697786306,FOURNITURES,8000,(None),0,0,Yaoundé,2024
+VTEQAUU9,CLTRDKFR,Carine Foe,+237695881503,FOURNITURES,14125,"EFOULAN
+COMMISARIAT",1000,0,Yaoundé,2024
+VTEBSAZS,CLTFTJ88,Carine Satakem Maurice,+237623058480,FORM 1,37700,(None),0,0,Yaoundé,2024
+VTEWBCET,CLTUVHBU,Carol Garoua,,FORM 5,12500,ROND POINT AHALA,1000,0,Yaoundé,2024
+VTE7J0Z3,CLTIW39V,Carole,+237677809339,(None),11300,(None),0,5000,Yaoundé,2024
+VTEULU58,CLTRNR5E,Cathy,+237690795658,4e,65950,(None),0,0,Yaoundé,2024
+VTE1UHYL,CLTJGJXV,Chantal Fassel,+237677582408,3e/2nd/TLE A,127250,ROND POINT NLONGAK,1000,0,Yaoundé,2024
+VTEKP3UK,CLTJGJXV,Chantal Fassel,+237677582408,FORM 1,60000,(None),0,0,Yaoundé,2024
+VTEZCG2S,CLTMNDV1,Charles,+237682244779,CLASS 2/ CP,7200,MESSAMENDONGO,1000,0,Yaoundé,2024
+VTEA6BNM,CLTMNDV1,Charles,+237682244779,NURSERY 1/ CP/ CLASS 2,17300,MESSAMENDONGO,1000,0,Yaoundé,2024
+VTE9SHUF,CLTWHVMD,Christiane,+237694714485,FORM 1,29100,(None),0,0,Yaoundé,2024
+VTE19C15,CLTTGRNS,Clarisse,+237699874537,"1er C ( info ; le lion et le
+perle ; ecm)",9300,ELIG ESSONO PJ,1000,20000,Yaoundé,2024
+VTE2RYJW,CLTX1IAP,Clara,+237699092800,MATERNELLE 1,9400,PROVINCE,1000,0,Yaoundé,2024
+VTEFL8FB,CLTOHOYO,Donfack,+237691139098,6e/1er C,38100,(None),0,0,Yaoundé,2024
+VTEVEBYD,CLTLZGEE,Efouba,+237694540015,(None),11850,(None),0,0,Yaoundé,2024
+VTERNK21,CLT5ARW0,Essaa,+237695126217,FORM 2 / CLASS V,24500,(None),1000,0,Yaoundé,2024
+VTET5YS2,CLTCO6TV,Essiane,+237691941812,6e,18600,POSTE CENTRALE,1000,0,Yaoundé,2024
+VTESQLLW,CLTKQ9AR,Essoba,+237677921937,CE2/6e/3e/Tle A,44700,SELECT CITE VERTE,1000,0,Yaoundé,2024
+VTEU4224,CLT4G27Y,Esta,+237656760545,FORM 3,10500,TROPICANA,1000,0,Yaoundé,2024
+VTE9HZSZ,CLT4G27Y,Esta,+237656760545,FORM 3,10500,(None),0,0,Yaoundé,2024
+VTEPNM5T,CLT4G27Y,Esta,+237656760545,FORM 3 / SIL BILINGUE,107450,TROPICANA,1000,0,Yaoundé,2024
+VTE79SAI,CLTJB0VU,Etoundi,+237655233839,TLE D,47500,ODZA,1500,0,Yaoundé,2024
+VTEAQSM0,CLTJB0VU,Etoundi,+237655233839,TLE D,50000,ODZA,1500,0,Yaoundé,2024
+VTELBTWG,CLTJRZYV,Eyinga,+237691785568,CM1,15600,MINSANTE,1000,0,Yaoundé,2024
+VTEDC5H0,CLT76C60,Eyom Laure,+237651840489,TLE C,83000,AWAE,1000,0,Yaoundé,2024
+VTEQR4V1,CLT76C60,Eyom Laure,+237651840489,CLASS 6,3400,AWAE,1000,0,Yaoundé,2024
+VTE3DVVM,CLTUZOAM,Angele Fleur Pep,+237696365770,LIVRES,23500,(None),0,0,Yaoundé,2024
+VTE5Z22G,CLTX5SSK,Flore,+237699517229,CLASS1/ CLASS 3,48000,GOLF,0,0,Yaoundé,2024
+VTE1QGQO,CLTSWVTL,Fouda Priscilia,+237690973436,FORM 2,19500,"ELIG EFA ENTREE
+RENAPRO",1000,0,Yaoundé,2024
+VTEKLOE3,CLTMDP0E,Geremyah,+237677244592,FORM 2,39500,SOA,2000,0,Yaoundé,2024
+VTEYQP93,CLT2574Z,Glory,+237676612694,CLASS 6,25800,BIYEM ASSI,0,0,Yaoundé,2024
+VTEL3WQD,CLTC5LJU,Glwadys Lea,+237693184171,FOURNITURES,17100,(None),0,0,Yaoundé,2024
+VTEMQZA5,CLTL31KE,Hildegarde,+237697482850,CLASS 2/CLASS 6,21700,GOLF,0,0,Yaoundé,2024
+VTE1TQX5,CLTL31KE,Hildegarde,+237697482850,"CLASS 2/CLASS
+6/FOUNITURES",44425,(None),0,0,Yaoundé,2024
+VTE4N45I,CLTVRUSZ,Kade,+237699842440,6e/ 4e /3e,122500,EMANA,1000,0,Yaoundé,2024
+VTEPUGIW,CLTVRUSZ,Kade,+237699842440,6e/4e/3e,45000,EMANA,1000,0,Yaoundé,2024
+VTE2WCZL,CLTVRUSZ,Kade,+237699842440,6e/4e/3e,122500,EMANA,1000,0,Yaoundé,2024
+VTECZGWA,CLTVRUSZ,Kade,+237699842440,6e/4e/3e,5000,EMANA,1000,0,Yaoundé,2024
+VTEXYFUQ,CLTIY62S,Kamte,+237699632661,FORM 1/ FORM 3/ FORM 5,74400,NLONGKAK,0,0,Yaoundé,2024
+VTEW4QWO,CLT8QBW3,Kemogne,+237674732704,CE2/ FORM 3,19500,NVOG BETI,1000,0,Yaoundé,2024
+VTEW4E7V,CLTDVCNJ,Koue Rosane,+237691553263,SIL/ CLASS1,15000,(None),0,0,Yaoundé,2024
+VTEUL6K1,CLTDVCNJ,Koue Rosane,+237691553263,SIL/ CLASS1,15200,(None),0,0,Yaoundé,2024
+VTEJZEPX,CLT5YNZ3,Lea Bibai,+237695757564,(None),64725,(None),0,0,Yaoundé,2024
+VTEPW220,CLT85QSC,Lili Titio,+237699271323,CM1/CP,31200,ACASIA,0,0,Yaoundé,2024
+VTEKE73A,CLT85QSC,Lili Titio,+237699271323,CM1/CP,16000,ACASIA,1000,0,Yaoundé,2024
+VTEYJYSV,CLTV06O9,Lock,+237678001997,CLASS1 / FORM1,29150,NKOLBISSON,1000,0,Yaoundé,2024
+VTEUVZFC,CLTQTNA4,Lucie,+237698436669,5e,25300,(None),0,0,Yaoundé,2024
+VTE7SC59,CLTX66C2,Aella Design,+237696385893,5e,35500,(None),0,0,Yaoundé,2024
+VTEEOT3I,CLT5RAIW,Endouga,+237696851791,CLASS 3/ CLASS6/ FORM 2,49350,(None),0,0,Yaoundé,2024
+VTEC4DCG,CLTU4EH1,Ichelle,+237653600512,MAT2/CE2/6e,47725,(None),0,0,Yaoundé,2024
+VTE1S4SG,CLT9NMGP,Arnaud,+237696372251,2nd A ESP,38800,(None),0,0,Yaoundé,2024
+VTEBXPES,CLTINGBM,Murielle,+237658641752,CP,26100,NSAM EXCAL,1000,0,Yaoundé,2024
+VTEDFQEE,CLTDHHR8,Miriam,+237698946690,6e/FOURNITURES,23400,(None),0,0,Yaoundé,2024
+VTEYD4DT,CLTDHHR8,Miriam,+237698946690,6e/FOURNITURES,17100,(None),0,0,Yaoundé,2024
+VTEQHWVF,CLTGS859,Nanga,+237693597045,CLASS 6,13150,MESSAMENDONGO,1000,0,Yaoundé,2024
+VTESAR5X,CLT1FG97,Ndee Alissia,+237655158365,SIL/CE1,20400,ABATTOIR(ETOUDI),1000,0,Yaoundé,2024
+VTECGW1Y,CLT97OW4,Line Ndengue,+237695290129,SIL/CM2/2ND C/TLE C,87400,AKONOLINGA,2000,0,Yaoundé,2024
+VTEAWQ4E,CLTFZHI8,Ndjock,+237651810564,4e/TLE A4 ALL,179500,"PROVINCE BUREAU 2E
+ETAGE",0,0,Yaoundé,2024
+VTEN8KDZ,CLTFZHI8,Ndjock,+237651810564,4esp/ TLE A4 ALL,179500,SOA,1000,0,Yaoundé,2024
+VTEEYJN8,CLTNH4Z2,Nadege Ndomo,+237676659110,3e CHINOIS,34200,ECOLE DE POSTE,1000,20000,Yaoundé,2024
+VTEEMGMG,CLT14O1C,Ndongo,,TLE A/3e/FOURNITURES,94100,(None),0,0,Yaoundé,2024
+VTEAVE9T,CLTABW9P,Ngo U,+237653570546,MAT1,18150,(None),0,0,Yaoundé,2024
+VTERGZGP,CLTPOJHR,Ngbwa Commercial,+237655085857,FORM 2,34000,(None),0,0,Yaoundé,2024
+VTELWMJ3,CLTASGYS,Njuenkou Karine,+237699911889,5e,34000,"IMMEUBLE HABIA EN
+FACE DU GOLFE RITA",1000,0,Yaoundé,2024
+VTEYC2YM,CLTFBRTS,Nlend Athilde,+237676663668,NURSERY 2,8350,NKOLMESSENG,1000,0,Yaoundé,2024
+VTEFLMIG,CLTALYG1,Nnanga Sylvie,+237690750609,FORM2/1ER D,77300,"EFOULAN
+COMMISARIAT",0,0,Yaoundé,2024
+VTE5LNJQ,CLTOXGC8,Noubessi,,CLASS V,7650,(None),0,0,Yaoundé,2024
+VTECKSS2,CLTIW39V,Carole,+237677809339,FORM 3,11300,"ELEVEUR MATCHEU
+HOTEL",1000,0,Yaoundé,2024
+VTEXOSXV,CLTIW39V,Carole,+237677809339,FORM 3,29200,"ELEVEUR MATCHEU
+HOTEL",1000,0,Yaoundé,2024
+VTE7JFUT,CLTCPFG6,Ntolo Rose,+237695911392,SIL/4e ALL,26600,MIMBOMAN,1000,0,Yaoundé,2024
+VTEBAP6B,CLT59AJR,Ongandzi,+237695015900,(None),72500,(None),0,0,Yaoundé,2024
+VTEEAFCD,CLTMMH69,Raissa,+237695911590,CAHIERS,3950,AWAE,1000,0,Yaoundé,2024
+VTE7QXSE,CLTYDKMN,Rose Irielle,+237657026090,CLASS 1,12900,(None),0,0,Yaoundé,2024
+VTEZPOOY,CLT31Y5V,Sarah,+237697756989,CLASS 2/ TLE,8750,TERMINUS ODZA,1000,0,Yaoundé,2024
+VTEQ3PRX,CLT120HH,Seraphine,+237677560657,(None),14850,(None),0,0,Yaoundé,2024
+VTEPQDZH,CLTMY8YF,Sorelle,+237690449918,CE1,21050,OBOGOBOGO,1000,0,Yaoundé,2024
+VTEIQQGG,CLTDX7WS,Ouar Iyabano,+237697784992,6e/ 5e /CLASS 5,61050,TSINGA VILLAGE,2000,0,Yaoundé,2024
+VTEAAL0N,CLTITR8M,Owona Nnomo Stephanie,+237694173287,CLASS 1/CLASS 5/ FORM 2,125000,(None),0,0,Yaoundé,2024
+VTEJBPS6,CLTQEQUS,Blanche Takeugne,+237697718405,TLE A/ 5e/ SIL,19800,(None),0,0,Yaoundé,2024
+VTEP89K4,CLT6KYQF,Henriette,+237699646332,1ER D/ NUSERY 1,52225,"MARIE GOOKER COTE
+BEAC",1000,20000,Yaoundé,2024
+VTE0XNBG,CLTDXZ9J,Van Epiphanie,+237690939423,FORM 4,49200,ESSAS,1000,0,Yaoundé,2024
+VTERIPPD,CLTCC0RX,Wenang Estelle,+237696502957,CP,13300,ODZA BORNE 10,1000,0,Yaoundé,2024
+VTEE4WEK,CLTCC0RX,Wenang Estelle,+237696502957,CP,3700,ODZA BORNE 10,1000,0,Yaoundé,2024
+VTEGKA1A,CLTCC0RX,Wenang Estelle,+237696502957,CP,3700,ODZA BORNE 10,1000,0,Yaoundé,2024
+VTE3VB0E,CLTIW8C1,Yabou,+237696170020,(None),38700,MOKOLO,1000,0,Yaoundé,2024
+VTENDAQU,CLTTF1ZK,Zaa Cendrine,,(None),27500,(None),0,0,Yaoundé,2024
+VTE73SNU,CLTP9V0Z,Zabo,,(None),21000,(None),0,0,Yaoundé,2024
+VTESW5ML,CLTSK5F3,Zibi,+237696463201,"FORM 3/ CLASS 5 / CLASS
+3+ FOURNITURES",53150,TOTAL EBOM,1000,0,Yaoundé,2024
+VTEHUU3F,CLTSK5F3,Zibi,+237696463201,(None),10500,(None),0,0,Yaoundé,2024
+VTE37BGM,CLT6WKC6,Laurence Zoa,+237674704970,FORM 1,37500,ODZA AUBERGE BLEU,1000,0,Yaoundé,2024
+VTECXE78,CLTC1CFJ,Ekinglo,,(None),280000,(None),0,0,Yaoundé,2024
+VTED7NNV,CLTOX9K6,Mpatrick Tchienkoua,+237694469868,(None),22050,(None),0,0,Yaoundé,2024
+VTE26HLA,CLTVJ7HQ,Boutou,+237677672139,Tle C /,56600,POLYTECHNIQUE,1000,0,Yaoundé,2024
+VTE7RBP4,CLT60WPR,MUTUELLE FEICOM,,VENTE FILIALE,4797450,FILIALE Yaoundé,0,0,Yaoundé,2024
