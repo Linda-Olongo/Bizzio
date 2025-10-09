@@ -1,0 +1,1068 @@
+{% extends 'index.html' %}
+
+{% block title %}Aide{% endblock %}
+
+{% block extra_css %}
+<style>
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+    }
+    
+    .page-title {
+        font-size: 1.8rem;
+        font-weight: 600;
+        color: #333;
+    }
+    
+    .page-subtitle {
+        font-size: 1.1rem;
+        color: #666;
+        margin-top: 8px;
+    }
+    
+    .search-section {
+        background: linear-gradient(135deg, #2c2c2c, #1a1a1a);
+        border-radius: 16px;
+        padding: 30px;
+        margin-bottom: 40px;
+        color: white;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .search-section::before {
+        content: "";
+        position: absolute;
+        top: -50px;
+        right: -50px;
+        width: 200px;
+        height: 200px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+    }
+    
+    .search-section::after {
+        content: "";
+        position: absolute;
+        bottom: -30px;
+        left: -30px;
+        width: 150px;
+        height: 150px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+    }
+    
+    .search-title {
+        font-size: 1.6rem;
+        margin-bottom: 20px;
+        font-weight: 500;
+        position: relative;
+        z-index: 2;
+    }
+    
+    .search-box {
+        max-width: 700px;
+        margin: 0 auto;
+        position: relative;
+        z-index: 2;
+    }
+    
+    .search-input {
+        width: 100%;
+        padding: 16px 60px 16px 25px;
+        border: none;
+        border-radius: 50px;
+        font-size: 1.05rem;
+        outline: none;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+        transition: all 0.3s ease;
+    }
+    
+    .search-input:focus {
+        box-shadow: 0 5px 20px rgba(44, 44, 44, 0.3);
+    }
+    
+    .search-btn {
+        position: absolute;
+        right: 8px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: linear-gradient(135deg, #2c2c2c, #1a1a1a);
+        border: none;
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        color: white;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+        box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+    }
+    
+    .search-btn:hover {
+        background: linear-gradient(135deg, #1a1a1a, #0d0d0d);
+        transform: translateY(-50%) scale(1.05);
+    }
+    
+    /* Renommage de .section-title en .content-section-title pour éviter le conflit */
+    .content-section-title {
+        font-size: 1.6rem;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 25px;
+        position: relative;
+        padding-bottom: 12px;
+        margin-left: 0;
+        padding-left: 0;
+    }
+    
+    .content-section-title::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 60px;
+        height: 4px;
+        background: linear-gradient(135deg, #2c2c2c, #1a1a1a);
+        border-radius: 4px;
+    }
+    
+    .help-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
+        gap: 30px;
+        margin-bottom: 50px;
+    }
+    
+    .help-card {
+        background: white;
+        border-radius: 16px;
+        padding: 30px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        border: 1px solid #f0f0f0;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+        /* height: 100%; removed to avoid forced stretching */
+        display: flex;
+        flex-direction: column;
+    }
+
+    .help-card > *:not(:last-child) {
+        margin-bottom: 10px;
+    }
+    
+    .help-card:hover {
+        transform: translateY(-5px);
+    }
+    
+    .help-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 5px;
+        height: 100%;
+        background: linear-gradient(to bottom, #2c2c2c, #1a1a1a);
+        transition: all 0.3s ease;
+    }
+    
+    .help-card:hover::before {
+        width: 7px;
+    }
+    
+    /* Dégradés uniques pour chaque carte - Bordures gauches */
+    .help-card:nth-child(1)::before {
+        background: linear-gradient(to bottom, #4a90e2, #357abd);
+    }
+    
+    .help-card:nth-child(2)::before {
+        background: linear-gradient(to bottom, #7b68ee, #6a5acd);
+    }
+    
+    .help-card:nth-child(3)::before {
+        background: linear-gradient(to bottom, #20b2aa, #008b8b);
+    }
+    
+    .help-card:nth-child(4)::before {
+        background: linear-gradient(to bottom, #ff6347, #ff4500);
+    }
+    
+    .help-card:nth-child(5)::before {
+        background: linear-gradient(to bottom, #32cd32, #228b22);
+    }
+    
+    .help-card:nth-child(6)::before {
+        background: linear-gradient(to bottom, #ffd700, #ffb347);
+    }
+    
+    .help-card:nth-child(7)::before {
+        background: linear-gradient(to bottom, #ff6347, #ff4500);
+    }
+    
+    /* Dégradés uniques pour chaque icône de carte */
+    .help-card:nth-child(1) .card-icon {
+        background: linear-gradient(135deg, #4a90e2, #357abd);
+        box-shadow: 0 5px 15px rgba(74, 144, 226, 0.3);
+    }
+    
+    .help-card:nth-child(2) .card-icon {
+        background: linear-gradient(135deg, #7b68ee, #6a5acd);
+        box-shadow: 0 5px 15px rgba(123, 104, 238, 0.3);
+    }
+    
+    .help-card:nth-child(3) .card-icon {
+        background: linear-gradient(135deg, #20b2aa, #008b8b);
+        box-shadow: 0 5px 15px rgba(32, 178, 170, 0.3);
+    }
+    
+    .help-card:nth-child(4) .card-icon {
+        background: linear-gradient(135deg, #ff6347, #ff4500);
+        box-shadow: 0 5px 15px rgba(255, 99, 71, 0.3);
+    }
+    
+    .help-card:nth-child(5) .card-icon {
+        background: linear-gradient(135deg, #32cd32, #228b22);
+        box-shadow: 0 5px 15px rgba(50, 205, 50, 0.3);
+    }
+    
+    .help-card:nth-child(6) .card-icon {
+        background: linear-gradient(135deg, #ffd700, #ffb347);
+        box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3);
+    }
+    
+    .help-card:nth-child(7) .card-icon {
+        background: linear-gradient(135deg, #ff6347, #ff4500);
+        box-shadow: 0 5px 15px rgba(255, 99, 71, 0.3);
+    }
+    
+    /* Dégradés uniques pour les puces de chaque carte */
+    .help-card:nth-child(1) .card-features li::before {
+        background: rgba(74, 144, 226, 0.1);
+        color: #4a90e2;
+    }
+    
+    .help-card:nth-child(2) .card-features li::before {
+        background: rgba(123, 104, 238, 0.1);
+        color: #7b68ee;
+    }
+    
+    .help-card:nth-child(3) .card-features li::before {
+        background: rgba(32, 178, 170, 0.1);
+        color: #20b2aa;
+    }
+    
+    .help-card:nth-child(4) .card-features li::before {
+        background: rgba(255, 99, 71, 0.1);
+        color: #ff6347;
+    }
+    
+    .help-card:nth-child(5) .card-features li::before {
+        background: rgba(50, 205, 50, 0.1);
+        color: #32cd32;
+    }
+    
+    .help-card:nth-child(6) .card-features li::before {
+        background: rgba(255, 215, 0, 0.1);
+        color: #ffd700;
+    }
+    
+    .help-card:nth-child(7) .card-features li::before {
+        background: rgba(255, 99, 71, 0.1);
+        color: #ff6347;
+    }
+    
+    /* Dégradés uniques pour les ombres de survol de chaque carte */
+    .help-card:nth-child(1):hover {
+        box-shadow: 0 15px 30px rgba(74, 144, 226, 0.15);
+        border-color: #4a90e2;
+    }
+    
+    .help-card:nth-child(2):hover {
+        box-shadow: 0 15px 30px rgba(123, 104, 238, 0.15);
+        border-color: #7b68ee;
+    }
+    
+    .help-card:nth-child(3):hover {
+        box-shadow: 0 15px 30px rgba(32, 178, 170, 0.15);
+        border-color: #20b2aa;
+    }
+    
+    .help-card:nth-child(4):hover {
+        box-shadow: 0 15px 30px rgba(255, 99, 71, 0.15);
+        border-color: #ff6347;
+    }
+    
+    .help-card:nth-child(5):hover {
+        box-shadow: 0 15px 30px rgba(50, 205, 50, 0.15);
+        border-color: #32cd32;
+    }
+    
+    .help-card:nth-child(6):hover {
+        box-shadow: 0 15px 30px rgba(255, 215, 0, 0.15);
+        border-color: #ffd700;
+    }
+    
+    .help-card:nth-child(7):hover {
+        box-shadow: 0 15px 30px rgba(255, 99, 71, 0.15);
+        border-color: #ff6347;
+    }
+    
+    .card-icon {
+        width: 60px;
+        height: 60px;
+        background: linear-gradient(135deg, #2c2c2c, #1a1a1a);
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 20px;
+        box-shadow: 0 5px 15px rgba(44, 44, 44, 0.3);
+    }
+    
+    .card-icon i {
+        font-size: 1.8rem;
+        color: white;
+    }
+    
+    .card-title {
+        color: #333;
+        font-size: 1.3rem;
+        font-weight: 600;
+        margin-bottom: 15px;
+    }
+    
+    .card-description {
+        color: #666;
+        font-size: 1rem;
+        line-height: 1.6;
+        margin-bottom: 6px; /* réduit l'espace sous la description */
+        flex-grow: 0;       /* empêche l'étirement qui crée du vide */
+    }
+    
+    .card-features {
+        list-style: none;
+        padding: 0;
+        margin: 0;         /* supprime l'espace au-dessus */
+        margin-top: 0;
+    }
+    
+    .card-features li {
+        color: #555;
+        font-size: 0.95rem;
+        margin-bottom: 12px;
+        padding-left: 28px;
+        position: relative;
+    }
+    
+    .card-features li::before {
+        content: "✓";
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 22px;
+        height: 22px;
+        background: rgba(44, 44, 44, 0.1);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #2c2c2c;
+        font-size: 0.8rem;
+    }
+    
+    .faq-section {
+        border-radius: 16px;
+        padding: 30px;
+        margin-bottom: 40px;
+        background: white;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+    }
+    
+    .faq-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    .faq-item {
+        background: white;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        border: 1px solid #eee;
+        transition: all 0.3s ease;
+    }
+    
+    .faq-item:hover {
+        border-color: #2c2c2c;
+    }
+    
+    .faq-question {
+        padding: 22px;
+        background: white;
+        border: none;
+        width: 100%;
+        text-align: left;
+        font-size: 1.1rem;
+        font-weight: 500;
+        color: #333;
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: all 0.3s ease;
+    }
+    
+    .faq-question:hover {
+        background: #f8f9fa;
+    }
+    
+    .faq-question.active {
+        background: #f5f5f5;
+        color: #2c2c2c;
+    }
+    
+    .faq-question span {
+        font-size: 1.5rem;
+        transition: all 0.3s ease;
+    }
+    
+    .faq-question.active span {
+        transform: rotate(45deg);
+    }
+    
+    .faq-answer {
+        padding: 0 22px;
+        max-height: 0;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        background: white;
+        font-size: 1rem;
+    }
+    
+    .faq-answer.active {
+        padding: 0 22px 22px;
+        max-height: 500px;
+    }
+    
+    .faq-answer p {
+        color: #666;
+        line-height: 1.7;
+        margin: 0;
+    }
+    
+    .contact-section {
+        border-radius: 16px;
+        padding: 40px 30px;
+        text-align: center;
+        background: white;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        margin-bottom: 30px;
+    }
+    
+    .contact-title {
+        color: #333;
+        font-size: 1.6rem;
+        font-weight: 600;
+        margin-bottom: 15px;
+    }
+    
+    .contact-description {
+        color: #666;
+        font-size: 1.05rem;
+        margin-bottom: 30px;
+        line-height: 1.7;
+        max-width: 700px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    
+    .contact-buttons {
+        display: flex;
+        gap: 20px;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    
+    .btn {
+        border: none;
+        padding: 14px 32px;
+        border-radius: 30px;
+        font-weight: 500;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        transition: all 0.3s ease;
+        font-size: 1.05rem;
+        cursor: pointer;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    
+    .btn-primary {
+        background: linear-gradient(135deg, #2c2c2c, #1a1a1a);
+        color: white;
+    }
+    
+    .btn-primary:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(44, 44, 44, 0.35);
+        color: white;
+        text-decoration: none;
+    }
+    
+    .btn-secondary {
+        background: white;
+        border: 2px solid #2c2c2c;
+        color: #2c2c2c;
+    }
+    
+    .btn-secondary:hover {
+        background: #2c2c2c;
+        color: white;
+        text-decoration: none;
+        transform: translateY(-3px);
+    }
+    
+    .no-results {
+        text-align: center;
+        padding: 40px;
+        grid-column: 1 / -1;
+        display: none;
+    }
+    
+    .no-results i {
+        font-size: 3rem;
+        color: #2c2c2c;
+        margin-bottom: 20px;
+    }
+    
+    .no-results h3 {
+        font-size: 1.5rem;
+        margin-bottom: 15px;
+        color: #333;
+    }
+    
+    .no-results p {
+        color: #666;
+        max-width: 500px;
+        margin: 0 auto;
+    }
+    @media (max-width: 768px) {
+    .page-header {
+        flex-direction: column;
+        align-items: flex-start;
+        margin-bottom: 20px;
+    }
+    
+    .page-title {
+        font-size: 1.5rem;
+    }
+    
+    .page-subtitle {
+        font-size: 1rem;
+        text-align: justify;
+        margin-top: 5px;
+    }
+    
+    .search-section {
+        padding: 20px;
+        margin-bottom: 30px;
+        border-radius: 12px;
+    }
+    
+    .search-title {
+        font-size: 1.3rem;
+        margin-bottom: 15px;
+    }
+    
+    .search-input {
+        padding: 14px 50px 14px 20px;
+        font-size: 1rem;
+    }
+    
+    .search-btn {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .content-section-title {
+        font-size: 1.3rem;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    
+    .help-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+        margin-bottom: 40px;
+    }
+    
+    .help-card {
+        padding: 20px;
+        border-radius: 12px;
+    }
+    
+    .card-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 12px;
+        margin-bottom: 15px;
+    }
+    
+    .card-icon i {
+        font-size: 1.5rem;
+    }
+    
+    .card-title {
+        font-size: 1.2rem;
+        margin-bottom: 12px;
+    }
+    
+    .card-description {
+        font-size: 0.95rem;
+        margin-bottom: 15px;
+    }
+    
+    .card-features li {
+        font-size: 0.9rem;
+        margin-bottom: 10px;
+        padding-left: 25px;
+    }
+    
+    .faq-section {
+        padding: 20px;
+        border-radius: 12px;
+        margin-bottom: 30px;
+    }
+    
+    .faq-question {
+        padding: 18px;
+        font-size: 1rem;
+    }
+    
+    .faq-answer {
+        padding: 0 18px;
+    }
+    
+    .faq-answer.active {
+        padding: 0 18px 18px;
+    }
+    
+    .contact-section {
+        padding: 30px 20px;
+        border-radius: 12px;
+        margin-bottom: 20px;
+    }
+    
+    .contact-title {
+        font-size: 1.3rem;
+    }
+    
+    .contact-description {
+        font-size: 1rem;
+        margin-bottom: 25px;
+    }
+    
+    .contact-buttons {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .btn {
+        width: 100%;
+        justify-content: center;
+        padding: 12px 24px;
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .page-title {
+        font-size: 1.3rem;
+    }
+    
+    .page-subtitle {
+        font-size: 0.9rem;
+    }
+    
+    .search-title {
+        font-size: 1.2rem;
+    }
+    
+    .content-section-title {
+        font-size: 1.2rem;
+    }
+    
+    .help-card {
+        padding: 15px;
+    }
+    
+    .card-title {
+        font-size: 1.1rem;
+    }
+    
+    .faq-question {
+        padding: 15px;
+        font-size: 0.95rem;
+    }
+    
+    .contact-title {
+        font-size: 1.2rem;
+    }
+    
+    .contact-description {
+        font-size: 0.95rem;
+    }
+}
+    
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <h1 class="page-title">CENTRE D'AIDE</h1>
+        <p class="page-subtitle">Trouvez rapidement les réponses à vos questions sur Bizzio</p>
+    </div>
+</div>
+
+<div class="search-section">
+    <h2 class="search-title">Comment pouvons-nous vous aider ?</h2>
+    <div class="search-box">
+        <input type="text" class="search-input" placeholder="Rechercher dans la documentation...">
+        <button class="search-btn">
+            <i class="fas fa-search"></i>
+        </button>
+    </div>
+</div>
+
+<h2 class="content-section-title">Fonctionnalités principales</h2>
+<div class="help-grid">
+    <div class="help-card" onclick="toggleFaqSection('dashboard-faq')">
+        <div class="card-icon">
+            <i class="fas fa-tachometer-alt"></i>
+        </div>
+        <h3 class="card-title">Tableau de bord</h3>
+        <p class="card-description">Centre de contrôle principal avec vue d'ensemble de l'activité commerciale.</p>
+        <ul class="card-features">
+            <li>KPIs : CA, Ventes, Articles, Nouveaux clients</li>
+            <li>Graphique évolution des ventes (12 mois)</li>
+            <li>Performance par prestation, ville et produit</li>
+            <li>Ventes par région et meilleurs clients</li>
+            <li>Clients actifs vs inactifs (camembert)</li>
+        </ul>
+    </div>
+    <div class="help-card" onclick="toggleFaqSection('ventes-faq')">
+        <div class="card-icon">
+            <i class="fas fa-chart-line"></i>
+        </div>
+        <h3 class="card-title">Ventes</h3>
+        <p class="card-description">Module de gestion et d'analyse des ventes avec outils de reporting.</p>
+        <ul class="card-features">
+            <li>Filtres : Période, Agent, Client, Ville, Prestation</li>
+            <li>Graphiques : Évolution CA, Ventes par mois, Top clients</li>
+            <li>Tableau détaillé des ventes avec tri</li>
+            <li>Export Excel des données filtrées</li>
+            <li>Statistiques : CA total, nombre de ventes, moyenne</li>
+        </ul>
+    </div>
+    <div class="help-card" onclick="toggleFaqSection('repertoire-faq')">
+        <div class="card-icon">
+            <i class="fas fa-address-book"></i>
+        </div>
+        <h3 class="card-title">Prestation</h3>
+        <p class="card-description">Gestion complète de la base de données clients avec outils d'analyse.</p>
+        <ul class="card-features">
+            <li>Filtres : Ville, Agent, Statut, Période d'activité</li>
+            <li>Recherche avancée par nom, téléphone, email</li>
+            <li>Statistiques détaillées par client</li>
+            <li>Historique complet des commandes</li>
+            <li>Export Excel des données filtrées</li>
+        </ul>
+    </div>
+    <div class="help-card" onclick="toggleFaqSection('team-faq')">
+        <div class="card-icon">
+            <i class="fas fa-users"></i>
+        </div>
+        <h3 class="card-title">Équipe</h3>
+        <p class="card-description">Gestion de l'équipe commerciale avec suivi des performances.</p>
+        <ul class="card-features">
+            <li>Liste complète des agents commerciaux</li>
+            <li>Statistiques de performance par agent</li>
+            <li>Objectifs et réalisations</li>
+            <li>Classement des meilleurs vendeurs</li>
+            <li>Suivi des ventes individuelles</li>
+        </ul>
+    </div>
+    <div class="help-card" onclick="toggleFaqSection('data-analyst-faq')">
+        <div class="card-icon">
+            <i class="fas fa-robot"></i>
+        </div>
+        <h3 class="card-title">Data Analyst</h3>
+        <p class="card-description">Assistant IA pour l'analyse de données avec requêtes en langage naturel.</p>
+        <ul class="card-features">
+            <li>Interface de chat avec l'IA</li>
+            <li>Requêtes en langage naturel</li>
+            <li>Génération automatique de graphiques</li>
+            <li>Analyse des tendances et patterns</li>
+            <li>Export des analyses en PDF/Excel</li>
+        </ul>
+    </div>
+    
+    <div class="help-card" onclick="toggleFaqSection('reporting-faq')">
+        <div class="card-icon">
+            <i class="fas fa-chart-bar"></i>
+        </div>
+        <h3 class="card-title">Reporting</h3>
+        <p class="card-description">Génération de rapports analytiques personnalisés avec export PDF.</p>
+        <ul class="card-features">
+            <li>Filtres : Année, Ville, Agent, Format</li>
+            <li>Génération de rapports PDF personnalisés</li>
+            <li>Configuration flexible des paramètres</li>
+            <li>Export direct en format PDF</li>
+            <li>Analyse comparative par période</li>
+        </ul>
+    </div>
+</div>
+
+<!-- Section FAQ -->
+<div class="faq-section">
+    <h2 class="content-section-title">Questions Fréquemment Posées</h2>
+    
+    <div class="faq-grid">
+        <div class="faq-item">
+            <button class="faq-question" onclick="toggleFaq(this)">
+                Comment utiliser le Tableau de bord ?
+                <span>+</span>
+            </button>
+            <div class="faq-answer">
+                <p>Le Tableau de bord présente les indicateurs clés (CA, vente, Articles, client actif), le graphique d'évolution mensuelle, la répartition par catégorie et ville, le top clients/articles. Accédez-y depuis "Tableau de bord" dans le menu.</p>
+            </div>
+        </div>
+        <div class="faq-item">
+            <button class="faq-question" onclick="toggleFaq(this)">
+                Où trouver les ventes ?
+                <span>+</span>
+            </button>
+            <div class="faq-answer">
+                <p>Ouvrez l'onglet "Ventes". Vous y trouverez la liste des proformas et des factures avec leurs statuts, des filtres par statut.</p>
+            </div>
+        </div>
+        <div class="faq-item">
+            <button class="faq-question" onclick="toggleFaq(this)">
+                Comment ajouter un nouveau client ?
+                <span>+</span>
+            </button>
+            <div class="faq-answer">
+                <p>Allez dans le menu "Répertoire", puis cliquez sur "Nouveau Client". Remplissez les informations requises (nom, téléphone, adresse, etc.).</p>
+            </div>
+        </div>
+        <div class="faq-item">
+            <button class="faq-question" onclick="toggleFaq(this)">
+                Comment gérer le Répertoire ?
+                <span>+</span>
+            </button>
+            <div class="faq-answer">
+                <p>Dans "Répertoire", vous pouvez rechercher, modifier et exporter vos clients. Les indicateurs en haut affichent le total de clients, les nouveaux sur une période et la ville la plus active. Un graphique qui présente les clients actifs vs inactifs selon l'activité récente.</p>
+            </div>
+        </div>
+        <div class="faq-item">
+            <button class="faq-question" onclick="toggleFaq(this)">
+                Comment gérer le Catalogue ?
+                <span>+</span>
+            </button>
+            <div class="faq-answer">
+                <p>Ouvrez "Catalogue", vous pouvez ajouter un nouvel article, modifier les informations et supprimer.</p>
+            </div>
+        </div>
+        <div class="faq-item">
+            <button class="faq-question" onclick="toggleFaq(this)">
+                Comment gérer l'Équipe ?
+                <span>+</span>
+            </button>
+            <div class="faq-answer">
+                <p>Dans "Équipe", créez un utilisateur en saisissant son nom, son rôle (admin, secrétaire), son poste et sa localisation. Vous pourr@ez définir son mot de passe et ses accès plus tard. Des indicateurs présentent la répartition par rôle et l'activité par utilisateur.</p>
+            </div>
+        </div>
+        <div class="faq-item">
+            <button class="faq-question" onclick="toggleFaq(this)">
+                À quoi sert Data Analyst ?
+                <span>+</span>
+            </button>
+            <div class="faq-answer">
+                <p>"Data Analyst" est votre assistant IA conversationnel : il répond à vos questions, vous aide à explorer vos données et génère des prévisions simples. Vos données originales restent toujours intactes.</p>
+            </div>
+        </div>
+        <div class="faq-item">
+            <button class="faq-question" onclick="toggleFaq(this)">
+                Comment générer un reporting? 
+                <span>+</span>
+            </button>
+            <div class="faq-answer">
+                <p>Allez dans "Reporting". Sélectionnez une période, choisissez le type de rapport (vente, Ville, Agence) puis exportez en PDF.</p>
+            </div>
+        </div>
+        <div class="faq-item">
+            <button class="faq-question" onclick="toggleFaq(this)">
+                Où consulter les logs ?
+                <span>+</span>
+            </button>
+            <div class="faq-answer">
+                <p>Dans "Logs", vous consultez l'historique des connexions et des actions sensibles (création, modification, suppression). Ces informations facilitent l'audit et renforcent la sécurité de la plateforme.</p>
+            </div>
+        </div>
+        <div class="faq-item">
+            <button class="faq-question" onclick="toggleFaq(this)">
+                Comment signaler un bug ?
+                <span>+</span>
+            </button>
+            <div class="faq-answer">
+                <p>Dans la section "Support" du menu, cliquez sur "Bug" pour ouvrir le formulaire de signalement. Décrivez le problème, la page concernée et joignez une capture si possible.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Section Contact -->
+<div class="contact-section">
+    <h2 class="contact-title">Vous ne trouvez pas ce que vous cherchez ?</h2>
+    <p class="contact-description">
+        Notre équipe de support est là pour vous aider. Contactez-nous directement ou explorez davantage votre application.
+    </p>
+    <div class="contact-buttons">
+        <a href="#" onclick="openBugModal(); return false;" class="btn btn-primary">
+            <i class="fas fa-bug"></i>
+            Signaler un problème
+        </a>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function toggleFaq(button) {
+    const answer = button.nextElementSibling;
+    const icon = button.querySelector('span');
+    
+    // Fermer toutes les autres FAQ
+    document.querySelectorAll('.faq-question').forEach(q => {
+        if (q !== button) {
+            q.classList.remove('active');
+            q.nextElementSibling.classList.remove('active');
+            q.querySelector('span').textContent = '+';
+        }
+    });
+    
+    // Toggle la FAQ actuelle
+    button.classList.toggle('active');
+    answer.classList.toggle('active');
+    icon.textContent = button.classList.contains('active') ? '×' : '+';
+}
+
+function toggleFaqSection(sectionId) {
+    // Cette fonction peut être utilisée pour naviguer vers des sections spécifiques
+    // ou ouvrir des modals avec plus d'informations détaillées
+    console.log('Section clicked:', sectionId);
+}
+
+// Fonctionnalité de recherche
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.querySelector('.search-input');
+    const searchBtn = document.querySelector('.search-btn');
+    
+    function performSearch() {
+        const query = searchInput.value.toLowerCase();
+        if (query.trim() === '') return;
+        
+        let found = false;
+        
+        // Recherche dans les cartes
+        const cards = document.querySelectorAll('.help-card');
+        cards.forEach(card => {
+            const text = card.textContent.toLowerCase();
+            if (text.includes(query)) {
+                card.style.display = 'block';
+                card.style.border = '2px solid #2c2c2c';
+                found = true;
+            } else {
+                card.style.display = 'none';
+            }
+        });
+        
+        // Recherche dans les FAQ
+        const faqItems = document.querySelectorAll('.faq-item');
+        faqItems.forEach(item => {
+            const text = item.textContent.toLowerCase();
+            if (text.includes(query)) {
+                item.style.display = 'block';
+                item.style.border = '2px solid #2c2c2c';
+                found = true;
+            } else {
+                item.style.display = 'none';
+            }
+        });
+        
+        // Afficher un message si aucun résultat trouvé
+        const noResults = document.querySelector('.no-results');
+        if (!found) {
+            if (!noResults) {
+                const helpGrid = document.querySelector('.help-grid');
+                const noResultsDiv = document.createElement('div');
+                noResultsDiv.className = 'no-results';
+                noResultsDiv.innerHTML = `
+                    <i class="fas fa-search"></i>
+                    <h3>Aucun résultat trouvé</h3>
+                    <p>Essayez d'autres termes de recherche ou contactez notre support pour obtenir de l'aide.</p>
+                `;
+                helpGrid.appendChild(noResultsDiv);
+            } else {
+                noResults.style.display = 'block';
+            }
+        } else if (noResults) {
+            noResults.style.display = 'none';
+        }
+    }
+    
+    searchBtn.addEventListener('click', performSearch);
+    searchInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            performSearch();
+        }
+    });
+    
+    // Reset search
+    searchInput.addEventListener('input', function() {
+        if (this.value === '') {
+            document.querySelectorAll('.help-card, .faq-item').forEach(item => {
+                item.style.display = 'block';
+                item.style.border = '';
+            });
+            const noResults = document.querySelector('.no-results');
+            if (noResults) noResults.style.display = 'none';
+        }
+    });
+    
+    // Marquer le lien aide comme actif
+    const navLinks = document.querySelectorAll('.nav-link');
+    navLinks.forEach(link => {
+        if (link.dataset.page === 'aide') {
+            link.classList.add('active');
+        } else {
+            link.classList.remove('active');
+        }
+    });
+});
+</script>
+{% endblock %}

@@ -1,0 +1,2197 @@
+{% extends 'index.html' %}
+{% block title %}Ventes{% endblock %}
+{% block extra_css %}
+    <style>
+        .content-area {
+            padding: 30px;
+        }
+        
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        .page-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        /* KPIs Section - Même design que ventes.html */
+        /* KPI cards: align design with dashboard_admin.html */
+        .kpi-section {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .kpi-card {
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            border: 1px solid #f0f0f0;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            color: #333;
+        }
+
+        .kpi-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+        }
+
+        .kpi-card h3 {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .kpi-card .value {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 15px;
+            line-height: 1.2;
+        }
+
+        /* Match dashboard gradients per KPI using order-based selectors */
+        .kpi-section .kpi-card:nth-child(1) { /* CA */
+            background: linear-gradient(135deg, #E8F5E8, #F1F8E9);
+        }
+        .kpi-section .kpi-card:nth-child(2) { /* Ventes */
+            background: linear-gradient(135deg, #E3F2FD, #E1F5FE);
+        }
+        .kpi-section .kpi-card:nth-child(3) { /* Clients */
+            background: linear-gradient(135deg, #F3E5F5, #FCE4EC);
+        }
+        .kpi-section .kpi-card:nth-child(4) { /* Articles */
+            background: linear-gradient(135deg, #FFF3E0, #FFF8E1);
+        }
+
+        /* Style spécial pour le CA */
+        .kpi-card:first-child .value {
+            font-size: 1.2rem;
+        }
+
+        .kpi-trend {
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin-top: 5px;
+        }
+
+        .trend-up {
+            color: #4CAF50;
+        }
+        
+        .trend-up::before {
+            content: "▲";
+            margin-right: 3px;
+        }
+
+        .trend-down {
+            color: #F44336;
+        }
+        
+        .trend-down::before {
+            content: "▼";
+            margin-right: 3px;
+        }
+
+        .trend-neutral {
+            color: #666;
+        }
+
+        /* Section Graphiques */
+        .charts-section {
+            margin-bottom: 0;
+        }
+
+        .charts-row {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+            width: 100%;
+        }
+
+        .chart-card {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            min-height: 400px;
+            box-sizing: border-box;
+        }
+
+        .chart-card:first-child {
+            flex: 0 0 calc(60% - 10px);
+            max-width: calc(60% - 10px);
+        }
+
+        .chart-card:last-child {
+            flex: 0 0 calc(40% - 10px);
+            max-width: calc(40% - 10px);
+            overflow: hidden; /* Empêcher le débordement */
+        }
+        
+        /* Améliorer l'affichage du graphique des revenus */
+        .chart-card:last-child .chart-container {
+            padding-left: 20px; /* Espace pour les noms de produits */
+            overflow-y: auto; /* Scroll vertical */
+            max-height: 320px; /* Hauteur limitée */
+            overflow-x: hidden; /* Empêcher le débordement horizontal */
+        }
+        
+        .chart-card:last-child canvas {
+            max-width: 100% !important;
+            height: auto !important;
+        }
+
+        .chart-header {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .chart-header h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: visible;
+        }
+
+        /* Graphique interactif avec zoom/pan */
+        .chart-interactive-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        .no-data-message {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            font-size: 1.1rem;
+            font-weight: 400;
+            color: #999;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .loading-message {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            font-size: 1rem;
+            color: #666;
+            text-align: center;
+            padding: 20px;
+        }
+
+        /* CSS pour la légende personnalisée - Style identique à prestation.html */
+        .chart-legend {
+            position: absolute;
+            bottom: 15px;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 10px 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin: 0 15px;
+            font-size: 0.8rem;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px;
+            max-height: 80px;
+            overflow-y: auto;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            padding: 4px 8px;
+            background: rgba(0,0,0,0.03);
+            border-radius: 4px;
+            min-width: 0;
+            flex: 1;
+            max-width: 100%;
+        }
+        
+        .legend-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 2px;
+            margin-right: 8px;
+            flex-shrink: 0;
+        }
+        
+        .legend-label {
+            font-weight: 500;
+            color: #333;
+            font-size: 0.7rem;
+            line-height: 1.1;
+            word-break: break-word;
+            white-space: normal;
+        }
+
+        /* Styles pour le graphique donut comme dans prestation.html */
+        .donut-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            max-width: 100%;
+            overflow: hidden;
+        }
+
+        #segmentationVillesChart {
+            max-width: 280px !important;
+            max-height: 280px !important;
+        }
+
+        .donut-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            z-index: 10;
+        }
+
+        .donut-value {
+            font-size: 1.2rem;     /* Plus petit */
+            font-weight: 600;      /* Plus fin */
+            color: #000;           /* Noir */
+            margin-bottom: 5px;
+        }
+
+        .donut-label {
+            font-size: 0.8rem;     /* Plus petit */
+            color: #bbb;           /* Gris clair */
+            font-weight: 400;      /* Plus fin */
+        }
+
+
+        .loading-spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #f3f3f3;
+            border-top: 2px solid #d81b60;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Section Tableau - Styles */
+        .table-section {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-top: 30px;
+        }
+
+        .table-summary {
+            background: linear-gradient(135deg, #fdecea, #fff5f5);
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 1rem;
+            font-weight: 500;
+            color: #333;
+            border-left: 6px solid transparent;
+            border-image: linear-gradient(180deg, #ff4d4d, #b71c1c) 1;
+        }
+
+        .table-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .table-section-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .search-filters {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .search-filters select,
+        .search-filters input {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            width: 150px;
+        }
+
+        .search-filters select:focus,
+        .search-filters input:focus {
+            border: 2px solid #333;
+            outline: none;
+        }
+
+        .search-filters select:hover,
+        .search-filters input:hover {
+            border-color: #333;
+        }
+
+        /* Export button in grey */
+        .export-btn {
+            background: #e0e0e0;
+            color: #333;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background 0.2s ease;
+        }
+
+        .export-btn:hover {
+            background: #d5d5d5;
+        }
+
+        .factures-table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+        }
+
+        .factures-table th,
+        .factures-table td {
+            padding: 12px 8px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+            vertical-align: middle;
+            word-wrap: break-word;
+        }
+
+        .factures-table th {
+            font-weight: 600;
+            background: #f8f9fa;
+            position: sticky;
+            top: 0;
+        }
+
+        .factures-table tbody tr {
+            transition: background-color 0.2s ease;
+        }
+
+        .factures-table tbody tr:hover {
+            background: #f8f9fa;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            text-transform: none;
+            letter-spacing: 0.5px;
+        }
+
+        .status-en_attente {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+
+        .status-en_cours {
+            background: #cce5ff;
+            color: #004085;
+            border: 1px solid #74b9ff;
+        }
+
+        .status-termine {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #00b894;
+        }
+
+        .status-partiel {
+            background: #fdfdfe;
+            color: #818182;
+            border: 1px solid #c6c8ca;
+        }
+
+        /* Table action buttons */
+        .action-btn {
+            background: none;
+            border: none;
+            color: #333; /* Details in black */
+            cursor: pointer;
+            margin: 0;
+            font-size: 0.9rem;
+            padding: 6px 0;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: flex-start;
+        }
+
+        .action-btn:hover {
+            background: rgba(0, 0, 0, 0.08);
+            text-decoration: none;
+        }
+
+        .action-btn.delete-btn {
+            color: #f44336;
+        }
+
+        .action-btn.delete-btn:hover {
+            background: rgba(244, 67, 54, 0.1);
+        }
+
+        .action-btn svg {
+            width: 16px;
+            height: 16px;
+            fill: currentColor;
+        }
+
+        /* Conteneur des boutons d'action */
+        .action-buttons-container {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 8px;
+            position: relative;
+        }
+
+        /* Menu déroulant avec 3 points verticaux */
+        .action-menu {
+            position: relative;
+            display: inline-block;
+        }
+
+        .action-menu-btn {
+            background: none;
+            border: none;
+            color: #333; /* three vertical dots in black */
+            cursor: pointer;
+            padding: 4px 6px;
+            transition: all 0.3s ease;
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 10;
+            font-size: 16px;
+            font-weight: bold;
+            line-height: 1;
+        }
+
+        .action-menu-btn:hover {
+            background: none;
+        }
+
+        .factures-table tbody tr:hover .action-menu-btn {
+            display: inline-block;
+        }
+
+        .action-menu-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 100%;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+            min-width: 120px;
+        }
+
+        .action-menu-content.show {
+            display: block;
+        }
+
+        .action-menu-item {
+            display: block;
+            width: 100%;
+            padding: 8px 12px;
+            text-align: left;
+            background: none;
+            border: none;
+            color: #333;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background-color 0.2s ease;
+        }
+
+        .action-menu-item:hover {
+            background: #f5f5f5;
+        }
+
+        .action-menu-item.delete {
+            color: #f44336;
+        }
+
+        .action-menu-item.delete:hover {
+            background: rgba(244, 67, 54, 0.1);
+        }
+
+        /* Alignement de la colonne Actions */
+        .factures-table th:nth-child(7) {
+            text-align: left;
+        }
+        
+        .factures-table td:nth-child(7) {
+            text-align: left;
+        }
+
+        .action-btn.delete-btn {
+            color: #f44336;
+        }
+
+        .action-btn.delete-btn:hover {
+            background: rgba(244, 67, 54, 0.1);
+        }
+
+        .action-btn svg {
+            width: 16px;
+            height: 16px;
+            fill: currentColor;
+        }
+
+        .factures-table .no-results {
+            text-align: center !important;
+            padding: 40px !important;
+            color: #333 !important;
+            font-style: normal !important;
+            font-weight: normal !important;
+            font-size: 1.1rem !important;
+            text-transform: uppercase !important;
+            width: 100% !important;
+            display: table-cell !important;
+            vertical-align: middle !important;
+        }
+
+        /* Styles pour la pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 5px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .pagination button {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            background: white;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            min-width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .pagination button:hover:not(.disabled) {
+            background: linear-gradient(90deg, #333, #555);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .pagination button.active {
+            background: linear-gradient(90deg, #333, #555);
+            color: white;
+            border-color: #333;
+        }
+
+        .pagination button.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            background: #f5f5f5;
+            color: #999;
+        }
+
+        .pagination .nav-btn {
+            padding: 8px 16px;
+            min-width: auto;
+            font-weight: 500;
+        }
+
+        .pagination .ellipsis {
+            background: none;
+            border: none;
+            cursor: default;
+            padding: 8px 4px;
+        }
+
+        .pagination .ellipsis:hover {
+            background: none;
+            transform: none;
+        }
+
+        /* Responsive - Adaptation mobile */
+        @media (max-width: 1024px) {
+            .kpi-section {
+                flex-wrap: wrap;
+            }
+            .kpi-card {
+                min-width: calc(50% - 10px);
+            }
+            .charts-row {
+                flex-direction: column;
+                gap: 20px;
+            }
+            .chart-card:first-child,
+            .chart-card:last-child {
+                flex: 1;
+                max-width: 100%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .content-area {
+                padding: 20px 15px;
+            }
+            
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+                margin-bottom: 25px;
+            }
+            
+            .page-title {
+                font-size: 1.8rem;
+                font-weight: 600;
+                color: #333;
+            }
+            
+            /* KPI EN VERTICAL - CHACUN SUR SA LIGNE */
+            .kpi-section {
+                display: flex;
+                flex-direction: column;
+                gap: 15px;
+                margin-bottom: 30px;
+            }
+            
+            .kpi-card {
+                background: white;
+                border-radius: 16px;
+                padding: 25px;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+                border: 1px solid #f0f0f0;
+                margin: 0;
+                width: 100%;
+            }
+            
+            .kpi-card h3 {
+                color: #666;
+                font-size: 1rem;
+                margin-bottom: 12px;
+                font-weight: 500;
+            }
+            
+            .kpi-card .value {
+                font-size: 1.5rem;
+                font-weight: 600;
+                color: #000;
+                margin-bottom: 5px;
+            }
+            
+            .kpi-trend {
+                font-size: 0.9rem;
+                font-weight: 500;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .content-area {
+                padding: 15px;
+            }
+            
+            /* KPI plus compacts mais toujours en vertical */
+            .kpi-card {
+                padding: 20px;
+            }
+            
+            .kpi-card h3 {
+                font-size: 0.95rem;
+            }
+            
+            .kpi-card .value {
+                font-size: 1.3rem;
+            }
+        }
+
+        /* Modals */
+        .modal-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1050;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            width: 700px;
+            max-width: 95%;
+            text-align: center;
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .modal-close:hover {
+            color: #000;
+        }
+
+        .modal-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(90deg, #333, #555);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            color: white;
+            font-size: 1.8rem;
+        }
+
+        .modal-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .modal-text {
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .modal-button {
+            background: linear-gradient(90deg, #333, #555);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .modal-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+        /* Toast notifications - même style que catalogue.html */
+        .top-alert{
+            position: sticky;
+            top: 0;
+            z-index: 1100;
+            margin-bottom: 12px;
+            padding: 12px 16px;
+            border-radius: 8px;
+            display: none;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+            font-weight: 500;
+            text-align: center;
+        }
+        .top-alert.success{ 
+            background: linear-gradient(90deg,#28a745,#20c997); 
+            color:#fff; 
+        }
+        .top-alert.error{ 
+            background: linear-gradient(90deg,#dc3545,#c82333); 
+            color:#fff; 
+        }
+
+        .btn-cancel {
+            background: #e0e0e0;
+            color: #666;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .btn-cancel:hover {
+            background: #d4d4d4;
+        }
+
+        .svg-icon {
+            width: 18px;
+            height: 18px;
+            fill: currentColor;
+        }
+
+        /* Modal de détails - Style dashboard_secretaire.html */
+        #proformaDetailsContent {
+            max-height: 70vh;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="content-area">
+        <!-- En-tête de page -->
+        <div class="page-header">
+            <h1 class="page-title">VENTES</h1>
+        </div>
+
+        <!-- Section KPIs -->
+        <div class="kpi-section">
+            <div class="kpi-card">
+                <h3>Chiffre d'Affaires</h3>
+                <div class="value" id="kpi-ca">-</div>
+            </div>
+            
+            <div class="kpi-card">
+                <h3>Total Ventes</h3>
+                <div class="value" id="kpi-total-ventes">-</div>
+            </div>
+            
+            <div class="kpi-card">
+                <h3>Nombre de Clients</h3>
+                <div class="value" id="kpi-nombre-clients">-</div>
+            </div>
+            
+            <div class="kpi-card">
+                <h3>Articles Vendus</h3>
+                <div class="value" id="kpi-articles-vendus">-</div>
+            </div>
+        </div>
+
+        <!-- Section Graphiques -->
+        <div class="charts-section">
+            <div class="charts-row">
+                <!-- Graphique 1: Évolution des Ventes -->
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h3>Évolution des Ventes</h3>
+                    </div>
+                    <div class="chart-container">
+                        <div class="chart-interactive-container">
+                            <canvas id="ventesEvolutionChart"></canvas>
+                            <div id="ventesEvolutionNoData" class="no-data-message" style="display: none;">
+                                AUCUNE DONNÉE DISPONIBLE
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Graphique 2: Segmentation par Ville -->
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h3>Segmentation par Ville</h3>
+                    </div>
+                    <div class="chart-container">
+                        <div id="chart3DContainer" style="display: none;"></div>
+                        <!-- Donut classique comme prestation.html -->
+                        <div class="donut-wrapper">
+                            <canvas id="segmentationVillesChart" width="280" height="280"></canvas>
+                            <div class="donut-center" id="donutCenter">
+                                <div class="donut-value" id="donutValue">0 FCFA</div>
+                                <div class="donut-label">CA Total</div>
+                            </div>
+                        </div>
+                        <div id="segmentationVillesLegend" class="chart-legend"></div>
+                        
+                        <div id="segmentationVillesNoData" class="no-data-message" style="display: none;">
+                            AUCUNE DONNÉE DISPONIBLE
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section Liste des Devis & Factures -->
+        <div class="table-section">
+            <div class="table-summary" id="commandesSummary" style="display: none;">
+                <!-- Rempli dynamiquement par JavaScript -->
+            </div>
+
+            <div class="table-controls">
+                <div class="table-section-title">Liste des Devis & Factures</div>
+                <div class="search-filters">
+                    <input type="text" placeholder="Rechercher..." id="searchCommandesInput">
+                    <select id="filterStatutCommandes">
+                        <option value="">Tous les statuts</option>
+                        <option value="en_attente">En attente</option>
+                        <option value="en_cours">En cours</option>
+                        <option value="termine">Terminé</option>
+                        <option value="partiel">Partiel</option>
+                    </select>
+                    <button class="export-btn" id="exportCommandesBtn">Exporter</button>
+                </div>
+            </div>
+            
+            <table class="factures-table" id="commandesTable">
+                <thead>
+                    <tr>
+                        <th style="width: 15%;">N°</th>
+                        <th style="width: 15%;">Date</th>
+                        <th style="width: 20%;">Client</th>
+                        <th style="width: 15%;">Total</th>
+                        <th style="width: 15%;">Statut</th>
+                        <th style="width: 15%;">Agent</th>
+                        <th style="width: 15%;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="commandesTableBody">
+                    <!-- Rempli dynamiquement par JavaScript -->
+                </tbody>
+            </table>
+            
+            <div class="pagination" id="commandesPaginationContainer">
+                <!-- Généré dynamiquement par JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de détails proforma -->
+    <div class="modal-backdrop" id="detailsModal" style="display: none;">
+        <div class="modal-content" style="width: 800px; max-width: 95%;">
+            <button class="modal-close" onclick="closeDetailsModal()" style="color:#000">×</button>
+            <div class="modal-text">
+                <div id="proformaDetailsContent">
+                    <!-- Contenu généré dynamiquement -->
+                </div>
+            </div>
+            <div id="action-buttons" style="display: flex; gap: 15px; justify-content: center; margin-top: 20px;">
+                <button class="btn-cancel" onclick="closeDetailsModal()">Fermer</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Toast succès/erreur réutilisant le style catalogue -->
+    <div id="ventesTopAlert" class="top-alert" role="status" aria-live="polite" style="display:none"></div>
+
+    <!-- Modal de suppression -->
+    <div class="modal-backdrop" id="deleteModal" style="display:none;">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeDeleteModal()">×</button>
+            <div class="modal-icon">
+                <svg class="svg-icon" viewBox="0 0 24 24">
+                    <path d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z"/>
+                </svg>
+            </div>
+            <h5 class="modal-title">Confirmer la suppression</h5>
+            <p class="modal-text">Êtes-vous sûr de vouloir supprimer cette facture ? Cette action est irréversible.</p>
+            <div style="display: flex; gap: 15px; justify-content: center;">
+                <button class="btn-cancel" onclick="closeDeleteModal()">Annuler</button>
+                <button class="modal-button" onclick="confirmDelete()">
+                    <svg class="svg-icon" viewBox="0 0 16 16">
+                        <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
+                        <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
+                    </svg>
+                    Supprimer
+                </button>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.0.1/dist/chartjs-plugin-zoom.min.js"></script>
+<script>
+// Variables globales pour les graphiques et le tableau
+let ventesEvolutionChart = null;
+let segmentationVillesChart = null;
+let currentCommandesPage = 1;
+let totalCommandesPages = 1;
+let commandesData = [];
+let currentDeleteId = null;
+let currentDeleteType = null;
+// Toast helpers (reuse catalogue look)
+function ventesShowToast(type, message){
+    const el = document.getElementById('ventesTopAlert');
+    if(!el) return;
+    
+    // Reset classes and styles
+    el.className = 'top-alert';
+    el.style.background = '';
+    el.style.color = '';
+    
+    if(type === 'success' || type === 'success-green'){
+        el.classList.add('success');
+    } else if(type === 'error'){
+        el.classList.add('error');
+    }
+    
+    el.textContent = message || (type === 'error' ? 'Une erreur est survenue.' : 'Opération effectuée avec succès.');
+    el.style.display = 'block';
+    
+    // Auto-hide after 3.2 seconds
+    clearTimeout(el._hideTimer);
+    el._hideTimer = setTimeout(function(){ 
+        el.style.display = 'none'; 
+    }, 3200);
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    console.log("🚀 Ventes Admin page loaded");
+    
+    // Charger les données des KPI
+    loadVentesKPIs();
+    
+    // Charger les graphiques
+    loadVentesCharts();
+
+    // Charger le tableau des commandes
+    loadCommandes();
+    
+    // Écouteurs d'événements pour le tableau des commandes
+    document.getElementById('searchCommandesInput').addEventListener('input', function() {
+        currentCommandesPage = 1;
+        loadCommandes();
+    });
+    
+    document.getElementById('filterStatutCommandes').addEventListener('change', function() {
+        currentCommandesPage = 1;
+        loadCommandes();
+    });
+    
+    document.getElementById('exportCommandesBtn').addEventListener('click', exportCommandes);
+});
+
+// Fonction pour charger les KPI des ventes
+async function loadVentesKPIs() {
+    try {
+        const response = await fetch('/admin/api/ventes/kpis');
+        const data = await response.json();
+        
+        if (data.success) {
+            // Mettre à jour les valeurs des KPI
+            document.getElementById('kpi-ca').textContent = data.ca_global;
+            document.getElementById('kpi-total-ventes').textContent = data.total_ventes_global;
+            document.getElementById('kpi-nombre-clients').textContent = data.nombre_clients_global;
+            document.getElementById('kpi-articles-vendus').textContent = data.articles_vendus_global;
+        } else {
+            console.error('Erreur lors du chargement des KPI:', data.message);
+        }
+    } catch (error) {
+        console.error('Erreur réseau lors du chargement des KPI:', error);
+    }
+}
+
+// Fonction pour charger les graphiques
+async function loadVentesCharts() {
+    console.log("📊 Début chargement graphiques...");
+    const startTime = Date.now();
+    
+    try {
+        // Charger les données des graphiques
+        console.log("📊 Chargement données évolution...");
+        const evolutionResponse = await fetch('/admin/api/ventes/evolution');
+        const evolutionData = await evolutionResponse.json();
+        console.log("📊 Données évolution reçues:", evolutionData);
+        
+        console.log("📊 Chargement données segmentation...");
+        const segmentationResponse = await fetch('/admin/api/ventes/segmentation-villes');
+        const segmentationData = await segmentationResponse.json();
+        console.log("📊 Données segmentation reçues:", segmentationData);
+
+        // Initialiser les graphiques
+        console.log("📊 Initialisation graphique évolution...");
+        try {
+            initVentesEvolutionChart(evolutionData);
+            console.log("✅ Graphique évolution initialisé");
+        } catch (error) {
+            console.error("❌ Erreur graphique évolution:", error);
+        }
+        
+        console.log("📊 Initialisation graphique segmentation...");
+        try {
+            initSegmentationVillesChartNew(segmentationData);
+            console.log("✅ Graphique segmentation initialisé");
+        } catch (error) {
+            console.error("❌ Erreur graphique segmentation:", error);
+        }
+        
+        const endTime = Date.now();
+        console.log(`📊 Graphiques chargés en ${endTime - startTime}ms`);
+        
+    } catch (error) {
+        console.error('⚠️ Erreur chargement graphiques:', error);
+        showNoDataMessage('ventesEvolutionChart', 'ventesEvolutionNoData');
+        showNoDataMessage('revenusProduitsChart', 'revenusProduitsNoData');
+    }
+}
+
+// Graphique 1: Évolution des Ventes (interactif avec zoom/pan) - SIMPLIFIÉ
+function initVentesEvolutionChart(data) {
+    const canvas = document.getElementById('ventesEvolutionChart');
+    const noDataDiv = document.getElementById('ventesEvolutionNoData');
+
+    // Toujours afficher le graphique même si has_data est false
+    if (noDataDiv) noDataDiv.style.display = 'none';
+    canvas.style.display = 'block';
+
+    const ctx = canvas.getContext('2d');
+    if (ventesEvolutionChart) {
+        ventesEvolutionChart.destroy();
+        ventesEvolutionChart = null;
+    }
+
+    const maxVentes = Math.max(...(data.nb_ventes || []).filter(val => val !== 0), 1);
+    const maxCA = Math.max(...(data.ca_montants || []).filter(val => val !== 0), 1000);
+    
+    // Création du sous-titre
+    const firstMonth = data.labels && data.labels[0] ? data.labels[0] : '';
+    const lastMonth = data.labels && data.labels[data.labels.length - 1] ? data.labels[data.labels.length - 1] : '';
+    const subtitleText = `12 mois (${firstMonth} - ${lastMonth})`;
+
+    ventesEvolutionChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: data.labels || [],
+            datasets: [
+                {
+                    label: 'Nombre de ventes',
+                    data: data.nb_ventes || [],
+                    backgroundColor: function(context) {
+                        // Dégradé bleu → cyan (deux couleurs distinctes, non vert)
+                        const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+                        gradient.addColorStop(0, 'rgba(33, 150, 243, 0.95)'); // Bleu
+                        gradient.addColorStop(1, 'rgba(0, 188, 212, 0.95)');  // Cyan
+                        return gradient;
+                    },
+                    borderColor: 'rgba(33, 150, 243, 1)',
+                    borderWidth: 2,
+                    yAxisID: 'y-ventes',
+                    type: 'bar'
+                },
+                {
+                    label: 'Chiffre d\'affaires (FCFA)',
+                    data: data.ca_montants || [],
+                    // Courbe CA avec un autre dégradé (violet → indigo), différent du dashboard
+                    backgroundColor: function(){
+                        const g = ctx.createLinearGradient(0, 0, 0, 300);
+                        g.addColorStop(0, 'rgba(156, 39, 176, 0.15)');  // Violet clair (remplissage)
+                        g.addColorStop(1, 'rgba(63, 81, 181, 0.05)');   // Indigo très clair
+                        return g;
+                    },
+                    borderColor: function(){
+                        const g2 = ctx.createLinearGradient(0, 0, 300, 0);
+                        g2.addColorStop(0, 'rgba(156, 39, 176, 1)'); // Violet
+                        g2.addColorStop(1, 'rgba(63, 81, 181, 1)');  // Indigo
+                        return g2;
+                    },
+                    borderWidth: 3,
+                    yAxisID: 'y-ca',
+                    type: 'line',
+                    tension: 0.4,
+                    fill: true,
+                    pointRadius: 5,
+                    pointHoverRadius: 7
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'top',
+                    labels: {
+                        boxWidth: 15,
+                        padding: 20,
+                        font: { size: 12, weight: '500' },
+                        usePointStyle: false
+                    }
+                },
+                title: {
+                    display: true,
+                    text: subtitleText,
+                    font: { size: 14, weight: 'normal' },
+                    color: '#666',
+                    padding: { bottom: 20 }
+                },
+                tooltip: {
+                    backgroundColor: 'rgba(0,0,0,0.9)',
+                    titleColor: 'white',
+                    bodyColor: 'white',
+                    borderWidth: 0,
+                    cornerRadius: 8,
+                    callbacks: {
+                        title: function(context) {
+                            return context[0].label; // Date
+                        },
+                        label: function(context) {
+                            // Ne retourner que les données de base pour éviter la duplication
+                            const datasetLabel = context.dataset.label;
+                            const value = context.parsed.y || 0;
+                            
+                            if (datasetLabel === 'Nombre de ventes') {
+                                return `${datasetLabel}: ${value.toLocaleString('fr-FR')}`;
+                            } else if (datasetLabel === 'Chiffre d\'affaires (FCFA)') {
+                                return `Chiffre d'affaire: ${formatCurrency(value)}`;
+                            }
+                            
+                            return `${datasetLabel}: ${value}`;
+                        },
+                        afterBody: function(context) {
+                            const index = context[0].dataIndex;
+                            const mois = data.labels[index];
+                            
+                            let tooltipText = [];
+                            
+                            // Ajouter la répartition par agence
+                            if (data.agence_details && data.agence_details[index]) {
+                                const agences = data.agence_details[index];
+                                if (Object.keys(agences).length > 0) {
+                                    tooltipText.push(''); // Ligne vide
+                                    tooltipText.push('Répartition par Agence:');
+                                    Object.entries(agences).forEach(([ville, details]) => {
+                                        tooltipText.push(`■ ${ville}: ${details.nb_ventes} ventes, ${formatCurrency(details.chiffre_affaire)}`);
+                                    });
+                                }
+                            }
+                            
+                            return tooltipText;
+                        }
+                    }
+                }
+            },
+            scales: {
+                'y-ventes': {
+                    type: 'linear',
+                    display: true,
+                    position: 'left',
+                    title: {
+                        display: true,
+                        text: 'Nombre de ventes',
+                        font: { size: 12, weight: '500' },
+                        color: '#666'
+                    },
+                    min: 0,
+                    max: Math.max(5, Math.ceil(maxVentes * 1.3)),
+                    ticks: {
+                        stepSize: Math.max(1, Math.ceil(maxVentes / 5)),
+                        font: { size: 10 },
+                        color: '#666'
+                    },
+                    grid: {
+                        color: 'rgba(0, 0, 0, 0.05)'
+                    }
+                },
+                'y-ca': {
+                    type: 'linear',
+                    display: true,
+                    position: 'right',
+                    title: {
+                        display: true,
+                        text: 'Chiffre d\'affaires (FCFA)',
+                        font: { size: 12, weight: '500' },
+                        color: '#666'
+                    },
+                    min: 0,
+                    max: Math.max(10000, Math.ceil(maxCA * 1.3)),
+                    ticks: {
+                        font: { size: 10 },
+                        color: '#666',
+                        callback: function(value) { 
+                            return value.toLocaleString('fr-FR'); 
+                        }
+                    },
+                    grid: {
+                        drawOnChartArea: false
+                    }
+                },
+                x: {
+                    ticks: { 
+                        font: { size: 10 },
+                        color: '#666'
+                    },
+                    grid: {
+                        display: true,
+                        color: 'rgba(0,0,0,0.05)'
+                    },
+                    border: {
+                        display: true,
+                        color: 'rgba(0,0,0,0.1)'
+                    }
+                }
+            },
+            interaction: { intersect: false, mode: 'index' },
+            animation: false,
+        },
+    });
+}
+
+// Graphique 2: Revenus par Produit (Barre horizontale)
+function initSegmentationVillesChart(data) {
+    const canvas = document.getElementById('segmentationVillesChart');
+    const noDataDiv = document.getElementById('segmentationVillesNoData');
+    
+    console.log('🔍 Canvas trouvé:', canvas);
+    console.log('🔍 NoData div trouvé:', noDataDiv);
+    console.log('🔍 Debug segmentation villes data:', data);
+    console.log('🔍 Data success:', data.success);
+    console.log('🔍 Data villes:', data.villes);
+    console.log('🔍 Data villes length:', data.villes ? data.villes.length : 'undefined');
+    
+    if (!data.success || !data.villes || data.villes.length === 0) {
+        console.log('❌ Pas de données pour segmentation villes');
+        showNoDataMessage('segmentationVillesChart', 'segmentationVillesNoData');
+        return;
+    }
+    
+    showChart('segmentationVillesChart');
+    
+    const ctx = canvas.getContext('2d');
+    
+    if (segmentationVillesChart) {
+        segmentationVillesChart.destroy();
+    }
+    
+    // Trier par revenus décroissants
+    const produitsSorted = data.produits.sort((a, b) => b.revenus - a.revenus);
+    console.log('📊 Produits triés:', produitsSorted.slice(0, 5)); // Debug des 5 premiers
+    console.log('📊 Premier produit avec villes:', produitsSorted[0]); // Debug du premier produit
+    
+    // Ajuster la hauteur du canvas selon le nombre de produits (limiter à 5 visibles)
+    const visibleProducts = Math.min(5, produitsSorted.length);
+    const minHeight = Math.max(300, visibleProducts * 50); // Barres plus hautes
+    canvas.height = minHeight;
+    
+    // Couleurs modernes
+    const modernColors = [
+        '#4A90E2',  // Bleu principal
+        '#7ED321',  // Vert moderne  
+        '#F5A623',  // Orange/jaune
+        '#D0021B',  // Rouge moderne
+        '#9013FE',  // Violet
+        '#50E3C2',  // Turquoise
+        '#FF6B6B',  // Rouge clair
+        '#4ECDC4',  // Turquoise clair
+        '#45B7D1',  // Bleu clair
+        '#96CEB4'   // Vert clair
+    ];
+    
+    revenusProduitsChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: produitsSorted.map(p => p.nom.length > 20 ? p.nom.substring(0, 20) + '...' : p.nom),
+            datasets: [{
+                label: 'Revenus (FCFA)',
+                data: produitsSorted.map(p => p.revenus),
+                backgroundColor: modernColors.slice(0, produitsSorted.length).map((color, index) => 
+                    produitsSorted[index].revenus > 0 ? color : '#E0E0E0'
+                ),
+                borderWidth: 0,
+                maxBarThickness: 60, // Barres encore plus épaisses
+                minBarLength: 10, // Barres plus visibles même pour 0
+                barPercentage: 0.8 // Espacement entre barres
+            }]
+        },
+        options: {
+            indexAxis: 'y', // Barres horizontales
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                },
+                title: {
+                    display: true,
+                    text: 'Revenus par Produit',
+                    font: { size: 12, weight: 'normal' },
+                    color: '#666',
+                    padding: { bottom: 15 },
+                },
+                tooltip: {
+                    backgroundColor: 'rgba(0,0,0,0.9)',
+                    titleColor: 'white',
+                    bodyColor: 'white',
+                    borderWidth: 0,
+                    cornerRadius: 8,
+                    callbacks: {
+                        title: function(context) {
+                            // Afficher le nom complet du produit dans le titre
+                            const index = context[0].dataIndex;
+                            return produitsSorted[index].nom;
+                        },
+                        label: function(context) {
+                            const index = context.dataIndex;
+                            const produit = produitsSorted[index];
+                            const labels = [`Revenus total: ${formatCurrency(produit.revenus)}`];
+                            
+                            // Ajouter les revenus par ville
+                            if (produit.villes && produit.villes.length > 0) {
+                                labels.push(''); // Ligne vide
+                                labels.push('Revenus par ville:');
+                                produit.villes.forEach(ville => {
+                                    if (ville.revenus > 0) {
+                                        labels.push(`• ${ville.ville}: ${formatCurrency(ville.revenus)}`);
+                                    }
+                                });
+                            }
+                            
+                            return labels;
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    beginAtZero: true,
+                    display: false, // Pas d'axe X visible
+                    ticks: {
+                        display: false // Pas de prix sur les abscisses
+                    },
+                    grid: {
+                        display: false // Pas de quadrillage
+                    },
+                    border: {
+                        display: false // Pas de bordure
+                    }
+                },
+                y: {
+                    ticks: {
+                        font: { size: 11 },
+                        maxRotation: 0,
+                        callback: function(value, index) {
+                            const label = this.getLabelForValue(value);
+                            return label.length > 20 ? label.substring(0, 20) + '...' : label;
+                        }
+                    },
+                    grid: {
+                        display: false
+                    },
+                    border: {
+                        display: false // Pas de bordure
+                    },
+                    afterFit: function(scale) {
+                        // Ajuster la largeur pour éviter la coupure
+                        scale.width = Math.max(scale.width, 180);
+                    }
+                }
+            },
+            animation: false,
+        }
+    });
+}
+
+// Fonction utilitaire pour afficher le message "Aucune donnée"
+function showNoDataMessage(canvasId, noDataId) {
+    const canvas = document.getElementById(canvasId);
+    const noDataDiv = document.getElementById(noDataId);
+    const loadingDiv = document.getElementById(canvasId.replace('Chart', 'Loading'));
+    
+    if (canvas) canvas.style.display = 'none';
+    if (loadingDiv) loadingDiv.style.display = 'none';
+    if (noDataDiv) noDataDiv.style.display = 'flex';
+}
+
+// Fonction utilitaire pour afficher le chargement
+function showLoadingMessage(canvasId) {
+    const canvas = document.getElementById(canvasId);
+    const loadingDiv = document.getElementById(canvasId.replace('Chart', 'Loading'));
+    const noDataDiv = document.getElementById(canvasId.replace('Chart', 'NoData'));
+    
+    if (canvas) canvas.style.display = 'none';
+    if (loadingDiv) loadingDiv.style.display = 'flex';
+    if (noDataDiv) noDataDiv.style.display = 'none';
+}
+
+// Fonction utilitaire pour afficher le graphique
+function showChart(canvasId) {
+    const canvas = document.getElementById(canvasId);
+    const loadingDiv = document.getElementById(canvasId.replace('Chart', 'Loading'));
+    const noDataDiv = document.getElementById(canvasId.replace('Chart', 'NoData'));
+    
+    if (canvas) canvas.style.display = 'block';
+    if (loadingDiv) loadingDiv.style.display = 'none';
+    if (noDataDiv) noDataDiv.style.display = 'none';
+}
+
+// Fonction utilitaire pour formater les montants
+function formatCurrency(amount) {
+    if (!amount || amount === 0) return '0 FCFA';
+    return `${parseInt(amount).toLocaleString('fr-FR')} FCFA`;
+}
+
+// ================== FONCTIONS POUR LE TABLEAU DES COMMANDES ==================
+
+// Charger les commandes
+function loadCommandes() {
+    const search = document.getElementById('searchCommandesInput').value;
+    const statut = document.getElementById('filterStatutCommandes').value;
+    
+    let url = `/admin/api/ventes/commandes-globales?page=${currentCommandesPage}&search=${encodeURIComponent(search)}`;
+    if (statut) url += `&statut=${statut}`;
+    
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                commandesData = data.commandes;
+                totalCommandesPages = data.total_pages;
+                
+                renderCommandesTable();
+                generateCommandesPagination();
+                updateCommandesSummary(data);
+            } else {
+                console.error('Erreur:', data.message);
+                showNoCommandesMessage();
+            }
+        })
+        .catch(error => {
+            console.error('Erreur réseau:', error);
+            showNoCommandesMessage();
+        });
+}
+
+// Rendre le tableau des commandes
+function renderCommandesTable() {
+    const tableBody = document.getElementById('commandesTableBody');
+    
+    // Vider le tableau
+    tableBody.innerHTML = '';
+    
+    if (commandesData.length === 0) {
+        const row = document.createElement('tr');
+        row.innerHTML = `<td colspan="7" class="no-results" style="text-align: center; font-weight: normal; text-transform: uppercase; padding: 40px; color: #d81b60;">Aucune commande trouvée</td>`;
+        tableBody.appendChild(row);
+        return;
+    }
+
+    // Remplir le corps du tableau
+    commandesData.forEach(commande => {
+        const row = document.createElement('tr');
+        
+        // Formatage de la date
+        const dateFormatted = new Date(commande.date_creation).toLocaleDateString('fr-FR', {
+            day: '2-digit',
+            month: 'short',
+            year: 'numeric'
+        });
+        
+        row.innerHTML = `
+            <td>${commande.numero}</td>
+            <td>${dateFormatted}</td>
+            <td>${commande.client_nom}</td>
+            <td>${formatCurrency(commande.total_ttc)}</td>
+            <td><span class="status-badge status-${commande.etat}">${getStatutLabel(commande.etat)}</span></td>
+            <td>${commande.created_by}</td>
+            <td>
+                <div class="action-buttons-container">
+                    <button class="action-btn" onclick="showDocumentDetails(${commande.id}, '${commande.type}')" title="Détails">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor">
+                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                            <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/>
+                        </svg>
+                        <span>Détails</span>
+                    </button>
+                    <button class="action-btn delete-btn" onclick="confirmDeleteCommande(${commande.id}, '${commande.type}')" title="Supprimer">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor">
+                            <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
+                            <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
+                        </svg>
+                        <span>Supprimer</span>
+                    </button>
+                    <button class="action-menu-btn" onclick="toggleActionMenu(${commande.id})" title="Plus d'actions">
+                        ⋮
+                    </button>
+                </div>
+            </td>
+        `;
+        
+        tableBody.appendChild(row);
+    });
+}
+
+// Obtenir le label du statut
+function getStatutLabel(statut) {
+    const labels = {
+        'en_attente': 'En attente',
+        'en_cours': 'En cours',
+        'termine': 'Terminé',
+        'partiel': 'Partiel'
+    };
+    return labels[statut] || statut.toLowerCase();
+}
+
+// Mettre à jour le résumé du tableau
+function updateCommandesSummary(data) {
+    const summaryDiv = document.getElementById('commandesSummary');
+    
+    if (data && data.summary) {
+        const { proformas, factures } = data.summary;
+        
+        summaryDiv.style.display = 'block';
+        summaryDiv.innerHTML = `
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                <div>
+                    ${proformas.count} Proforma${proformas.count > 1 ? 's' : ''}, pour un montant total de ${formatCurrency(proformas.total_amount)}
+                </div>
+                <div>
+                    ${factures.count} Facture${factures.count > 1 ? 's' : ''}, pour un montant total de ${formatCurrency(factures.total_amount)}
+                </div>
+            </div>
+        `;
+    } else {
+        summaryDiv.style.display = 'none';
+    }
+}
+
+// Afficher le message d'erreur
+function showNoCommandesMessage() {
+    const tableBody = document.getElementById('commandesTableBody');
+    tableBody.innerHTML = `<tr><td colspan="7" class="no-results" style="text-align: center; font-weight: normal; text-transform: uppercase; padding: 40px; color: #d81b60;">Erreur lors du chargement des commandes</td></tr>`;
+    document.getElementById('commandesSummary').style.display = 'none';
+}
+
+// Générer la pagination
+function generateCommandesPagination() {
+    const container = document.getElementById('commandesPaginationContainer');
+    let html = '';
+
+    // Bouton Précédent
+    if (currentCommandesPage > 1) {
+        html += `<button class="nav-btn" onclick="goToCommandesPage(${currentCommandesPage - 1})">Précédent</button>`;
+    } else {
+        html += `<button class="nav-btn disabled">Précédent</button>`;
+    }
+
+    // Pages
+    let startPage = Math.max(1, currentCommandesPage - 2);
+    let endPage = Math.min(totalCommandesPages, currentCommandesPage + 2);
+
+    if (startPage > 1) {
+        html += `<button onclick="goToCommandesPage(1)">1</button>`;
+        if (startPage > 2) {
+            html += `<span class="ellipsis">...</span>`;
+        }
+    }
+
+    for (let i = startPage; i <= endPage; i++) {
+        html += `<button class="${i === currentCommandesPage ? 'active' : ''}" onclick="goToCommandesPage(${i})">${i}</button>`;
+    }
+
+    if (endPage < totalCommandesPages) {
+        if (endPage < totalCommandesPages - 1) {
+            html += `<span class="ellipsis">...</span>`;
+        }
+        html += `<button onclick="goToCommandesPage(${totalCommandesPages})">${totalCommandesPages}</button>`;
+    }
+
+    // Bouton Suivant
+    if (currentCommandesPage < totalCommandesPages) {
+        html += `<button class="nav-btn" onclick="goToCommandesPage(${currentCommandesPage + 1})">Suivant</button>`;
+    } else {
+        html += `<button class="nav-btn disabled">Suivant</button>`;
+    }
+
+    container.innerHTML = html;
+}
+
+// Aller à une page
+function goToCommandesPage(page) {
+    currentCommandesPage = page;
+    loadCommandes();
+    // Scroll vers le tableau
+    document.querySelector('.table-section').scrollIntoView({ 
+        behavior: 'smooth', 
+        block: 'start' 
+    });
+}
+
+// Afficher les détails d'un document (proforma ou facture)
+    function showDocumentDetails(documentId, type) {
+        if (type === 'proforma') {
+            showProformaDetails(documentId);
+        } else if (type === 'facture') {
+            showFactureDetails(documentId);
+        }
+    }
+
+// Afficher les détails d'une facture
+function showFactureDetails(factureId) {
+    fetch(`/admin/api/ventes/facture-details/${factureId}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                displayProformaDetails(data.proforma, data.articles);
+                document.getElementById('detailsModal').style.display = 'flex';
+            } else {
+                alert('Erreur lors du chargement des détails: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Erreur:', error);
+            alert('Erreur lors du chargement des détails: Erreur lors de la récupération des détails');
+        });
+}
+
+// Afficher les détails d'une proforma
+function showProformaDetails(proformaId) {
+    fetch(`/admin/api/ventes/proforma-details/${proformaId}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                displayProformaDetails(data.proforma, data.articles);
+                document.getElementById('detailsModal').style.display = 'flex';
+            } else {
+                alert('Erreur lors du chargement des détails: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Erreur:', error);
+            alert('Erreur réseau lors du chargement des détails');
+        });
+}
+
+// Afficher les détails dans le modal
+    function displayProformaDetails(proforma, articles) {
+        const content = document.getElementById('proformaDetailsContent');
+        
+        // Déterminer le type de prestation
+        const hasFormation = articles.some(article => 
+            article.type_article && article.type_article.toLowerCase().includes('formation')
+        );
+        const hasService = articles.some(article => 
+            article.type_article && (
+                article.type_article.toLowerCase().includes('service') ||
+                article.type_article.toLowerCase().includes('mission')
+            )
+        );
+        const hasMixed = hasFormation && hasService;
+        
+        let html = `
+            <div style="text-align: left;">
+                <h6>Informations Client</h6>
+                <p><strong>Nom:</strong> ${proforma.client_nom}</p>
+                <p><strong>Téléphone:</strong> ${proforma.client_telephone || 'Non renseigné'}</p>
+                <p><strong>Adresse:</strong> ${proforma.client_adresse || 'Non renseigné'}</p>
+                
+                <h6 style="margin-top: 20px;">Prestation</h6>
+                <table style="width: 100%; border-collapse: collapse;">
+                    <thead>
+                        <tr style="background: #f8f9fa;">
+                            <th style="padding: 8px; border: 1px solid #ddd;">Type</th>
+                            <th style="padding: 8px; border: 1px solid #ddd;">Désignation</th>
+                            <th style="padding: 8px; border: 1px solid #ddd;">${hasMixed ? 'Quantité/Durée' : (hasFormation ? 'Nombre d\'heures' : (hasService ? 'Nombre de jours' : 'Quantité'))}</th>
+                            <th style="padding: 8px; border: 1px solid #ddd;">${hasMixed ? 'Prix unitaire' : (hasFormation ? 'Prix par heure' : (hasService ? 'Prix par jour' : 'Prix'))}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+        `;
+        
+        articles.forEach(article => {
+            // Déterminer le type de cet article spécifique
+            const isFormation = article.type_article && article.type_article.toLowerCase().includes('formation');
+            const isService = article.type_article && (
+                article.type_article.toLowerCase().includes('service') ||
+                article.type_article.toLowerCase().includes('mission')
+            );
+            
+            // Ajouter une indication dans la colonne quantité si c'est un mélange
+            let quantiteDisplay = article.quantite;
+            if (hasMixed) {
+                if (isFormation) {
+                    quantiteDisplay = `${article.quantite} h`;
+                } else if (isService) {
+                    quantiteDisplay = `${article.quantite} j`;
+                } else {
+                    quantiteDisplay = `${article.quantite} u`;
+                }
+            }
+            
+            html += `
+                <tr>
+                    <td style="padding: 8px; border: 1px solid #ddd;">${article.type_article || 'N/A'}</td>
+                    <td style="padding: 8px; border: 1px solid #ddd;">${article.designation}</td>
+                    <td style="padding: 8px; border: 1px solid #ddd;">${quantiteDisplay}</td>
+                    <td style="padding: 8px; border: 1px solid #ddd;">${formatCurrency(article.prix)}</td>
+                </tr>
+            `;
+        });
+    
+    // Vérifier si on a des articles ou si c'est une ancienne proforma
+    if (articles.length === 0) {
+        // Affichage minimaliste pour les anciennes proformas sans articles
+        html += `
+                </tbody>
+            </table>
+            
+            <div style="margin-top: 20px; padding: 15px; background: linear-gradient(135deg, #fff5f5, #fdecea); border-radius: 5px; border-left: 6px solid transparent; border-image: linear-gradient(180deg, #ff4d4d, #b71c1c) 1;">
+                <h6 style="margin: 0 0 10px 0; color: #b71c1c;">Ancienne Commande</h6>
+                <p style="margin: 0; color: #666; font-size: 14px;">
+                    Cette commande provient de l'ancien système et ne contient pas de détails d'articles.
+                    <br>Le montant total est de <strong>${formatCurrency(proforma.total_ttc || proforma.sous_total || 0)}</strong>.
+                </p>
+            </div>
+        `;
+    } else {
+        // Calculer les totaux normalement
+        const sousTotal = articles.reduce((sum, article) => sum + (article.prix * article.quantite), 0);
+        const remise = proforma.remise || 0;
+        const frais = proforma.frais || 0;
+        const totalTTC = sousTotal + frais - remise;
+        
+        html += `
+                </tbody>
+            </table>
+            
+            <h6 style="margin-top: 20px;">Résumé Financier</h6>
+            <div style="margin-top: 10px; text-align: left;">
+                <p><strong>Sous-total:</strong> ${formatCurrency(sousTotal)}</p>
+                <p><strong>Remise:</strong> ${formatCurrency(remise)}</p>
+                <p><strong>Frais supplémentaires:</strong> ${formatCurrency(frais)}</p>
+                <p style="font-size: 1.1rem; font-weight: bold; margin-top: 10px;">
+                    <strong>Total TTC:</strong> ${formatCurrency(totalTTC)}
+                </p>
+            </div>
+        `;
+    }
+    
+    // Ajouter le résumé financier pour les anciennes proformas aussi
+    if (articles.length === 0) {
+        const totalTTC = proforma.total_ttc || proforma.sous_total || 0;
+        html += `
+            <h6 style="margin-top: 20px;">Résumé Financier</h6>
+            <div style="margin-top: 10px; text-align: left;">
+                <p style="font-size: 1.1rem; font-weight: bold;">
+                    <strong>Total TTC:</strong> ${formatCurrency(totalTTC)}
+                </p>
+            </div>
+        `;
+    }
+    
+    html += `
+        </div>
+    `;
+    
+    content.innerHTML = html;
+}
+
+// Fermer le modal de détails
+function closeDetailsModal() {
+    document.getElementById('detailsModal').style.display = 'none';
+}
+
+// Confirmer la suppression d'une commande
+function confirmDeleteCommande(documentId, type) {
+    currentDeleteId = documentId;
+    currentDeleteType = type;
+    document.getElementById('deleteModal').style.display = 'flex';
+}
+
+// Supprimer une commande
+function deleteCommande(documentId, type) {
+    let url;
+    let fallbackUrl;
+    if (type === 'proforma') {
+        url = `/admin/api/ventes/proforma/${documentId}`;
+        fallbackUrl = `/admin/api/ventes/proforma/${documentId}/delete`;
+    } else {
+        url = `/admin/api/ventes/facture/${documentId}`;
+        fallbackUrl = `/admin/api/ventes/facture/${documentId}/delete`;
+    }
+
+    fetch(url, { method: 'DELETE' })
+        .then(async (response) => {
+            // Si le serveur ne permet pas DELETE, on tente une route POST de secours
+            if (!response.ok) {
+                try {
+                    const alt = await fetch(fallbackUrl, { method: 'POST' });
+                    return alt.json();
+                } catch (e) {
+                    throw e;
+                }
+            }
+            return response.json();
+        })
+        .then((data) => {
+            if (data && data.success) {
+                loadCommandes();
+                const ref = data.reference || documentId;
+                ventesShowToast('success-green', `Commande ${ref} supprimée`);
+                closeDeleteModal(); // Fermer le modal après succès
+            } else {
+                ventesShowToast('error', (data && data.message) || 'Erreur lors de la suppression');
+                closeDeleteModal(); // Fermer le modal même en cas d'erreur
+            }
+        })
+        .catch((error) => {
+            console.error('Erreur:', error);
+            ventesShowToast('error', 'Erreur réseau lors de la suppression');
+            closeDeleteModal(); // Fermer le modal en cas d'erreur réseau
+        });
+}
+
+// Fermer le modal de suppression
+function closeDeleteModal() {
+    document.getElementById('deleteModal').style.display = 'none';
+    currentDeleteId = null;
+    currentDeleteType = null;
+}
+
+// Confirmer la suppression
+function confirmDelete() {
+    if (currentDeleteId && currentDeleteType) {
+        deleteCommande(currentDeleteId, currentDeleteType);
+        // Ne pas fermer le modal ici, laisser deleteCommande le faire après l'affichage du toast
+    }
+}
+
+// Exporter les commandes
+function exportCommandes() {
+    const search = document.getElementById('searchCommandesInput').value;
+    const statut = document.getElementById('filterStatutCommandes').value;
+    
+    let url = `/admin/api/export/commandes?search=${encodeURIComponent(search)}`;
+    if (statut) url += `&statut=${statut}`;
+    
+    window.open(url, '_blank');
+}
+
+// Gérer le menu déroulant des actions
+function toggleActionMenu(documentId) {
+    // Fermer tous les autres menus
+    document.querySelectorAll('.action-menu-content').forEach(menu => {
+        if (menu.id !== `actionMenu${documentId}`) {
+            menu.classList.remove('show');
+        }
+    });
+    
+    // Toggle le menu actuel
+    const menu = document.getElementById(`actionMenu${documentId}`);
+    if (menu) {
+        menu.classList.toggle('show');
+    }
+}
+
+// Fermer les menus quand on clique ailleurs
+document.addEventListener('click', function(event) {
+    if (!event.target.closest('.action-menu')) {
+        document.querySelectorAll('.action-menu-content').forEach(menu => {
+            menu.classList.remove('show');
+        });
+    }
+});
+
+// Fonction pour créer la légende personnalisée du graphique de segmentation par ville
+function updateSegmentationVillesLegend(villes, totalCa) {
+    const legendDiv = document.getElementById('segmentationVillesLegend');
+    if (!legendDiv) return;
+    
+    legendDiv.innerHTML = '';
+    legendDiv.style.display = 'flex';
+    
+    // Créer un élément pour le total (comme dans prestation.html)
+    const totalElement = document.createElement('div');
+    totalElement.style.cssText = `
+        width: 100%;
+        text-align: center;
+        font-weight: 600;
+        margin-bottom: 5px;
+        color: #333;
+    `;
+    totalElement.textContent = `Total: ${formatCurrency(totalCa || 0)}`;
+    legendDiv.appendChild(totalElement);
+    
+    const modernColors = [
+        '#795548',  // Marron principal (première couleur)
+        '#4A90E2',  // Bleu
+        '#7ED321',  // Vert moderne  
+        '#F5A623',  // Orange/jaune
+        '#D0021B',  // Rouge moderne
+        '#9013FE',  // Violet
+        '#50E3C2',  // Turquoise
+        '#FF6B6B',  // Rouge clair
+        '#4ECDC4',  // Turquoise clair
+        '#45B7D1'   // Bleu clair
+    ];
+    
+    // Ajouter chaque élément de légende directement dans la légende principale
+    villes.forEach((ville, index) => {
+        const itemDiv = document.createElement('div');
+        itemDiv.className = 'legend-item';
+        
+        const colorSpan = document.createElement('span');
+        colorSpan.className = 'legend-color';
+        colorSpan.style.backgroundColor = modernColors[index % modernColors.length];
+        
+        const labelSpan = document.createElement('span');
+        labelSpan.className = 'legend-label';
+        // Format: "Ville (x%) ~ Y FCFA"
+        const revenueFormatted = formatCurrency(ville.revenue);
+        labelSpan.textContent = `${ville.ville} (${ville.percentage}%) ~ ${revenueFormatted}`;
+        
+        itemDiv.appendChild(colorSpan);
+        itemDiv.appendChild(labelSpan);
+        legendDiv.appendChild(itemDiv);
+    });
+}
+
+// Fonction pour mettre à jour le centre du donut
+function updateDonutCenter(totalCA) {
+    const valueElement = document.getElementById('donutValue');
+    const labelElement = document.querySelector('.donut-label');
+    
+    if (valueElement) {
+        valueElement.textContent = formatCurrency(totalCA);
+    }
+    
+    if (labelElement) {
+        labelElement.textContent = 'CA Total';
+    }
+}
+
+// Nouvelle fonction pour le graphique de segmentation par ville
+function initSegmentationVillesChartNew(data) {
+    console.log('🔍 Segmentation villes data:', data);
+    const canvas = document.getElementById('segmentationVillesChart');
+    const noDataDiv = document.getElementById('segmentationVillesNoData');
+    
+    console.log('🔍 Canvas trouvé:', canvas);
+    console.log('🔍 Canvas dimensions:', canvas ? `${canvas.width}x${canvas.height}` : 'null');
+    
+    if (!data.success || !data.villes || data.villes.length === 0) {
+        console.log('❌ Pas de données segmentation villes');
+        showNoDataMessage('segmentationVillesChart', 'segmentationVillesNoData');
+        return;
+    }
+    
+    // Le donut-wrapper est déjà affiché par défaut
+    
+    console.log('🔍 Appel showChart...');
+    showChart('segmentationVillesChart');
+    console.log('🔍 Canvas après showChart:', canvas.style.display);
+    
+    if (segmentationVillesChart) {
+        segmentationVillesChart.destroy();
+    }
+    
+    const ctx = canvas.getContext('2d');
+    
+    // Couleurs modernes comme dans prestation.html
+    const modernColors = [
+        '#795548',  // Marron principal (première couleur)
+        '#4A90E2',  // Bleu
+        '#7ED321',  // Vert moderne  
+        '#F5A623',  // Orange/jaune
+        '#D0021B',  // Rouge moderne
+        '#9013FE',  // Violet
+        '#50E3C2',  // Turquoise
+        '#FF6B6B',  // Rouge clair
+        '#4ECDC4',  // Turquoise clair
+        '#45B7D1'   // Bleu clair
+    ];
+    
+    segmentationVillesChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: data.villes.map(v => v.ville),
+            datasets: [{
+                data: data.villes.map(v => v.percentage),
+                backgroundColor: modernColors.slice(0, data.villes.length),
+                borderWidth: 0,
+                hoverBorderWidth: 0,
+                cutout: '65%'
+            }]
+        },
+        options: {
+            responsive: false,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    enabled: true,
+                    backgroundColor: 'rgba(0,0,0,0.8)',
+                    titleColor: 'white',
+                    bodyColor: 'white',
+                    borderWidth: 0,
+                    cornerRadius: 6,
+                    callbacks: {
+                        label: function(context) {
+                            const ville = data.villes[context.dataIndex];
+                            return `${ville.ville}: ${ville.percentage}%`;
+                        }
+                    }
+                }
+            },
+            interaction: {
+                intersect: false
+            }
+        }
+    });
+    
+    console.log('✅ Graphique segmentation créé:', segmentationVillesChart);
+    
+    // Afficher le centre du donut avec le CA total
+    updateDonutCenter(data.total_ca);
+    
+    // Créer la légende personnalisée
+    updateSegmentationVillesLegend(data.villes, data.total_ca);
+}
+</script>
+{% endblock %}

@@ -1,0 +1,3010 @@
+{% extends 'index.html' %}
+{% block title %}Tableau de Bord{% endblock %}
+{% block extra_css %}
+    <style>
+        .content-area {
+            padding: 30px;
+        }
+        
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        
+        .page-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #333;
+        }
+
+        /* Section Filtres */
+        .filters-section {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            margin-bottom: 30px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .filters-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .filters-row {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .filters-row .filter-group {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .filter-label {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #555;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .filter-select {
+            padding: 12px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            background: white;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .filter-select:focus {
+            border-color: #333;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .filter-select:hover {
+            border-color: #333;
+        }
+
+        .active-filters {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #333;
+            margin-top: 15px;
+        }
+
+        .active-filters-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+        }
+
+        .filter-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .filter-tag {
+            color: white;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.3s ease;
+        }
+
+        /* Dégradés différents pour chaque type de filtre */
+        .filter-tag[data-filter="annee"] {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+        }
+
+        .filter-tag[data-filter="trimestre"] {
+            background: linear-gradient(135deg, #f093fb, #f5576c);
+        }
+
+        .filter-tag[data-filter="mois"] {
+            background: linear-gradient(135deg, #4facfe, #00f2fe);
+        }
+
+        .filter-tag[data-filter="ville"] {
+            background: linear-gradient(135deg, #43e97b, #38f9d7);
+        }
+
+        .filter-tag[data-filter="type"] {
+            background: linear-gradient(135deg, #fa709a, #fee140);
+        }
+
+        .filter-tag[data-filter="agent"] {
+            background: linear-gradient(135deg, #a8edea, #fed6e3);
+        }
+
+        .filter-tag .remove-btn {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 14px;
+            padding: 0;
+            margin-left: 4px;
+        }
+
+        .filter-tag .remove-btn:hover {
+            opacity: 0.8;
+        }
+
+        /* Section KPIs */
+        .kpi-section {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .kpi-card {
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            border: 1px solid #f0f0f0;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            color: #333;
+        }
+
+        .kpi-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+        }
+
+        /* Dégradés de fond pour chaque KPI - CONSERVER LES COULEURS ORIGINALES */
+        .kpi-card.ca {
+            background: linear-gradient(135deg, #E8F5E8, #F1F8E9);
+        }
+
+        .kpi-card.ventes {
+            background: linear-gradient(135deg, #E3F2FD, #E1F5FE);
+        }
+
+        .kpi-card.articles {
+            background: linear-gradient(135deg, #FFF3E0, #FFF8E1);
+        }
+
+        .kpi-card.clients {
+            background: linear-gradient(135deg, #F3E5F5, #FCE4EC);
+        }
+
+        .kpi-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .kpi-title {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .kpi-icon {
+            width: 24px;
+            height: 24px;
+            opacity: 0.7;
+        }
+
+        .kpi-card.ca .kpi-icon {
+            fill: #2E7D32;
+        }
+
+        .kpi-card.ventes .kpi-icon {
+            fill: #1565C0;
+        }
+
+        .kpi-card.articles .kpi-icon {
+            fill: #E65100;
+        }
+
+        .kpi-card.clients .kpi-icon {
+            fill: #7B1FA2;
+        }
+
+        .kpi-value {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 15px;
+            line-height: 1.2;
+        }
+
+        .last-month {
+            font-size: 0.8rem;
+            color: #666;
+            margin-top: 10px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .content-area {
+                padding: 20px 15px;
+            }
+            
+            .filters-row {
+                flex-direction: column;
+            }
+            
+            .filters-row .filter-group {
+                min-width: auto;
+            }
+            
+            .kpi-section {
+                grid-template-columns: 1fr;
+            }
+            
+            .page-title {
+                font-size: 1.5rem;
+            }
+        }
+
+        /* Animations */
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Section Chart */
+        .chart-section {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            margin: 30px 0;
+            padding: 25px;
+            border: 1px solid #e0e0e0;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .chart-header h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #333;
+            margin: 0;
+        }
+
+        .chart-controls {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .year-filter {
+            padding: 8px 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .year-filter:focus {
+            border-color: #333;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .year-filter:hover {
+            border-color: #333;
+        }
+
+    .chart-container {
+        position: relative;
+        height: 400px;
+        width: 100%;
+    }
+
+    /* Section Performance */
+    .performance-sections {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+        margin-top: 30px;
+    }
+
+    .performance-card {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        height: 470px;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        border: 1px solid #f0f0f0;
+        position: relative;
+    }
+
+    .performance-card:nth-child(1)::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: 4px;
+        background: linear-gradient(180deg, #9c27b0, #673ab7);
+    }
+
+    .performance-card:nth-child(2)::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: 4px;
+        background: linear-gradient(180deg, #FF5733, #FFC300);
+    }
+
+    .performance-card:nth-child(3)::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: 4px;
+        background: linear-gradient(180deg, #4caf50, #81c784);
+    }
+
+    .performance-header {
+        background: white;
+        color: #333;
+        padding: 30px 25px 15px 25px;
+        font-weight: 600;
+        font-size: 1.1em;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        border-bottom: none;
+    }
+
+    .performance-header h3 {
+        margin: 0;
+        font-size: 1rem;
+        font-weight: 600;
+        color: #333;
+    }
+
+    .performance-body {
+        padding: 25px;
+        flex: 1;
+        overflow-y: auto;
+    }
+
+    /* Styles pour Performance Prestation */
+    .prestation-item {
+        border-bottom: 1px solid #f0f0f0;
+        padding: 12px 0;
+        background: white;
+        margin-bottom: 0;
+    }
+
+    .prestation-item:last-child {
+        border-bottom: none;
+    }
+
+    .prestation-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 8px;
+    }
+
+    .prestation-name {
+        font-weight: 600;
+        font-size: 0.9em;
+        color: #2c3e50;
+    }
+
+    .prestation-value {
+        text-align: right;
+    }
+
+    .prestation-ca {
+        font-weight: bold;
+        font-size: 0.9em;
+        color: #2c3e50;
+    }
+
+    .prestation-stats {
+        font-size: 0.8em;
+        color: #7f8c8d;
+    }
+
+    /* Styles pour Performance Ville */
+    .ville-item {
+        border-bottom: 1px solid #f0f0f0;
+        padding: 12px 0;
+        background: white;
+        margin-bottom: 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        min-height: 50px;
+    }
+
+    .ville-item:last-child {
+        border-bottom: none;
+    }
+
+    .ville-info {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .ville-name {
+        font-weight: 600;
+        font-size: 0.9em;
+        color: #2c3e50;
+        margin-bottom: 5px;
+    }
+
+    .ville-stats {
+        font-size: 0.8em;
+        color: #7f8c8d;
+    }
+
+    .ville-value {
+        font-weight: bold;
+        font-size: 0.9em;
+        color: #2c3e50;
+    }
+
+    /* Styles pour Produit Populaire */
+    .article-item {
+        border-bottom: 1px solid #f0f0f0;
+        padding: 12px 0;
+        background: white;
+        margin-bottom: 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        min-height: 50px;
+        gap: 15px;
+    }
+
+    .article-item:last-child {
+        border-bottom: none;
+    }
+
+    .article-info {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        min-width: 0;
+    }
+
+    .article-name {
+        font-size: 0.9em;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 5px;
+        line-height: 1.2;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        word-break: break-word;
+    }
+
+    .article-stats {
+        font-size: 0.8em;
+        color: #666;
+    }
+
+    .article-value {
+        font-size: 0.9em;
+        font-weight: bold;
+        color: #333;
+        white-space: nowrap;
+        flex-shrink: 0;
+        text-align: right;
+    }
+
+    /* Section Analytics */
+    .analytics-sections {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+        margin-top: 30px;
+    }
+
+    .analytics-card {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        height: 510px;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        border: 1px solid #f0f0f0;
+    }
+
+    .analytics-header {
+        background: white;
+        color: #333;
+        padding: 30px 25px 15px 25px;
+        font-weight: 600;
+        font-size: 1.1em;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        border-bottom: none;
+    }
+
+    .analytics-header h3 {
+        margin: 0;
+        font-size: 1rem;
+        font-weight: 600;
+        color: #333;
+    }
+
+    .analytics-body {
+        padding: 25px;
+        flex: 1;
+        overflow-y: auto;
+    }
+
+    /* Styles pour Ventes par Région */
+    .region-item {
+        display: flex;
+        align-items: center;
+        padding: 15px 0;
+        border-bottom: 1px solid #f0f0f0;
+        transition: all 0.3s ease;
+    }
+
+    .region-item:hover {
+        background: #f8f9fa;
+        padding-left: 10px;
+        padding-right: 10px;
+        margin: 0 -10px;
+        border-radius: 8px;
+    }
+
+    .region-item:last-child {
+        border-bottom: none;
+    }
+
+    .region-flag {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        margin-right: 15px;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        font-weight: bold;
+        color: white;
+        box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+        transition: all 0.3s ease;
+    }
+
+    .region-flag:hover {
+        transform: scale(1.1);
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    }
+
+    .region-info {
+        flex: 1;
+    }
+
+    .region-name {
+        font-weight: 600;
+        font-size: 0.9em;
+        color: #333;
+        margin-bottom: 5px;
+    }
+
+    .region-users {
+        font-size: 0.85em;
+        color: #666;
+    }
+
+    .region-progress {
+        width: 120px;
+        height: 10px;
+        background: #e0e0e0;
+        border-radius: 5px;
+        overflow: hidden;
+        margin-left: 15px;
+        box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .region-progress-bar {
+        height: 100%;
+        background: linear-gradient(90deg, #4CAF50, #81C784);
+        border-radius: 5px;
+        transition: width 0.5s ease;
+        box-shadow: 0 1px 3px rgba(76, 175, 80, 0.3);
+    }
+
+    /* Styles pour Meilleurs Clients */
+    .client-item {
+        display: flex;
+        align-items: center;
+        padding: 15px 0;
+        border-bottom: 1px solid #f0f0f0;
+        transition: all 0.3s ease;
+    }
+
+    .client-item:hover {
+        background: #f8f9fa;
+        padding-left: 10px;
+        padding-right: 10px;
+        margin: 0 -10px;
+        border-radius: 8px;
+    }
+
+    .client-item:last-child {
+        border-bottom: none;
+    }
+
+    .client-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        margin-right: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 16px;
+        font-weight: bold;
+        color: white;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        transition: all 0.3s ease;
+    }
+
+    .client-avatar:hover {
+        transform: scale(1.1);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+
+    .client-info {
+        flex: 1;
+    }
+
+    .client-name {
+        font-weight: 600;
+        font-size: 0.9em;
+        color: #333;
+        margin-bottom: 5px;
+    }
+
+    .client-stats {
+        font-size: 0.85em;
+        color: #666;
+    }
+
+    .client-progress {
+        width: 120px;
+        height: 10px;
+        background: #e0e0e0;
+        border-radius: 5px;
+        overflow: hidden;
+        margin-left: 15px;
+        box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .client-progress-bar {
+        height: 100%;
+        border-radius: 5px;
+        transition: width 0.5s ease;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    }
+
+    /* Section Clients Activity */
+    .clients-activity-sections {
+        display: grid;
+        grid-template-columns: 1fr 2fr;
+        gap: 20px;
+        margin-top: 30px;
+    }
+
+    .clients-activity-card-large {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        height: 410px;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        border: 1px solid #f0f0f0;
+    }
+
+    .clients-activity-card-small {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        height: 400px;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        border: 1px solid #f0f0f0;
+    }
+
+    .clients-activity-header {
+        background: white;
+        color: #333;
+        padding: 30px 25px 15px 25px;
+        font-weight: 600;
+        font-size: 1.1em;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        border-bottom: none;
+    }
+
+    .clients-activity-header h3 {
+        margin: 0;
+        font-size: 1rem;
+        font-weight: 600;
+        color: #333;
+    }
+
+    .clients-activity-body {
+        padding: 25px;
+        flex: 1;
+        overflow-y: auto;
+    }
+
+    /* Styles pour le graphique camembert clients actifs/inactifs - COPY EXACT de repertoire_admin.html */
+    .clients-donut-container {
+        position: relative;
+        height: 280px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+    }
+
+    .donut-wrapper {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        max-width: 100%;
+        overflow: hidden;
+    }
+
+    #clientsDonutChart {
+        max-width: 280px !important;
+        max-height: 280px !important;
+    }
+
+    .donut-center {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+        z-index: 10;
+    }
+
+    .donut-value {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: #000;
+        margin-bottom: 5px;
+    }
+
+    .donut-label {
+        font-size: 0.8rem;
+        color: #bbb;
+        font-weight: 400;
+    }
+
+    .chart-legend {
+        position: absolute;
+        bottom: 15px;
+        left: 0;
+        right: 0;
+        background: rgba(255, 255, 255, 0.95);
+        padding: 10px 15px;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        margin: 0 15px;
+        font-size: 0.8rem;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 8px;
+        max-height: 80px;
+        overflow-y: auto;
+    }
+
+    .legend-item {
+        display: flex;
+        align-items: center;
+        padding: 4px 8px;
+        background: rgba(0,0,0,0.03);
+        border-radius: 4px;
+    }
+
+    .legend-color {
+        width: 12px;
+        height: 12px;
+        border-radius: 2px;
+        margin-right: 6px;
+    }
+
+    .legend-label {
+        font-weight: 500;
+        color: #333;
+        margin-right: 4px;
+    }
+
+    .legend-percentage {
+        color: #666;
+        font-size: 0.75rem;
+    }
+
+    /* Styles pour Performance Agent - Design amélioré */
+    .performance-agents-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+    }
+
+    .performance-agents-table th {
+        background: #f8f9fa;
+        color: #333;
+        font-weight: 600;
+        font-size: 0.85rem;
+        padding: 12px 8px;
+        text-align: left;
+        border-bottom: 2px solid #e9ecef;
+    }
+
+    .performance-agents-table td {
+        padding: 12px 8px;
+        border-bottom: 1px solid #f0f0f0;
+        font-size: 0.85rem;
+    }
+
+    .performance-agents-table tr:hover {
+        background: #f8f9fa;
+    }
+
+    .agent-name {
+        font-weight: 600;
+        color: #333;
+    }
+
+    .metric-bar {
+        position: relative;
+        height: 24px;
+        background: #f0f0f0;
+        border-radius: 12px;
+        overflow: hidden;
+        margin: 4px 0;
+    }
+
+    .metric-bar-fill {
+        height: 100%;
+        border-radius: 12px;
+        transition: width 0.3s ease;
+        position: relative;
+    }
+
+    .metric-bar-text {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: white;
+        font-weight: 600;
+        font-size: 0.75rem;
+        text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+        white-space: nowrap;
+        text-align: center;
+    }
+
+    .metric-revenu { background: linear-gradient(90deg, #8e7dff, #6c5ce7); }
+    .metric-devis { background: linear-gradient(90deg, #2ecc71, #27ae60); }
+    .metric-atp { background: linear-gradient(90deg, #3498db, #2980b9); }
+    .metric-conv { background: linear-gradient(90deg, #f39c12, #e67e22); }
+
+    /* Styles pour Activité récente - COPY EXACT de ventes_admin.html */
+    .recent-activity-card {
+        background: white;
+        padding: 25px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        margin-top: 30px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .recent-activity-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #e91e63, #9c27b0);
+    }
+
+    .table-controls {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+
+    .table-section-title {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: #333;
+    }
+
+    .factures-table {
+        width: 100%;
+        border-collapse: collapse;
+        table-layout: fixed;
+    }
+
+    .factures-table th,
+    .factures-table td {
+        padding: 12px 8px;
+        text-align: left;
+        border-bottom: 1px solid #e0e0e0;
+        vertical-align: middle;
+        word-wrap: break-word;
+    }
+
+    .factures-table th {
+        font-weight: 600;
+        background: #f8f9fa;
+        position: sticky;
+        top: 0;
+    }
+
+    .factures-table tbody tr {
+        transition: background-color 0.2s ease;
+    }
+
+    .factures-table tbody tr:hover {
+        background: #f8f9fa;
+    }
+
+    .status-badge {
+        display: inline-block;
+        padding: 4px 8px;
+        border-radius: 12px;
+        font-size: 0.8rem;
+        font-weight: 500;
+        text-transform: none;
+        letter-spacing: 0.5px;
+    }
+
+    .status-en_attente {
+        background: #fff3cd;
+        color: #856404;
+        border: 1px solid #ffeaa7;
+    }
+
+    .status-en_cours {
+        background: #cce5ff;
+        color: #004085;
+        border: 1px solid #74b9ff;
+    }
+
+    .status-termine {
+        background: #d4edda;
+        color: #155724;
+        border: 1px solid #00b894;
+    }
+
+    .status-partiel {
+        background: #fdfdfe;
+        color: #818182;
+        border: 1px solid #c6c8ca;
+    }
+
+        .factures-table .no-results {
+            text-align: center !important;
+            padding: 40px !important;
+            color: #d81b60 !important;
+            font-style: normal !important;
+            font-weight: normal !important;
+            font-size: 1.1rem !important;
+            text-transform: uppercase !important;
+            width: 100% !important;
+            display: table-cell !important;
+            vertical-align: middle !important;
+        }
+
+        /* Styles pour le bouton Détails Mensuels */
+        .sparklines-btn {
+            background: #333;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .sparklines-btn:hover {
+            background: #555;
+            transform: translateY(-1px);
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none !important;
+            position: fixed !important;
+            z-index: 9999 !important;
+            left: 0 !important;
+            top: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+            background-color: rgba(0,0,0,0.5) !important;
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            visibility: hidden;
+            opacity: 0;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        
+        .modal.show {
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+        }
+
+        .modal-content {
+            background-color: white;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 0;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 25px;
+            border-bottom: 1px solid #e0e0e0;
+            background: linear-gradient(135deg, #333, #555);
+            border-radius: 15px 15px 0 0;
+            color: white;
+        }
+
+        .modal-header h3 {
+            margin: 0;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .close {
+            color: white;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .close:hover {
+            color: #ffcccb;
+        }
+
+        .modal-body {
+            padding: 25px;
+            max-height: 60vh;
+            overflow-y: auto;
+        }
+
+        .monthly-detail-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        .monthly-detail-table th,
+        .monthly-detail-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .monthly-detail-table th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .monthly-detail-table tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        /* Styles pour le modal de comparaison annuelle */
+        .year-selection {
+            display: flex;
+            gap: 15px;
+            align-items: end;
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 6px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            color: #495057;
+        }
+
+        .form-group select {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .btn-primary {
+            background-color: #d81b60;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .btn-primary:hover {
+            background-color: #c2185b;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .comparison-table th {
+            background-color: #f8f9fa;
+            font-weight: bold;
+        }
+
+        .trend-up {
+            color: #28a745;
+            font-weight: bold;
+            background-color: rgba(40, 167, 69, 0.1);
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+
+        .trend-down {
+            color: #dc3545;
+            font-weight: bold;
+            background-color: rgba(220, 53, 69, 0.1);
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+
+        .trend-neutral {
+            color: #6c757d;
+            font-weight: bold;
+            background-color: rgba(108, 117, 125, 0.1);
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .performance-sections {
+                grid-template-columns: 1fr;
+            }
+            
+            .analytics-sections {
+                grid-template-columns: 1fr;
+            }
+            
+            .clients-activity-sections {
+                grid-template-columns: 1fr;
+            }
+            
+            .performance-card, .analytics-card, .clients-activity-card-large, .clients-activity-card-small {
+                height: auto;
+                min-height: 300px;
+            }
+            
+            .modal-content {
+                width: 95%;
+                margin: 10% auto;
+            }
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="content-area">
+        <!-- En-tête de page -->
+        <div class="page-header">
+            <h1 class="page-title">TABLEAU DE BORD</h1>
+        </div>
+
+        <!-- Section Filtres -->
+        <div class="filters-section fade-in">
+            <h2 class="filters-title">FILTRAGE TEMPOREL & MÉTIER</h2>
+
+            <!-- Première ligne : Année, Trimestre, Mois -->
+            <div class="filters-row">
+                <div class="filter-group">
+                    <label class="filter-label">Année</label>
+                    <select class="filter-select" id="filterAnnee">
+                        <option value="">Toutes les années</option>
+                        <!-- Options chargées dynamiquement -->
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label class="filter-label">Trimestre</label>
+                    <select class="filter-select" id="filterTrimestre">
+                        <option value="">Tous les trimestres</option>
+                        <option value="Q1">Q1 (Jan-Mar)</option>
+                        <option value="Q2">Q2 (Avr-Juin)</option>
+                        <option value="Q3">Q3 (Juil-Sep)</option>
+                        <option value="Q4">Q4 (Oct-Déc)</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label class="filter-label">Mois</label>
+                    <select class="filter-select" id="filterMois">
+                        <option value="">Tous les mois</option>
+                        <option value="01">Janvier</option>
+                        <option value="02">Février</option>
+                        <option value="03">Mars</option>
+                        <option value="04">Avril</option>
+                        <option value="05">Mai</option>
+                        <option value="06">Juin</option>
+                        <option value="07">Juillet</option>
+                        <option value="08">Août</option>
+                        <option value="09">Septembre</option>
+                        <option value="10">Octobre</option>
+                        <option value="11">Novembre</option>
+                        <option value="12">Décembre</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Deuxième ligne : Ville, Prestation, Agent -->
+            <div class="filters-row">
+                <div class="filter-group">
+                    <label class="filter-label">Ville</label>
+                    <select class="filter-select" id="filterVille">
+                        <option value="">Toutes les villes</option>
+                        <!-- Options chargées dynamiquement -->
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label class="filter-label">Prestation</label>
+                    <select class="filter-select" id="filterType">
+                        <option value="">Tous les types</option>
+                        <!-- Options chargées dynamiquement -->
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label class="filter-label">Agent</label>
+                    <select class="filter-select" id="filterAgent">
+                        <option value="">Tous les agents</option>
+                        <!-- Options chargées dynamiquement -->
+                    </select>
+                </div>
+            </div>
+
+            <!-- Filtres Actifs -->
+            <div class="active-filters" id="activeFilters" style="display: none;">
+                <div class="active-filters-title">FILTRES SÉLECTIONNÉS :</div>
+                <div class="filter-tags" id="filterTags">
+                    <!-- Généré dynamiquement -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Section KPIs -->
+        <div class="kpi-section fade-in">
+            <div class="kpi-card ca">
+                <div class="kpi-header">
+                    <h3 class="kpi-title">Chiffre d'Affaires</h3>
+                    <svg class="kpi-icon" viewBox="0 0 24 24">
+                        <path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/>
+                    </svg>
+                </div>
+                <div class="kpi-value" id="kpi-ca">-</div>
+            </div>
+
+            <div class="kpi-card ventes">
+                <div class="kpi-header">
+                    <h3 class="kpi-title">Ventes</h3>
+                    <svg class="kpi-icon" viewBox="0 0 24 24">
+                        <path d="M7 18c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12L8.1 13h7.45c.75 0 1.41-.41 1.75-1.03L21.7 4H5.21l-.94-2H1zm16 16c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/>
+                    </svg>
+                </div>
+                <div class="kpi-value" id="kpi-ventes">-</div>
+            </div>
+
+            <div class="kpi-card articles">
+                <div class="kpi-header">
+                    <h3 class="kpi-title">Articles</h3>
+                    <svg class="kpi-icon" viewBox="0 0 24 24">
+                        <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
+                    </svg>
+                </div>
+                <div class="kpi-value" id="kpi-articles">-</div>
+            </div>
+
+            <div class="kpi-card clients">
+                <div class="kpi-header">
+                    <h3 class="kpi-title">Clients Actifs</h3>
+                    <svg class="kpi-icon" viewBox="0 0 24 24">
+                        <path d="M16 4c0-1.11.89-2 2-2s2 .89 2 2-.89 2-2 2-2-.89-2-2zm4 18v-6h2.5l-2.54-7.63A1.5 1.5 0 0 0 18.54 8H17c-.8 0-1.54.37-2.01.99L14 10l-1-2H9l-1 2v8h2v6h4z"/>
+                    </svg>
+                </div>
+                <div class="kpi-value" id="kpi-satisfaction">-</div>
+            </div>
+        </div>
+
+        <!-- Section Évolution des ventes -->
+        <div class="chart-section">
+            <div class="chart-header">
+                <h3>Évolution des ventes</h3>
+                <div class="chart-controls">
+                    <button class="sparklines-btn" onclick="showMonthlyDetails()">Détails Mensuels</button>
+                    <button class="sparklines-btn" onclick="showYearComparison()">Comparaison Annuelle</button>
+                    <select id="chart-year-filter" class="year-filter">
+                    </select>
+                </div>
+            </div>
+            <div class="chart-container">
+                <canvas id="salesEvolutionChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Section Performance -->
+        <div class="performance-sections">
+            <div class="performance-card">
+                <div class="performance-header">
+                    <h3>PERFORMANCE PRESTATION</h3>
+                </div>
+                <div class="performance-body">
+                    <div id="prestation-performance">
+                        <!-- Données chargées dynamiquement -->
+                    </div>
+                </div>
+            </div>
+            
+            <div class="performance-card">
+                <div class="performance-header">
+                    <h3>PERFORMANCE PAR VILLE</h3>
+                </div>
+                <div class="performance-body">
+                    <div id="ville-performance">
+                        <!-- Données chargées dynamiquement -->
+                    </div>
+                </div>
+            </div>
+            
+            <div class="performance-card">
+                <div class="performance-header">
+                    <h3>PRODUIT POPULAIRE</h3>
+                </div>
+                <div class="performance-body">
+                    <div id="top-articles-list">
+                        <!-- Chargé dynamiquement -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section Analytics -->
+        <div class="analytics-sections">
+            <div class="analytics-card">
+                <div class="analytics-header">
+                    <h3>VENTES PAR RÉGION</h3>
+                </div>
+                <div class="analytics-body">
+                    <div id="ventes-region">
+                        <!-- Données chargées dynamiquement -->
+                    </div>
+                </div>
+            </div>
+            
+            <div class="analytics-card">
+                <div class="analytics-header">
+                    <h3>MEILLEURS CLIENTS</h3>
+                </div>
+                <div class="analytics-body">
+                    <div id="meilleurs-clients">
+                        <!-- Chargé dynamiquement -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section Clients Activity -->
+        <div class="clients-activity-sections">
+            <div class="clients-activity-card-small">
+                <div class="clients-activity-header">
+                    <h3>CLIENTS ACTIFS VS INACTIFS</h3>
+                </div>
+                <div class="clients-activity-body">
+                    <div id="clients-actifs-inactifs">
+                        <!-- Chargé dynamiquement -->
+                    </div>
+                </div>
+            </div>
+            
+            <div class="clients-activity-card-large">
+                <div class="clients-activity-header">
+                    <h3>PERFORMANCE AGENT</h3>
+                </div>
+                <div class="clients-activity-body">
+                    <div id="performance-agents-table">
+                        <!-- Chargé dynamiquement -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section 5: Activité récente -->
+    <div class="dashboard-section">
+        <div class="recent-activity-card">
+            <div class="table-controls">
+                <div class="table-section-title">Activité récente</div>
+            </div>
+            
+            <table class="factures-table" id="recentActivityTable">
+                <thead>
+                    <tr>
+                        <th style="width: 15%;">N°</th>
+                        <th style="width: 15%;">Date</th>
+                        <th style="width: 20%;">Client</th>
+                        <th style="width: 15%;">Total</th>
+                        <th style="width: 15%;">Statut</th>
+                        <th style="width: 15%;">Agent</th>
+                    </tr>
+                </thead>
+                <tbody id="recentActivityTableBody">
+                    <!-- Chargé dynamiquement -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Détails Mensuels -->
+<div id="monthlyDetailModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Détails Mensuels</h3>
+            <span class="close" onclick="closeMonthlyDetails()">&times;</span>
+        </div>
+        <div class="modal-body">
+            <div id="monthlyDetailContent">
+                <!-- Contenu généré dynamiquement -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Comparaison Annuelle -->
+<div id="yearComparisonModal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Comparaison Annuelle</h3>
+            <span class="close" onclick="closeYearComparison()">&times;</span>
+        </div>
+        <div class="modal-body">
+            <h4 style="color: #333; margin-bottom: 15px; font-size: 16px;">Sélectionnez deux années à comparer</h4>
+            <div class="year-selection" style="background-color: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+                <div style="display: flex; gap: 15px; align-items: flex-end;">
+                    <div class="form-group" style="display: flex; flex-direction: column; gap: 5px;">
+                        <label style="color: #333; font-weight: bold; margin-bottom: 5px;">Année 1:</label>
+                        <select id="year1Select" style="padding: 8px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px;">
+                            <option value="">Sélectionner...</option>
+                            <option value="2022">2022</option>
+                            <option value="2023">2023</option>
+                            <option value="2024">2024</option>
+                            <option value="2025">2025</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="display: flex; flex-direction: column; gap: 5px;">
+                        <label style="color: #333; font-weight: bold; margin-bottom: 5px;">Année 2:</label>
+                        <select id="year2Select" style="padding: 8px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px;">
+                            <option value="">Sélectionner...</option>
+                            <option value="2022">2022</option>
+                            <option value="2023">2023</option>
+                            <option value="2024">2024</option>
+                            <option value="2025">2025</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div id="comparisonResults">
+                <!-- Le tableau sera créé dynamiquement ici -->
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+// Variables globales
+let dashboardData = {};
+let currentFilters = {};
+
+// Variables globales pour le graphique
+let salesEvolutionChart = null;
+let clientsDonutChart = null;
+
+// Initialisation
+document.addEventListener('DOMContentLoaded', function() {
+    console.log("🚀 Dashboard page loaded");
+    
+    // Initialiser les filtres
+    initializeFilters();
+    
+    // Charger les données
+    loadDashboardData();
+    loadAvailableYears();
+    loadPerformanceData();
+    loadAnalyticsData();
+    loadClientsActivityData();
+    loadRecentActivityData(); // NOUVEAU: Charger l'activité récente
+    loadPerformanceAgentsData();
+});
+
+// Charger les données du dashboard
+async function loadDashboardData() {
+    try {
+        const params = new URLSearchParams(currentFilters);
+        const response = await fetch(`/admin/api/reporting/kpis?${params}`);
+        const data = await response.json();
+        
+        if (data.success) {
+            dashboardData = data.kpis;
+            updateKPIs(data.kpis);
+        } else {
+            console.error('Erreur lors du chargement des données:', data.message);
+            showErrorState();
+        }
+    } catch (error) {
+        console.error('Erreur réseau:', error);
+        showErrorState();
+    }
+}
+
+// Initialiser les filtres
+function initializeFilters() {
+    // Charger les options dynamiques depuis l'API
+    loadFilterOptions();
+    
+    // Appliquer les filtres par défaut
+    applyDefaultFilters();
+    
+    // Configurer les écouteurs d'événements
+    setupEventListeners();
+}
+
+// Charger les options des filtres
+async function loadFilterOptions() {
+    try {
+        const response = await fetch('/admin/api/reporting/filter-options');
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        
+        if (data.success && data.options) {
+            populateFilterOptions(data.options);
+        } else {
+            console.error('Erreur dans la réponse API:', data.message || 'Données non disponibles');
+            // Initialiser avec des options vides pour éviter les erreurs
+            populateFilterOptions({
+                annees: [],
+                villes: [],
+                types: [],
+                agents: []
+            });
+        }
+    } catch (error) {
+        console.error('Erreur lors du chargement des options de filtres:', error);
+        // Initialiser avec des options vides pour éviter les erreurs
+        populateFilterOptions({
+            annees: [],
+            villes: [],
+            types: [],
+            agents: []
+        });
+    }
+}
+
+// Remplir les options des filtres
+function populateFilterOptions(options) {
+    // Vérifier que options existe
+    if (!options) {
+        console.error('Options de filtres non disponibles');
+        return;
+    }
+    
+    // Années
+    const anneeSelect = document.getElementById('filterAnnee');
+    if (anneeSelect) {
+        anneeSelect.innerHTML = '<option value="">Toutes les années</option>';
+        if (options.annees && Array.isArray(options.annees)) {
+            options.annees.forEach(annee => {
+                anneeSelect.innerHTML += `<option value="${annee}">${annee}</option>`;
+            });
+        }
+    }
+    
+    // Villes
+    const villeSelect = document.getElementById('filterVille');
+    if (villeSelect) {
+        villeSelect.innerHTML = '<option value="">Toutes les villes</option>';
+        if (options.villes && Array.isArray(options.villes)) {
+            options.villes.forEach(ville => {
+                villeSelect.innerHTML += `<option value="${ville}">${ville}</option>`;
+            });
+        }
+    }
+    
+    // Types de prestations
+    const typeSelect = document.getElementById('filterType');
+    if (typeSelect) {
+        typeSelect.innerHTML = '<option value="">Tous les types</option>';
+        if (options.types && Array.isArray(options.types)) {
+            options.types.forEach(type => {
+                typeSelect.innerHTML += `<option value="${type}">${type}</option>`;
+            });
+        }
+    }
+    
+    // Agents
+    const agentSelect = document.getElementById('filterAgent');
+    if (agentSelect) {
+        agentSelect.innerHTML = '<option value="">Tous les agents</option>';
+        if (options.agents && Array.isArray(options.agents)) {
+            options.agents.forEach(agent => {
+                agentSelect.innerHTML += `<option value="${agent.id}">${agent.nom}</option>`;
+            });
+        }
+    }
+}
+
+// Appliquer les filtres par défaut
+function applyDefaultFilters() {
+    currentFilters = {
+        annee: '',
+        trimestre: '',
+        mois: '',
+        ville: '',
+        type: '',
+        agent: ''
+    };
+    
+    updateActiveFilters();
+}
+
+// Configurer les écouteurs d'événements
+function setupEventListeners() {
+    // Filtres
+    document.querySelectorAll('.filter-select').forEach(select => {
+        select.addEventListener('change', handleFilterChange);
+    });
+}
+
+// Gérer les changements de filtres
+function handleFilterChange(event) {
+    const filterId = event.target.id.replace('filter', '').toLowerCase();
+    currentFilters[filterId] = event.target.value;
+    
+    updateActiveFilters();
+    loadDashboardData();
+}
+
+// Mettre à jour les filtres actifs
+function updateActiveFilters() {
+    const activeFiltersDiv = document.getElementById('activeFilters');
+    const filterTagsDiv = document.getElementById('filterTags');
+    
+    const activeFilters = Object.entries(currentFilters)
+        .filter(([key, value]) => value && value !== '')
+        .map(([key, value]) => ({ key, value }));
+    
+    if (activeFilters.length === 0) {
+        activeFiltersDiv.style.display = 'none';
+        return;
+    }
+    
+    activeFiltersDiv.style.display = 'block';
+    
+    filterTagsDiv.innerHTML = activeFilters.map(({ key, value }) => {
+        const label = getFilterLabel(key, value);
+        return `
+            <div class="filter-tag" data-filter="${key}">
+                ${label}
+                <button class="remove-btn" onclick="removeFilter('${key}')">×</button>
+            </div>
+        `;
+    }).join('');
+}
+
+// Obtenir le label d'un filtre
+function getFilterLabel(key, value) {
+    const labels = {
+        annee: `Année: ${value}`,
+        trimestre: `Trimestre: ${value}`,
+        mois: `Mois: ${getMonthName(value)}`,
+        ville: `Ville: ${value}`,
+        type: `Type: ${getTypeLabel(value)}`,
+        agent: `Agent: ${getAgentName(value)}`
+    };
+    return labels[key] || `${key}: ${value}`;
+}
+
+// Obtenir le nom du mois
+function getMonthName(monthNumber) {
+    const months = {
+        '01': 'Janvier', '02': 'Février', '03': 'Mars', '04': 'Avril',
+        '05': 'Mai', '06': 'Juin', '07': 'Juillet', '08': 'Août',
+        '09': 'Septembre', '10': 'Octobre', '11': 'Novembre', '12': 'Décembre'
+    };
+    return months[monthNumber] || monthNumber;
+}
+
+// Obtenir le label du type
+function getTypeLabel(type) {
+    const types = {
+        'service': 'Services',
+        'formation': 'Formations',
+        'livre': 'Livres',
+        'fourniture': 'Fournitures'
+    };
+    return types[type] || type;
+}
+
+// Obtenir le nom de l'agent
+function getAgentName(agentId) {
+    const agentSelect = document.getElementById('filterAgent');
+    const options = agentSelect.options;
+    for (let i = 0; i < options.length; i++) {
+        if (options[i].value === agentId) {
+            return options[i].text;
+        }
+    }
+    return agentId; // Retourner l'ID si le nom n'est pas trouvé
+}
+
+// Supprimer un filtre
+function removeFilter(filterKey) {
+    currentFilters[filterKey] = '';
+    document.getElementById(`filter${filterKey.charAt(0).toUpperCase() + filterKey.slice(1)}`).value = '';
+    updateActiveFilters();
+    loadDashboardData();
+}
+
+// Mettre à jour les KPIs
+function updateKPIs(kpis) {
+    // Chiffre d'Affaires
+    document.getElementById('kpi-ca').textContent = formatCurrency(kpis.ca);
+    
+    // Ventes
+    document.getElementById('kpi-ventes').textContent = formatNumber(kpis.ventes);
+    
+    // Articles
+    document.getElementById('kpi-articles').textContent = formatNumber(kpis.articles);
+    
+    // Clients Actifs
+    document.getElementById('kpi-satisfaction').textContent = formatNumber(kpis.nouveaux_clients);
+}
+
+function showErrorState() {
+    document.querySelectorAll('.kpi-value').forEach(el => {
+        el.textContent = 'Erreur';
+    });
+}
+
+// Fonctions utilitaires
+function formatCurrency(amount) {
+    if (!amount || amount === 0) return '0 FCFA';
+    return `${parseInt(amount).toLocaleString('fr-FR')} FCFA`;
+}
+
+function formatNumber(number) {
+    if (!number || number === 0) return '0';
+    return parseInt(number).toLocaleString('fr-FR');
+}
+
+// ================== FONCTIONS GRAPHIQUE ==================
+
+// Charger les données du graphique
+async function loadChartData(year = '') {
+    try {
+        // Utiliser la même API que les sparklines
+        const params = new URLSearchParams();
+        if (year) {
+            params.append('annee', year);
+        }
+        
+        const response = await fetch(`/admin/api/reporting/sparklines?${params}`);
+        const data = await response.json();
+        
+        if (data.success && data.sparklines) {
+            // Transformer les données sparklines en format chart avec 12 mois
+            const sparklinesData = data.sparklines;
+            
+            // Créer les labels pour 12 mois
+            const monthNames = {
+                1: 'Janv', 2: 'Févr', 3: 'Mars', 4: 'Avr', 5: 'Mai', 6: 'Juin',
+                7: 'Juil', 8: 'Août', 9: 'Sept', 10: 'Oct', 11: 'Nov', 12: 'Déc'
+            };
+            
+            const labels = [];
+            const ca_montants = [];
+            const nb_ventes = [];
+            
+            // Créer un mapping des données existantes
+            const dataMap = {};
+            if (sparklinesData.labels && sparklinesData.chiffre_affaires && sparklinesData.ventes) {
+                sparklinesData.labels.forEach((label, index) => {
+                    const [year, month] = label.split('-');
+                    dataMap[parseInt(month)] = {
+                        ca: sparklinesData.chiffre_affaires[index] || 0,
+                        ventes: sparklinesData.ventes[index] || 0
+                    };
+                });
+            }
+            
+            // Générer les 12 mois
+            for (let month = 1; month <= 12; month++) {
+                labels.push(monthNames[month]);
+                ca_montants.push(dataMap[month]?.ca || 0);
+                nb_ventes.push(dataMap[month]?.ventes || 0);
+            }
+            
+            const chartData = {
+                labels: labels,
+                ca_montants: ca_montants,
+                nb_ventes: nb_ventes
+            };
+            createSalesChart(chartData);
+        } else {
+            console.error('Erreur lors du chargement des données du graphique:', data.message);
+        }
+    } catch (error) {
+        console.error('Erreur réseau pour le graphique:', error);
+    }
+}
+
+// Charger les années disponibles
+async function loadAvailableYears() {
+    try {
+        const response = await fetch('/admin/api/reporting/filter-options');
+        const data = await response.json();
+        
+        if (data.success && data.options && data.options.annees) {
+            const yearFilter = document.getElementById('chart-year-filter');
+            yearFilter.innerHTML = '';
+            
+            // Année actuelle par défaut
+            const currentYear = new Date().getFullYear();
+            const currentOption = document.createElement('option');
+            currentOption.value = currentYear;
+            currentOption.textContent = currentYear;
+            currentOption.selected = true;
+            yearFilter.appendChild(currentOption);
+            
+            // Autres années disponibles
+            data.options.annees.forEach(year => {
+                if (year !== currentYear) {
+                    const option = document.createElement('option');
+                    option.value = year;
+                    option.textContent = year;
+                    yearFilter.appendChild(option);
+                }
+            });
+            
+            // Écouter les changements de filtre
+            yearFilter.addEventListener('change', function() {
+                loadChartData(this.value);
+            });
+            
+            // Charger les données pour l'année actuelle par défaut
+            loadChartData(currentYear);
+        }
+    } catch (error) {
+        console.error('Erreur lors du chargement des années:', error);
+    }
+}
+
+// Créer le graphique des ventes
+function createSalesChart(data) {
+    const canvas = document.getElementById('salesEvolutionChart');
+    if (!canvas) return;
+    
+    const ctx = canvas.getContext('2d');
+    
+    // Détruire le graphique existant
+    if (salesEvolutionChart) {
+        salesEvolutionChart.destroy();
+    }
+    
+    salesEvolutionChart = new Chart(canvas, {
+        type: 'bar',
+        data: {
+            labels: data.labels || [],
+            datasets: [
+                {
+                    label: 'Chiffre d\'affaire',
+                    data: data.ca_montants || [],
+                    backgroundColor: function(context) {
+                        const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+                        gradient.addColorStop(0, 'rgba(156, 39, 176, 0.9)'); // Violet foncé en haut
+                        gradient.addColorStop(1, 'rgba(33, 150, 243, 0.9)'); // Bleu en bas
+                        return gradient;
+                    },
+                    borderColor: 'rgba(156, 39, 176, 1)',
+                    borderWidth: 0,
+                    borderRadius: 8,
+                    borderSkipped: false,
+                    yAxisID: 'y-ca'
+                },
+                {
+                    label: 'Nombre de ventes',
+                    data: data.nb_ventes || [],
+                    type: 'line',
+                    borderColor: function(context) {
+                        const gradient = ctx.createLinearGradient(0, 0, 400, 0);
+                        gradient.addColorStop(0, 'rgba(76, 175, 80, 1)'); // Vert foncé
+                        gradient.addColorStop(1, 'rgba(255, 235, 59, 1)'); // Jaune
+                        return gradient;
+                    },
+                    backgroundColor: 'rgba(76, 175, 80, 0.1)',
+                    borderWidth: 3,
+                    fill: false,
+                    tension: 0.4,
+                    pointRadius: 6,
+                    pointHoverRadius: 8,
+                    pointBackgroundColor: '#fff',
+                    pointBorderColor: 'rgba(76, 175, 80, 1)',
+                    pointBorderWidth: 2,
+                    yAxisID: 'y-ventes'
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: {
+                mode: 'index',
+                intersect: false,
+            },
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'top',
+                    labels: {
+                        usePointStyle: true,
+                        padding: 20,
+                        font: {
+                            size: 12,
+                            weight: '500'
+                        }
+                    }
+                },
+                tooltip: {
+                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                    titleColor: '#fff',
+                    bodyColor: '#fff',
+                    borderColor: 'rgba(255, 255, 255, 0.1)',
+                    borderWidth: 1,
+                    cornerRadius: 8,
+                    displayColors: true,
+                    callbacks: {
+                        title: function(context) {
+                            return context[0].label;
+                        },
+                        label: function(context) {
+                            if (context.datasetIndex === 0) {
+                                return `Chiffre d'affaire: ${formatCurrency(context.parsed.y)}`;
+                            } else {
+                                return `Ventes: ${formatNumber(context.parsed.y)}`;
+                            }
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    grid: {
+                        display: false
+                    },
+                    ticks: {
+                        font: {
+                            size: 11
+                        }
+                    }
+                },
+                'y-ca': {
+                    type: 'linear',
+                    display: true,
+                    position: 'left',
+                    title: {
+                        display: true,
+                        text: 'Chiffre d\'affaire (FCFA)',
+                        font: {
+                            size: 12,
+                            weight: '500'
+                        }
+                    },
+                    ticks: {
+                        callback: function(value) {
+                            return formatCurrency(value);
+                        },
+                        font: {
+                            size: 10
+                        }
+                    },
+                    grid: {
+                        color: 'rgba(0, 0, 0, 0.05)'
+                    }
+                },
+                'y-ventes': {
+                    type: 'linear',
+                    display: true,
+                    position: 'right',
+                    title: {
+                        display: true,
+                        text: 'Nombre de ventes',
+                        font: {
+                            size: 12,
+                            weight: '500'
+                        }
+                    },
+                    ticks: {
+                        callback: function(value) {
+                            return formatNumber(value);
+                        },
+                        font: {
+                            size: 10
+                        }
+                    },
+                    grid: {
+                        drawOnChartArea: false,
+                    }
+                }
+            }
+        }
+    });
+}
+
+// Charger les données de performance
+async function loadPerformanceData() {
+    try {
+        // Charger les données de performance prestation
+        const prestationResponse = await fetch('/admin/api/reporting/prestation-performance');
+        const prestationData = await prestationResponse.json();
+        
+        if (prestationData.success) {
+            displayPrestationPerformance(prestationData.prestations);
+            displayVillePerformance(prestationData.villes);
+        }
+        
+        // Charger les top articles
+        const articlesResponse = await fetch('/admin/api/reporting/top-articles');
+        const articlesData = await articlesResponse.json();
+        
+        if (articlesData.success && articlesData.articles) {
+            displayTopArticles(articlesData.articles);
+        } else {
+            console.error('Erreur chargement articles:', articlesData.message || 'Données non disponibles');
+        }
+    } catch (error) {
+        console.error('Erreur lors du chargement des données de performance:', error);
+    }
+}
+
+// Afficher les performances par prestation
+function displayPrestationPerformance(prestations) {
+    const container = document.getElementById('prestation-performance');
+    
+    if (!prestations || prestations.length === 0) {
+        container.innerHTML = '<p style="color: #999; text-align: center; font-size: 0.9em;">Aucune donnée disponible</p>';
+        return;
+    }
+    
+    let html = '';
+    prestations.forEach((prestation) => {
+        html += `
+            <div class="prestation-item">
+                <div class="prestation-header">
+                    <div class="prestation-name">${prestation.prestation}</div>
+                    <div class="prestation-value">
+                        <span class="prestation-ca">${formatCurrency(prestation.ca_total)}</span>
+                    </div>
+                </div>
+                <div class="prestation-stats">
+                    ${prestation.nb_commandes} commandes • ${prestation.nb_clients} clients • ${prestation.pourcentage}%
+                </div>
+            </div>
+        `;
+    });
+    
+    container.innerHTML = html;
+}
+
+// Afficher les performances par ville
+function displayVillePerformance(villes) {
+    const container = document.getElementById('ville-performance');
+    
+    if (!villes || villes.length === 0) {
+        container.innerHTML = '<p style="color: #999; text-align: center; font-size: 0.9em;">Aucune donnée disponible</p>';
+        return;
+    }
+    
+    let html = '';
+    villes.forEach((ville) => {
+        html += `
+            <div class="ville-item">
+                <div class="ville-info">
+                    <div class="ville-name">${ville.ville}</div>
+                    <div class="ville-stats">
+                        ${ville.nb_commandes} commandes • ${ville.pourcentage}%
+                    </div>
+                </div>
+                <div class="ville-value">${formatCurrency(ville.ca_total)}</div>
+            </div>
+        `;
+    });
+    
+    container.innerHTML = html;
+}
+
+// Afficher les top articles
+function displayTopArticles(articles) {
+    const container = document.getElementById('top-articles-list');
+    
+    if (!articles || articles.length === 0) {
+        container.innerHTML = '<p style="color: #999; text-align: center; font-size: 0.9em;">Aucune donnée disponible</p>';
+        return;
+    }
+    
+    let html = '';
+    articles.forEach((article, index) => {
+        // Tronquer le nom de l'article s'il est trop long (plus agressif pour laisser place au prix)
+        const nomTronque = article.nom.length > 25 ? 
+            article.nom.substring(0, 25) + '...' : 
+            article.nom;
+            
+        html += `
+            <div class="article-item">
+                <div class="article-info">
+                    <div class="article-name" title="${article.nom}">${nomTronque}</div>
+                    <div class="article-stats">
+                        ${article.commandes} commandes • ${article.part}%
+                    </div>
+                </div>
+                <div class="article-value">${formatCurrency(article.ca)}</div>
+            </div>
+        `;
+    });
+    
+    container.innerHTML = html;
+}
+
+// Fonctions utilitaires
+function formatCurrency(amount) {
+    if (!amount || amount === 0) return '0 FCFA';
+    return `${parseInt(amount).toLocaleString('fr-FR')} FCFA`;
+}
+
+function formatNumber(number) {
+    if (!number || number === 0) return '0';
+    return parseInt(number).toLocaleString('fr-FR');
+}
+
+// Charger les données analytics
+async function loadAnalyticsData() {
+    try {
+        // Charger les ventes par région
+        const regionResponse = await fetch('/admin/api/reporting/ventes-region');
+        const regionData = await regionResponse.json();
+        
+        if (regionData.success) {
+            displayVentesRegion(regionData.regions);
+        }
+        
+        // Charger les meilleurs clients
+        const clientsResponse = await fetch('/admin/api/reporting/meilleurs-clients');
+        const clientsData = await clientsResponse.json();
+        
+        if (clientsData.success) {
+            displayMeilleursClients(clientsData.clients);
+        }
+    } catch (error) {
+        console.error('Erreur lors du chargement des données analytics:', error);
+    }
+}
+
+// Afficher les ventes par région
+function displayVentesRegion(regions) {
+    const container = document.getElementById('ventes-region');
+    
+    if (!regions || regions.length === 0) {
+        container.innerHTML = '<p style="color: #999; text-align: center; font-size: 0.9em;">Aucune donnée disponible</p>';
+        return;
+    }
+    
+    // Dégradés différents pour chaque ville
+    const gradients = [
+        'linear-gradient(135deg, #667eea, #764ba2)',  // Violet
+        'linear-gradient(135deg, #f093fb, #f5576c)',  // Rose
+        'linear-gradient(135deg, #4facfe, #00f2fe)',  // Bleu cyan
+        'linear-gradient(135deg, #43e97b, #38f9d7)',  // Vert cyan
+        'linear-gradient(135deg, #fa709a, #fee140)',  // Rose jaune
+        'linear-gradient(135deg, #a8edea, #fed6e3)',  // Pastel
+        'linear-gradient(135deg, #ff9a9e, #fecfef)',  // Rose pastel
+        'linear-gradient(135deg, #ffecd2, #fcb69f)',  // Orange pastel
+        'linear-gradient(135deg, #a18cd1, #fbc2eb)',  // Violet pastel
+        'linear-gradient(135deg, #fad0c4, #ffd1ff)'   // Rose doux
+    ];
+    
+    let html = '';
+    regions.forEach((region, index) => {
+        const percentage = region.pourcentage || 0;
+        const gradient = gradients[index % gradients.length];
+        const progressGradient = gradients[index % gradients.length];
+        
+        html += `
+            <div class="region-item" data-ville="${region.ville}" data-commandes="${region.nb_commandes}" data-ca="${region.ca_total}" data-percentage="${percentage}">
+                <div class="region-flag" style="background: ${gradient}">${region.ville.charAt(0)}</div>
+                <div class="region-info">
+                    <div class="region-name">${region.ville}</div>
+                    <div class="region-users">${region.nb_commandes} commandes</div>
+                </div>
+                <div class="region-progress">
+                    <div class="region-progress-bar" style="width: ${percentage}%; background: ${progressGradient}"></div>
+                </div>
+            </div>
+        `;
+    });
+    
+    container.innerHTML = html;
+    
+    // Ajouter les tooltips
+    const regionItems = container.querySelectorAll('.region-item');
+    regionItems.forEach(item => {
+        item.addEventListener('mouseenter', function() {
+            const ville = this.getAttribute('data-ville');
+            const commandes = this.getAttribute('data-commandes');
+            const ca = this.getAttribute('data-ca');
+            const percentage = this.getAttribute('data-percentage');
+            
+            // Créer tooltip
+            const tooltip = document.createElement('div');
+            tooltip.className = 'region-tooltip';
+            tooltip.innerHTML = `
+                <strong>${ville}</strong><br>
+                ${commandes} commandes<br>
+                ${parseFloat(ca).toLocaleString('fr-FR')} FCFA<br>
+                ${percentage}% du total
+            `;
+            tooltip.style.cssText = `
+                position: absolute;
+                background: rgba(0,0,0,0.9);
+                color: white;
+                padding: 10px 15px;
+                border-radius: 8px;
+                font-size: 12px;
+                z-index: 1000;
+                pointer-events: none;
+                white-space: nowrap;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            `;
+            
+            document.body.appendChild(tooltip);
+            
+            this.addEventListener('mousemove', function(e) {
+                tooltip.style.left = e.pageX + 15 + 'px';
+                tooltip.style.top = e.pageY - 10 + 'px';
+            });
+            
+            this.addEventListener('mouseleave', function() {
+                document.body.removeChild(tooltip);
+            });
+        });
+    });
+}
+
+// Afficher les meilleurs clients avec style WhatsApp
+function displayMeilleursClients(clients) {
+    const container = document.getElementById('meilleurs-clients');
+    
+    if (!clients || clients.length === 0) {
+        container.innerHTML = '<p style="color: #999; text-align: center; font-size: 0.9em;">Aucune donnée disponible</p>';
+        return;
+    }
+    
+    // Dégradés différents pour chaque client (style WhatsApp) - COULEURS DIFFÉRENTES
+    const gradients = [
+        'linear-gradient(135deg, #FF6B6B, #FF8E8E)',  // Rouge corail
+        'linear-gradient(135deg, #4ECDC4, #44A08D)',  // Turquoise
+        'linear-gradient(135deg, #45B7D1, #96C93D)',  // Bleu vert
+        'linear-gradient(135deg, #F093FB, #F5576C)',  // Rose magenta
+        'linear-gradient(135deg, #FFD89B, #19547B)',  // Orange bleu
+        'linear-gradient(135deg, #667eea, #764ba2)',  // Violet
+        'linear-gradient(135deg, #f093fb, #f5576c)',  // Rose
+        'linear-gradient(135deg, #4facfe, #00f2fe)',  // Bleu cyan
+        'linear-gradient(135deg, #43e97b, #38f9d7)',  // Vert cyan
+        'linear-gradient(135deg, #fa709a, #fee140)'  // Rose jaune
+    ];
+    
+    let html = '';
+    clients.forEach((client, index) => {
+        const percentage = client.pourcentage || 0;
+        const gradient = gradients[index % gradients.length];
+        const progressGradient = gradients[index % gradients.length];
+        
+        // Initiale du client
+        const initiale = client.nom.charAt(0).toUpperCase();
+        
+        html += `
+            <div class="client-item" data-client="${client.nom}" data-commandes="${client.nb_commandes}" data-ca="${client.ca_total}" data-percentage="${percentage}">
+                <div class="client-avatar" style="background: ${gradient}">${initiale}</div>
+                <div class="client-info">
+                    <div class="client-name">${client.nom}</div>
+                    <div class="client-stats">${client.nb_commandes} commandes • ${percentage}%</div>
+                </div>
+                <div class="client-progress">
+                    <div class="client-progress-bar" style="width: ${percentage}%; background: ${progressGradient}"></div>
+                </div>
+            </div>
+        `;
+    });
+    
+    container.innerHTML = html;
+    
+    // Ajouter les tooltips
+    const clientItems = container.querySelectorAll('.client-item');
+    clientItems.forEach(item => {
+        item.addEventListener('mouseenter', function() {
+            const client = this.getAttribute('data-client');
+            const commandes = this.getAttribute('data-commandes');
+            const ca = this.getAttribute('data-ca');
+            const percentage = this.getAttribute('data-percentage');
+            
+            // Créer tooltip
+            const tooltip = document.createElement('div');
+            tooltip.className = 'client-tooltip';
+            tooltip.innerHTML = `
+                <strong>${client}</strong><br>
+                ${commandes} commandes<br>
+                ${parseFloat(ca).toLocaleString('fr-FR')} FCFA<br>
+                ${percentage}% du CA total
+            `;
+            tooltip.style.cssText = `
+                position: absolute;
+                background: rgba(0,0,0,0.9);
+                color: white;
+                padding: 10px 15px;
+                border-radius: 8px;
+                font-size: 12px;
+                z-index: 1000;
+                pointer-events: none;
+                white-space: nowrap;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            `;
+            
+            document.body.appendChild(tooltip);
+            
+            this.addEventListener('mousemove', function(e) {
+                tooltip.style.left = e.pageX + 15 + 'px';
+                tooltip.style.top = e.pageY - 10 + 'px';
+            });
+            
+            this.addEventListener('mouseleave', function() {
+                document.body.removeChild(tooltip);
+            });
+        });
+    });
+}
+
+// Charger les données des clients actifs/inactifs
+async function loadClientsActivityData() {
+    try {
+        const response = await fetch('/admin/api/repertoire/active-inactive?months=3');
+        const data = await response.json();
+        
+        if (data.success) {
+            displayClientsActifsInactifs(data);
+        } else {
+            console.error('Erreur chargement clients actifs/inactifs:', data.message);
+        }
+    } catch (error) {
+        console.error('Erreur réseau pour clients actifs/inactifs:', error);
+    }
+}
+
+// Afficher le graphique camembert des clients actifs/inactifs - COPY EXACT de repertoire_admin.html
+function displayClientsActifsInactifs(data) {
+    const container = document.getElementById('clients-actifs-inactifs');
+    
+    if (!data.success || !data.labels || data.labels.length === 0) {
+        container.innerHTML = '<p style="color: #999; text-align: center; font-size: 0.9em;">Aucune donnée disponible</p>';
+        return;
+    }
+    
+    // Créer le HTML exact comme dans repertoire_admin.html
+    const html = `
+        <div class="clients-donut-container">
+            <div class="donut-wrapper">
+                <canvas id="clientsDonutChart" width="280" height="280"></canvas>
+                <div class="donut-center">
+                    <div class="donut-value" id="clientsDonutValue">0%</div>
+                    <div class="donut-label">Actifs</div>
+                </div>
+                <div id="clientsDonutLegend" class="chart-legend"></div>
+            </div>
+        </div>
+    `;
+    
+    container.innerHTML = html;
+    
+    // Copier exactement la fonction initClientsDonut de repertoire_admin.html
+    const canvas = document.getElementById('clientsDonutChart');
+    const noDataDiv = document.getElementById('clientsDonutNoData');
+    const centerValue = document.getElementById('clientsDonutValue');
+    const legendDiv = document.getElementById('clientsDonutLegend');
+
+    if (!data.success || !data.labels || data.labels.length === 0) {
+        canvas.style.display = 'none';
+        legendDiv.style.display = 'none';
+        return;
+    }
+
+    const colors = ['#4A90E2','#7ED321'];
+
+    const ctx = canvas.getContext('2d');
+    if (clientsDonutChart) clientsDonutChart.destroy();
+    clientsDonutChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: { labels: data.labels, datasets: [{ data: data.percentages, backgroundColor: colors, borderWidth: 0, cutout: '65%' }] },
+        options: { plugins: { legend: { display: false } }, animation: false }
+    });
+
+    const activeIndex = data.labels.findIndex(l => l.toLowerCase().includes('actif'));
+    const activePct = activeIndex >= 0 ? data.percentages[activeIndex] : 0;
+    const activeCount = activeIndex >= 0 ? data.counts[activeIndex] : 0;
+    const totalCount = (data.counts || []).reduce((a,b)=>a+b,0) || 0;
+    centerValue.textContent = `${activePct}%`;
+    const centerLabel = document.querySelector('#clientsDonutChart + .donut-center .donut-label') || document.querySelector('.donut-label');
+    if (centerLabel) centerLabel.textContent = `Actifs (${activeCount}/${totalCount})`;
+
+    legendDiv.innerHTML = data.labels.map((label, i) => `
+        <div class="legend-item">
+            <div class="legend-color" style="background-color: ${colors[i]}"></div>
+            <div class="legend-label">${label}</div>
+            <div class="legend-percentage">${data.counts[i]} (${data.percentages[i]}%)</div>
+        </div>
+    `).join('');
+}
+
+// Charger les données de performance des agents - COPY de team.html
+async function loadPerformanceAgentsData() {
+    try {
+        const response = await fetch('/admin/api/team/comparatif?page=1&rows=5');
+        const data = await response.json();
+        
+        if (data.success) {
+            displayPerformanceAgents(data);
+        } else {
+            console.error('Erreur chargement performance agents:', data.message);
+        }
+    } catch (error) {
+        console.error('Erreur réseau pour performance agents:', error);
+    }
+}
+
+// Afficher le tableau de performance des agents - Design amélioré
+function displayPerformanceAgents(data) {
+    const container = document.getElementById('performance-agents-table');
+    
+    if (!data.success || !data.items || data.items.length === 0) {
+        container.innerHTML = '<p style="color: #999; text-align: center; font-size: 0.9em;">Aucune donnée disponible</p>';
+        return;
+    }
+    
+    // Calculer les maximums pour les barres de progression
+    const maxRev = Math.max(...data.items.map(x => x.revenu));
+    const maxDevis = Math.max(...data.items.map(x => x.nb_devis));
+    const maxAtp = Math.max(...data.items.map(x => x.atp));
+    const maxConv = Math.max(...data.items.map(x => x.taux)); // CORRECTION: c'est 'taux' pas 'taux_conv'
+    
+    const html = `
+        <table class="performance-agents-table">
+            <thead>
+                <tr>
+                    <th style="width: 20%;">Agent</th>
+                    <th style="width: 25%;">Revenu (30j)</th>
+                    <th style="width: 20%;">Devis (30j)</th>
+                    <th style="width: 20%;">ATP</th>
+                    <th style="width: 15%;">Taux conv.</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${data.items.map(agent => {
+                    const revenu = agent.revenu || 0;
+                    const nbDevis = agent.nb_devis || 0;
+                    const atp = agent.atp || 0;
+                    const tauxConv = agent.taux || 0; // CORRECTION: c'est 'taux' pas 'taux_conv'
+                    
+                    const revenuPct = maxRev > 0 ? Math.round((revenu * 100) / maxRev) : 0;
+                    const devisPct = maxDevis > 0 ? Math.round((nbDevis * 100) / maxDevis) : 0;
+                    const atpPct = maxAtp > 0 ? Math.round((atp * 100) / maxAtp) : 0;
+                    const convPct = maxConv > 0 ? Math.round((tauxConv * 100) / maxConv) : 0;
+                    
+                    return `
+                        <tr>
+                            <td><div class="agent-name">${agent.nom || 'N/A'}</div></td>
+                            <td>
+                                <div class="metric-bar">
+                                    <div class="metric-bar-fill metric-revenu" style="width: ${revenuPct}%;"></div>
+                                    <div class="metric-bar-text">${formatCurrency(revenu)}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="metric-bar">
+                                    <div class="metric-bar-fill metric-devis" style="width: ${devisPct}%;"></div>
+                                    <div class="metric-bar-text">${nbDevis}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="metric-bar">
+                                    <div class="metric-bar-fill metric-atp" style="width: ${atpPct}%;"></div>
+                                    <div class="metric-bar-text">${formatCurrency(atp)}</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="metric-bar">
+                                    <div class="metric-bar-fill metric-conv" style="width: ${convPct}%;"></div>
+                                    <div class="metric-bar-text">${tauxConv}%</div>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                }).join('')}
+            </tbody>
+        </table>
+    `;
+    
+    container.innerHTML = html;
+}
+
+// Obtenir le label du statut - COPY de ventes_admin.html
+function getStatutLabel(statut) {
+    const labels = {
+        'en_attente': 'En attente',
+        'en_cours': 'En cours',
+        'termine': 'Terminé',
+        'partiel': 'Partiel'
+    };
+    return labels[statut] || statut.toLowerCase();
+}
+
+// Charger les données d'activité récente - COPY de ventes_admin.html
+async function loadRecentActivityData() {
+    try {
+        const response = await fetch('/admin/api/ventes/commandes-globales?page=1&rows=5');
+        const data = await response.json();
+        
+        if (data.success) {
+            displayRecentActivity(data.commandes);
+        } else {
+            console.error('Erreur chargement activité récente:', data.message);
+        }
+    } catch (error) {
+        console.error('Erreur réseau pour activité récente:', error);
+    }
+}
+
+// Afficher la liste d'activité récente - COPY EXACT de ventes_admin.html
+function displayRecentActivity(commandes) {
+    const tableBody = document.getElementById('recentActivityTableBody');
+    
+    if (!commandes || commandes.length === 0) {
+        tableBody.innerHTML = '<tr><td colspan="6" class="no-results">Aucune commande trouvée</td></tr>';
+        return;
+    }
+    
+    // LIMITER À 5 COMMANDES - Frontend limitation
+    const limitedCommandes = commandes.slice(0, 5);
+    
+    // Vider le tableau
+    tableBody.innerHTML = '';
+    
+    // Remplir le corps du tableau
+    limitedCommandes.forEach(commande => {
+        const row = document.createElement('tr');
+        
+        // Formatage de la date
+        const dateFormatted = new Date(commande.date_creation).toLocaleDateString('fr-FR', {
+            day: '2-digit',
+            month: 'short',
+            year: 'numeric'
+        });
+        
+        row.innerHTML = `
+            <td>${commande.numero}</td>
+            <td>${dateFormatted}</td>
+            <td>${commande.client_nom}</td>
+            <td>${formatCurrency(commande.total_ttc)}</td>
+            <td><span class="status-badge status-${commande.etat}">${getStatutLabel(commande.etat)}</span></td>
+            <td>${commande.created_by}</td>
+        `;
+        
+        tableBody.appendChild(row);
+    });
+}
+
+// Modal Détails Mensuels - COPY EXACT de reporting.html
+async function showMonthlyDetails() {
+    // Ouvrir le modal
+    const modal = document.getElementById('monthlyDetailModal');
+    modal.classList.add('show');
+    
+    // Charger les données et créer le tableau directement
+    try {
+        const response = await fetch('/admin/api/reporting/monthly-details');
+        const data = await response.json();
+        
+        if (data.success && data.monthly_details) {
+            // Créer le tableau HTML directement
+            let tableHTML = `
+                <table class="monthly-detail-table">
+                    <thead>
+                        <tr>
+                            <th>Mois</th>
+                            <th>Chiffre d'Affaires</th>
+                            <th>Ventes</th>
+                            <th>Articles</th>
+                            <th>Clients Actifs</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+            
+            data.monthly_details.forEach(month => {
+                tableHTML += `
+                    <tr>
+                        <td>${month.mois}</td>
+                        <td>${formatNumber(month.chiffre_affaires)} FCFA</td>
+                        <td>${formatNumber(month.ventes)}</td>
+                        <td>${formatNumber(month.articles)}</td>
+                        <td>${formatNumber(month.nouveaux_clients)}</td>
+                    </tr>
+                `;
+            });
+            
+            tableHTML += '</tbody></table>';
+            
+            // Remplacer le contenu du modal-body
+            const modalBody = modal.querySelector('.modal-body');
+            modalBody.innerHTML = tableHTML;
+        }
+    } catch (error) {
+        console.error('Erreur:', error);
+    }
+}
+
+function closeMonthlyDetails() {
+    document.getElementById('monthlyDetailModal').classList.remove('show');
+}
+
+// Ajouter les event listeners pour les boutons de fermeture
+document.addEventListener('DOMContentLoaded', function() {
+    // Bouton fermer pour Détails Mensuels
+    const monthlyModal = document.getElementById('monthlyDetailModal');
+    if (monthlyModal) {
+        const closeBtn = monthlyModal.querySelector('.close');
+        if (closeBtn) {
+            closeBtn.addEventListener('click', closeMonthlyDetails);
+            console.log('Event listener ajouté pour monthlyModal');
+        }
+    }
+    
+    // Bouton fermer pour Comparaison Annuelle
+    const yearModal = document.getElementById('yearComparisonModal');
+    if (yearModal) {
+        const closeBtn = yearModal.querySelector('.close');
+        if (closeBtn) {
+            // Supprimer l'ancien event listener s'il existe
+            closeBtn.removeEventListener('click', closeYearComparison);
+            // Ajouter le nouvel event listener
+            closeBtn.addEventListener('click', closeYearComparison);
+            console.log('Event listener ajouté pour yearComparisonModal');
+        } else {
+            console.log('Bouton close non trouvé dans yearComparisonModal');
+        }
+    } else {
+        console.log('yearComparisonModal non trouvé');
+    }
+    
+    // Fermer le modal en cliquant en dehors
+    window.onclick = function(event) {
+        const monthlyModal = document.getElementById('monthlyDetailModal');
+        const comparisonModal = document.getElementById('yearComparisonModal');
+        
+        if (event.target === monthlyModal) {
+            monthlyModal.classList.remove('show');
+        }
+        if (event.target === comparisonModal) {
+            comparisonModal.classList.remove('show');
+        }
+    }
+});
+
+// Modal Comparaison Annuelle - VERSION SIMPLE
+async function showYearComparison() {
+    // Ouvrir le modal avec les champs de sélection
+    const modal = document.getElementById('yearComparisonModal');
+    console.log('Ouverture modal comparaison:', modal);
+    
+    // Vérifier le contenu HTML du modal
+    console.log('Contenu HTML du modal:', modal.innerHTML);
+    
+    modal.classList.add('show');
+    modal.style.setProperty('display', 'flex', 'important');
+    console.log('Modal ouvert, classes:', modal.className);
+    
+    // Vérifier que le contenu est visible
+    const modalBody = modal.querySelector('.modal-body');
+    const yearSelection = modal.querySelector('.year-selection');
+    console.log('Modal body:', modalBody);
+    console.log('Year selection:', yearSelection);
+    console.log('Year selection visible:', yearSelection ? yearSelection.offsetHeight : 'non trouvé');
+    
+    // Si year-selection n'existe pas, le créer dynamiquement
+    if (!yearSelection) {
+        console.log('Création dynamique du contenu...');
+        const modalBody = modal.querySelector('.modal-body');
+        if (modalBody) {
+            modalBody.innerHTML = `
+                <h4 style="color: #333; margin-bottom: 15px; font-size: 16px;">Sélectionnez deux années à comparer</h4>
+                <div class="year-selection" style="background-color: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+                    <div style="display: flex; gap: 15px; align-items: flex-end;">
+                        <div class="form-group" style="display: flex; flex-direction: column; gap: 5px;">
+                            <label style="color: #333; font-weight: bold; margin-bottom: 5px;">Année 1:</label>
+                            <select id="year1Select" style="padding: 8px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px;">
+                                <option value="">Sélectionner...</option>
+                                <option value="2022">2022</option>
+                                <option value="2023">2023</option>
+                                <option value="2024">2024</option>
+                                <option value="2025">2025</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="display: flex; flex-direction: column; gap: 5px;">
+                            <label style="color: #333; font-weight: bold; margin-bottom: 5px;">Année 2:</label>
+                            <select id="year2Select" style="padding: 8px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px;">
+                                <option value="">Sélectionner...</option>
+                                <option value="2022">2022</option>
+                                <option value="2023">2023</option>
+                                <option value="2024">2024</option>
+                                <option value="2025">2025</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div id="comparisonResults">
+                    <!-- Le tableau sera créé dynamiquement ici -->
+                </div>
+            `;
+            console.log('Contenu créé dynamiquement');
+        }
+    }
+    
+    // Ajouter les event listeners pour la comparaison automatique
+    const year1Select = document.getElementById('year1Select');
+    const year2Select = document.getElementById('year2Select');
+    
+    if (year1Select && year2Select) {
+        // Fonction pour vérifier si les deux années sont sélectionnées et déclencher la comparaison
+        const checkAndCompare = () => {
+            const year1 = year1Select.value;
+            const year2 = year2Select.value;
+            
+            if (year1 && year2 && year1 !== year2) {
+                console.log('Comparaison automatique déclenchée:', year1, 'vs', year2);
+                compareYears();
+            }
+        };
+        
+        // Ajouter les event listeners
+        year1Select.addEventListener('change', checkAndCompare);
+        year2Select.addEventListener('change', checkAndCompare);
+        
+        console.log('Event listeners ajoutés pour la comparaison automatique');
+    }
+    
+    // S'assurer que l'event listener est attaché au bouton close
+    const closeBtn = modal.querySelector('.close');
+    if (closeBtn) {
+        closeBtn.addEventListener('click', closeYearComparison);
+        console.log('Event listener attaché au bouton close');
+        
+        // Test direct du bouton
+        console.log('Bouton close trouvé:', closeBtn);
+        console.log('HTML du bouton:', closeBtn.outerHTML);
+        
+        // Test manuel
+        closeBtn.onclick = function() {
+            console.log('CLIC DÉTECTÉ SUR LE BOUTON X !');
+            closeYearComparison();
+        };
+    } else {
+        console.log('❌ BOUTON CLOSE NON TROUVÉ !');
+    }
+}
+
+// Fonction pour comparer les années (appelée automatiquement)
+async function compareYears() {
+    const year1 = document.getElementById('year1Select').value;
+    const year2 = document.getElementById('year2Select').value;
+    
+    // Vérifications de sécurité (normalement déjà vérifiées par checkAndCompare)
+    if (!year1 || !year2 || year1 === year2) {
+        return;
+    }
+    
+    try {
+        const response = await fetch(`/admin/api/reporting/year-comparison?year1=${year1}&year2=${year2}`);
+        const data = await response.json();
+        
+        if (data.success && data.comparison) {
+            const comparison = data.comparison;
+            
+            // Mettre à jour le titre du modal
+            const modal = document.getElementById('yearComparisonModal');
+            const modalTitle = modal.querySelector('h3');
+            if (modalTitle) {
+                modalTitle.textContent = `Année ${comparison.year1.year} vs Année ${comparison.year2.year}`;
+            }
+            
+            // Créer le tableau HTML directement
+            let tableHTML = `
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Métrique</th>
+                            <th>Année ${comparison.year1.year}</th>
+                            <th>Année ${comparison.year2.year}</th>
+                            <th>Tendance</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+            
+            const metrics = [
+                { key: 'ca', label: 'Chiffre d\'Affaires', format: 'FCFA' },
+                { key: 'ventes', label: 'Ventes', format: '' },
+                { key: 'articles', label: 'Articles', format: '' },
+                { key: 'nouveaux_clients', label: 'Clients Actifs', format: '' }
+            ];
+            
+            metrics.forEach(metric => {
+                const year1Value = comparison.year1[metric.key];
+                const year2Value = comparison.year2[metric.key];
+                const trend = comparison.trends[`${metric.key}_trend`];
+                
+                const trendClass = trend > 0 ? 'trend-up' : trend < 0 ? 'trend-down' : 'trend-neutral';
+                const trendIcon = trend > 0 ? '↗' : trend < 0 ? '↘' : '→';
+                
+                tableHTML += `
+                    <tr>
+                        <td>${metric.label}</td>
+                        <td>${formatNumber(year1Value)} ${metric.format}</td>
+                        <td>${formatNumber(year2Value)} ${metric.format}</td>
+                        <td class="${trendClass}">
+                            ${trendIcon} ${Math.abs(trend)}%
+                        </td>
+                    </tr>
+                `;
+            });
+            
+            tableHTML += '</tbody></table>';
+            
+            // Mettre le tableau dans comparisonResults
+            const comparisonResults = document.getElementById('comparisonResults');
+            comparisonResults.innerHTML = tableHTML;
+        }
+    } catch (error) {
+        console.error('Erreur:', error);
+    }
+}
+
+// Fonction globale pour fermer le modal
+window.closeYearComparison = function() {
+    console.log('🚨 FONCTION closeYearComparison APPELÉE !');
+    const modal = document.getElementById('yearComparisonModal');
+    console.log('Modal trouvé:', modal);
+    if (modal) {
+        modal.classList.remove('show');
+        modal.style.display = 'none';
+        console.log('Modal fermé - classe show supprimée et display: none');
+    } else {
+        console.log('❌ MODAL NON TROUVÉ !');
+    }
+}
+</script>
+{% endblock %}

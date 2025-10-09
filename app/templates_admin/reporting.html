@@ -1,0 +1,548 @@
+{% extends 'index.html' %}
+{% block title %}Reporting{% endblock %}
+{% block extra_css %}
+    <style>
+        .content-area {
+            padding: 30px;
+        }
+        
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        
+        .page-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #333;
+        }
+
+        .new-prestation-btn {
+            background: linear-gradient(90deg, #333, #555);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: transform 0.2s ease;
+        }
+
+        .new-prestation-btn:hover {
+            transform: translateY(-2px);
+            background: linear-gradient(90deg, #444, #666);
+        }
+
+        /* Section Filtres */
+        .filters-section {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            padding: 150px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            margin-bottom: 30px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .filters-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .filters-row {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .filters-row .filter-group {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .filter-label {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #555;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .filter-select {
+            padding: 12px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            background: white;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .filter-select:focus {
+            border-color: #333;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .filter-select:hover {
+            border-color: #333;
+        }
+
+        /* Indicateur champ obligatoire */
+        .filter-label.required::after {
+            content: ' *';
+            color: #c62828;
+            font-weight: 700;
+        }
+
+        /* Aide et états d'erreur inline (au lieu d'alert) */
+        .field-hint {
+            display: none;
+            font-size: 0.85rem;
+            color: #666;
+            margin-top: 6px;
+            display: none;
+        }
+        .field-hint.show { display: block; }
+        .field-hint.error { color: #c62828; }
+        .info-inline {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.85rem;
+            color: #666;
+        }
+        .info-inline i {
+            display: inline-flex;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            align-items: center;
+            justify-content: center;
+            font-style: normal;
+            font-weight: 700;
+            font-size: 12px;
+            background: #ffebee; /* fond rouge très clair */
+            color: #c62828;      /* rouge icône */
+            border: 1px solid #ffcdd2;
+        }
+        .filter-select.error {
+            border-color: #c62828;
+            box-shadow: 0 0 0 3px rgba(198, 40, 40, 0.1);
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none !important;
+            position: fixed !important;
+            z-index: 9999 !important;
+            left: 0 !important;
+            top: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+            background-color: rgba(0,0,0,0.5) !important;
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            visibility: hidden;
+            opacity: 0;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        
+        .modal.show {
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+        }
+
+        .modal-content {
+            background-color: white;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 0;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 25px;
+            border-bottom: 1px solid #e0e0e0;
+            background: linear-gradient(135deg, #d81b60, #ff8a80);
+            border-radius: 15px 15px 0 0;
+            color: white;
+        }
+
+        .modal-header h3 {
+            margin: 0;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .close {
+            color: white;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .close:hover {
+            color: #ffcccb;
+        }
+
+        .modal-body {
+            padding: 25px;
+            max-height: 60vh;
+            overflow-y: auto;
+        }
+
+        .monthly-detail-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        .monthly-detail-table th,
+        .monthly-detail-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .monthly-detail-table th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .monthly-detail-table tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        .comparison-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .comparison-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #d81b60;
+        }
+
+        .comparison-card h4 {
+            margin: 0 0 15px 0;
+            color: #333;
+            font-size: 1.1rem;
+        }
+
+        .comparison-metric {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .comparison-metric:last-child {
+            border-bottom: none;
+        }
+
+        .metric-label {
+            font-weight: 500;
+            color: #555;
+        }
+
+        .metric-value {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .variation {
+            font-size: 0.9rem;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-weight: 500;
+        }
+
+        .variation.positive {
+            background: #e8f5e8;
+            color: #2e7d32;
+        }
+
+        .variation.negative {
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        .variation.neutral {
+            background: #f5f5f5;
+            color: #666;
+        }
+
+        .comparison-charts {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .content-area {
+                padding: 20px 15px;
+            }
+            
+            .filters-row {
+                flex-direction: column;
+            }
+            
+            .filters-row .filter-group {
+                min-width: auto;
+            }
+            
+            .page-title {
+                font-size: 1.5rem;
+            }
+            
+            .modal-content {
+                width: 95%;
+                margin: 10% auto;
+            }
+        }
+
+        /* Animations */
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="content-area">
+        <!-- En-tête de page -->
+        <div class="page-header">
+            <h1 class="page-title">REPORTING ANALYTIQUE</h1>
+            <button class="new-prestation-btn" id="downloadPdfBtn">
+                <i class="fas fa-download"></i> Télécharger PDF
+            </button>
+        </div>
+
+        <!-- Section Filtres -->
+        <div class="filters-section fade-in">
+            <h2 class="filters-title">CONFIGURATION DU RAPPORT DE PERFORMANCE</h2>
+
+            <!-- Première ligne : Année, Ville -->
+            <div class="filters-row">
+                <div class="filter-group">
+                    <label class="filter-label required">Année</label>
+                    <select class="filter-select" id="downloadYear" required>
+                        <option value="">Sélectionner une année</option>
+                        <!-- Chargé dynamiquement -->
+                    </select>
+                    <div id="yearHint" class="field-hint"><span class="info-inline"><i>i</i><span>Sélectionnez une année pour générer le rapport.</span></span></div>
+                </div>
+
+                <div class="filter-group">
+                    <label class="filter-label">Ville</label>
+                    <select class="filter-select" id="downloadAgency">
+                        <option value="">Toutes les villes</option>
+                        <!-- Chargé dynamiquement -->
+                    </select>
+                </div>
+                </div>
+
+            <!-- Deuxième ligne : Agent, Format -->
+            <div class="filters-row">
+                <div class="filter-group">
+                    <label class="filter-label">Agent</label>
+                    <select class="filter-select" id="downloadAgent">
+                        <option value="">Tous les agents</option>
+                        <!-- Chargé dynamiquement -->
+                    </select>
+            </div>
+
+                <div class="filter-group">
+                    <label class="filter-label">Format</label>
+                    <input type="text" class="filter-select" id="downloadFormat" value="PDF" readonly>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Détail par mois -->
+        <div id="monthlyDetailModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Détails Mensuels</h3>
+                    <span class="close" onclick="closeMonthlyDetail()">&times;</span>
+                </div>
+                <div class="modal-body">
+                    <div id="monthlyDetailContent">
+                        <!-- Contenu généré dynamiquement -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Comparaison année précédente -->
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Initialisation
+document.addEventListener('DOMContentLoaded', function() {
+    console.log("🚀 Reporting page loaded");
+    
+    // Charger les options pour les champs de téléchargement
+    loadDownloadOptions();
+    
+    // Event listener pour le bouton de téléchargement PDF
+    const downloadBtn = document.getElementById('downloadPdfBtn');
+    if (downloadBtn) {
+        downloadBtn.addEventListener('click', function() {
+            console.log("🖱️ Bouton télécharger PDF cliqué");
+            downloadPDF();
+        });
+    } else {
+        console.error("❌ Bouton downloadPdfBtn non trouvé");
+    }
+});
+
+// Fonction pour télécharger le PDF directement
+function downloadPDF() {
+    const year = document.getElementById('downloadYear').value;
+    const agency = document.getElementById('downloadAgency').value;
+    const agent = document.getElementById('downloadAgent').value;
+    const format = document.getElementById('downloadFormat').value;
+    
+    if (!year) {
+        // Remplacer l'alert par une indication inline et mise en évidence du champ
+        const yearSelect = document.getElementById('downloadYear');
+        const yearHint = document.getElementById('yearHint');
+        if (yearSelect) yearSelect.classList.add('error');
+        if (yearHint) {
+            yearHint.classList.add('show', 'error');
+            yearHint.innerHTML = '<span class="info-inline"><i>i</i><span>Veuillez sélectionner une année.</span></span>';
+        }
+        yearSelect && yearSelect.focus();
+        return;
+    }
+    
+    // Construire l'URL de téléchargement
+    let url = `/admin/api/reporting/export?annee=${year}&format=${format}`;
+    if (agency) url += `&ville=${agency}`;
+    if (agent) url += `&agent=${agent}`;
+    
+    // Ouvrir le téléchargement dans une nouvelle fenêtre
+    window.open(url, '_blank');
+}
+
+function loadDownloadOptions() {
+    console.log('🔄 Chargement des options de téléchargement...');
+    fetch('/admin/api/reporting/filter-options')
+        .then(response => {
+            console.log('📡 Réponse API reçue:', response.status);
+            return response.json();
+        })
+        .then(data => {
+            console.log('📊 Données reçues:', data);
+            if (data.success) {
+                // Charger les années
+                const yearSelect = document.getElementById('downloadYear');
+                if (yearSelect) {
+                yearSelect.innerHTML = '<option value="">Sélectionner une année</option>';
+                    if (data.options && data.options.annees && Array.isArray(data.options.annees)) {
+                        data.options.annees.forEach(year => {
+                    const option = document.createElement('option');
+                    option.value = year;
+                    option.textContent = year;
+                    yearSelect.appendChild(option);
+                });
+                    }
+                }
+                
+                // Charger les villes
+                const citySelect = document.getElementById('downloadAgency');
+                if (citySelect) {
+                citySelect.innerHTML = '<option value="">Toutes les villes</option>';
+                    if (data.options && data.options.villes && Array.isArray(data.options.villes)) {
+                        data.options.villes.forEach(ville => {
+                    const option = document.createElement('option');
+                    option.value = ville; // Garder la casse originale
+                    option.textContent = ville;
+                    citySelect.appendChild(option);
+                });
+                    }
+                }
+                
+                // Charger les agents
+                const agentSelect = document.getElementById('downloadAgent');
+                if (agentSelect) {
+                agentSelect.innerHTML = '<option value="">Tous les agents</option>';
+                    if (data.options && data.options.agents && Array.isArray(data.options.agents)) {
+                        data.options.agents.forEach(agent => {
+                    const option = document.createElement('option');
+                            option.value = agent.id;
+                            option.textContent = agent.nom;
+                    agentSelect.appendChild(option);
+                });
+                    }
+                }
+
+                // Nettoyer l'état d'erreur si des années existent
+                try {
+                    const yearSelectEl = document.getElementById('downloadYear');
+                    const yearHintEl = document.getElementById('yearHint');
+                    if (yearSelectEl) yearSelectEl.classList.remove('error');
+                    if (yearHintEl) yearHintEl.classList.remove('show', 'error');
+                } catch(e) {}
+            }
+        })
+        .catch(error => console.error('Erreur chargement options:', error));
+}
+
+// Fonctions pour les modals (conservées pour compatibilité)
+function showMonthlyDetails() {
+    const modal = document.getElementById('monthlyDetailModal');
+    if (modal) {
+        modal.classList.add('show');
+    }
+}
+
+function closeMonthlyDetail() {
+    const modal = document.getElementById('monthlyDetailModal');
+    if (modal) {
+        modal.classList.remove('show');
+    }
+}
+
+function showYearComparison() {
+    // Fonction pour la comparaison annuelle si nécessaire
+    console.log('Comparaison annuelle');
+}
+</script>
+{% endblock %}

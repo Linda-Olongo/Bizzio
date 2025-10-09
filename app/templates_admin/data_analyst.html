@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Analyst</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='image/logo.png') }}">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            background: white;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        
+        h1 {
+            color: #333;
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 30px;
+        }
+        
+        .description {
+            text-align: center;
+            color: #666;
+            font-size: 1.2rem;
+            margin-bottom: 40px;
+        }
+        
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+        
+        .feature-card {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .feature-icon {
+            font-size: 3rem;
+            color: #007bff;
+            margin-bottom: 20px;
+        }
+        
+        .feature-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        .feature-description {
+            color: #666;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Data Analyst</h1>
+        <p class="description">
+            Votre assistant IA pour l'analyse de données business
+        </p>
+        
+        <div class="features">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <div class="feature-title">Analyses Produits</div>
+                <div class="feature-description">
+                    Analysez les performances de vos produits et identifiez les meilleures opportunités de vente.
+                </div>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-chart-bar"></i>
+                </div>
+                <div class="feature-title">Rapports Business</div>
+                <div class="feature-description">
+                    Obtenez des insights détaillés sur vos ventes, clients et revenus avec des recommandations actionnables.
+                </div>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-brain"></i>
+                </div>
+                <div class="feature-title">IA Intelligente</div>
+                <div class="feature-description">
+                    Bizzio comprend le contexte et fournit des analyses spontanées basées sur vos vraies données.
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

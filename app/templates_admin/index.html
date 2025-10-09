@@ -1,0 +1,4347 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}Dashboard{% endblock %}</title>
+    <link
+      rel="icon"
+      type="image/png"
+      href="{{ url_for('static', filename='image/logo.png') }}"
+    />
+    <link
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+    <style>
+      /* Styles généraux */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      body {
+        display: flex;
+        height: 100vh;
+        background: white;
+        overflow-x: hidden;
+      }
+
+      /* Sidebar */
+      .sidebar {
+        width: 250px;
+        background-color: rgb(252, 252, 252);
+        position: fixed;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        border-right: 0.5px solid #e0e0e0;
+        z-index: 1000;
+        transition: transform 0.3s ease;
+      }
+
+      .sidebar.open {
+        transform: translateX(0);
+      }
+
+      .sidebar-header {
+        padding: 20px;
+        border-bottom: 1px solid #e0e0e0;
+      }
+
+      .sidebar-header h2 {
+        color: #000;
+        font-size: 1.3rem;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .sidebar-header h2 svg {
+        fill: #000;
+      }
+
+      .sidebar-nav {
+        flex: 1;
+        padding: 20px 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+
+      .nav-main {
+        flex: 1;
+      }
+
+      .nav-main ul {
+        list-style: none;
+      }
+
+      .nav-main li {
+        margin-bottom: 5px;
+      }
+
+      .nav-main a {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 20px;
+        text-decoration: none;
+        color: #666;
+        transition: all 0.3s ease;
+        font-size: 0.9rem;
+      }
+
+      .nav-main a svg {
+        fill: #666;
+        transition: fill 0.3s ease;
+      }
+
+      /* Navbar active and hover styles */
+      .nav-main a.active {
+        color: #000 !important;
+        font-weight: bold;
+      }
+
+      .nav-main a.active svg {
+        fill: #000;
+      }
+
+      .nav-main a.active:hover {
+        color: #000 !important;
+        font-weight: bold;
+      }
+
+      .nav-main a.active:hover svg {
+        fill: #000;
+      }
+
+      .nav-main a:not(.active):hover {
+        color: #000;
+        font-weight: bold;
+      }
+
+      .nav-main a:not(.active):hover svg {
+        fill: #000;
+      }
+
+      .nav-section {
+        margin-top: auto;
+      }
+
+      .section-divider {
+        height: 1px;
+        background: #e0e0e0;
+        margin: 15px 0;
+      }
+
+      .section-title {
+        padding: 0 20px;
+        font-size: 0.7rem;
+        color: #999;
+        text-transform: uppercase;
+        font-weight: 500;
+        margin-bottom: 10px;
+        letter-spacing: 0.5px;
+      }
+
+      .nav-section ul {
+        list-style: none;
+      }
+
+      .nav-section li {
+        margin-bottom: 5px;
+      }
+
+      .nav-section a {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 20px;
+        text-decoration: none;
+        color: #666;
+        transition: all 0.3s ease;
+        font-size: 0.9rem;
+      }
+
+      .nav-section a svg {
+        fill: #666;
+        transition: fill 0.3s ease;
+      }
+
+      .nav-section a:hover {
+        color: #000;
+        font-weight: bold;
+      }
+
+      .nav-section a:hover svg {
+        fill: #000;
+      }
+
+      .nav-section a.active {
+        color: #000 !important;
+        font-weight: bold;
+      }
+
+      .nav-section a.active svg {
+        fill: #000;
+      }
+
+      .nav-section a.active:hover {
+        color: #000 !important;
+        font-weight: bold;
+      }
+
+      .nav-section a.active:hover svg {
+        fill: #000;
+      }
+
+      /* Contenu principal */
+      .main-content {
+        margin-left: 250px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        transition: margin-left 0.3s ease;
+      }
+
+      .top-bar {
+        background-color: white;
+        padding: 17px 30px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border: none;
+        outline: none;
+      }
+
+      .top-bar-left {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+      }
+
+      .mobile-menu-btn {
+        display: none;
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        cursor: pointer;
+        color: #333;
+      }
+
+      .top-bar-right {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        margin-left: auto;
+      }
+
+      .notification-icon {
+        cursor: pointer;
+        color: #666;
+        transition: color 0.3s ease;
+      }
+
+      .notification-icon:hover {
+        color: #d81b60 !important;
+      }
+
+      .profile-info {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .profile-avatar {
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        background: #d81b60;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 500;
+        font-size: 0.9rem;
+      }
+
+      .profile-details {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .profile-name {
+        font-weight: 500;
+        color: #333;
+        font-size: 0.9rem;
+      }
+
+      .profile-role {
+        font-size: 0.8rem;
+        color: #666;
+      }
+
+      .profile-ville {
+        font-size: 0.8rem;
+        color: #000;
+      }
+
+      .content-area {
+        flex: 1;
+        padding: 30px;
+        overflow-y: auto;
+        background: white;
+      }
+
+      /* Menu hamburger overlay */
+      .sidebar-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 999;
+        display: none;
+      }
+
+      .sidebar-overlay.show {
+        display: block;
+      }
+
+
+/* MODAL BUG STYLES */
+.bug-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10000;
+    font-family: inherit;
+}
+
+.bug-modal-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(4px);
+}
+
+.bug-modal-content {
+    position: relative;
+    background: white;
+    border-radius: 16px;
+    max-width: 900px;
+    width: 95%;
+    max-height: 95vh;
+    margin: 2.5vh auto;
+    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    display: flex;
+    flex-direction: column;
+}
+
+.bug-modal-header {
+    background: white;
+    color: #333;
+    padding: 20px 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.bug-modal-title {
+    font-size: 1.4rem;
+    font-weight: 600;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.bug-modal-close {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 6px;
+    transition: background-color 0.2s;
+}
+
+.bug-modal-close:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.bug-modal-body {
+    padding: 0;
+    overflow-y: auto;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.bug-hero {
+    background: linear-gradient(90deg, #333, #666);
+    border-radius: 0;
+    padding: 30px;
+    margin-bottom: 30px;
+    color: white;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.bug-hero::before {
+    content: "";
+    position: absolute;
+    top: -50px;
+    right: -50px;
+    width: 200px;
+    height: 200px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+}
+
+.bug-hero::after {
+    content: "";
+    position: absolute;
+    bottom: -30px;
+    left: -30px;
+    width: 150px;
+    height: 150px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+}
+
+.bug-hero-content {
+    position: relative;
+    z-index: 2;
+}
+
+.bug-hero h2 {
+    font-size: 1.6rem;
+    margin-bottom: 15px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.bug-hero p {
+    font-size: 1.05rem;
+    opacity: 0.95;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.bug-form-section {
+    margin-bottom: 30px;
+    padding: 0 30px;
+    flex-shrink: 0;
+}
+
+.bug-section-title {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #333;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.bug-section-title svg {
+    color: #333;
+}
+
+.bug-form-group {
+    margin-bottom: 20px;
+}
+
+.bug-form-label {
+    display: block;
+    font-weight: 500;
+    color: #333;
+    margin-bottom: 8px;
+    font-size: 1rem;
+}
+
+.bug-form-label.required::after {
+    content: " *";
+    color: #333;
+}
+
+.bug-form-input,
+.bug-form-select,
+.bug-form-textarea {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background: #fafafa;
+    font-family: inherit;
+}
+
+.bug-form-input:focus,
+.bug-form-select:focus,
+.bug-form-textarea:focus {
+    outline: none;
+    border-color: #333;
+    background: white;
+    box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
+}
+
+.bug-form-textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+.bug-form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.bug-form-select {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+    background-position: right 12px center;
+    background-repeat: no-repeat;
+    background-size: 16px;
+    padding-right: 40px;
+    appearance: none;
+}
+
+.bug-priority-selector {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.bug-priority-option {
+    position: relative;
+}
+
+.bug-priority-option input[type="radio"] {
+    display: none;
+}
+
+.bug-priority-label {
+    display: block;
+    padding: 12px;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    background: #fafafa;
+}
+
+.bug-priority-label small {
+    display: block;
+    font-size: 0.8rem;
+    margin-top: 4px;
+    opacity: 0.8;
+}
+
+.bug-priority-option.low .bug-priority-label {
+    border-color: #68d391;
+    color: #22543d;
+}
+
+.bug-priority-option.normal .bug-priority-label {
+    border-color: #f6ad55;
+    color: #7b341e;
+}
+
+.bug-priority-option.high .bug-priority-label {
+    border-color: #fc8181;
+    color: #742a2a;
+}
+
+.bug-priority-option input:checked + .bug-priority-label {
+    transform: scale(1.05);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    border-color: #333;
+    background: rgba(0, 0, 0, 0.05);
+}
+
+.bug-upload-area {
+    border: 2px dashed #d1d5db;
+    border-radius: 12px;
+    padding: 40px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: #fafafa;
+}
+
+.bug-upload-area:hover {
+    border-color: #333;
+    background: rgba(0, 0, 0, 0.02);
+}
+
+.bug-upload-area svg {
+    color: #9ca3af;
+    margin-bottom: 15px;
+}
+
+.bug-upload-area p {
+    font-weight: 500;
+    color: #374151;
+    margin: 0 0 8px 0;
+    font-size: 1.1rem;
+}
+
+.bug-upload-area span {
+    color: #6b7280;
+    font-size: 0.9rem;
+}
+
+.bug-image-preview {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.bug-image-item {
+    position: relative;
+    border-radius: 8px;
+    overflow: hidden;
+    aspect-ratio: 1;
+    border: 1px solid #e5e7eb;
+}
+
+.bug-image-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.bug-image-remove {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.bug-submit-section {
+    text-align: center;
+    padding: 20px 30px;
+    border-top: 1px solid #e2e8f0;
+    margin-top: auto; /* Pousse la section vers le bas */
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    flex-shrink: 0;
+}
+
+.bug-btn-secondary,
+.bug-btn-primary {
+    padding: 14px 30px;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1rem;
+    border: none;
+}
+
+.bug-btn-secondary {
+    background: #f3f4f6;
+    border: 1px solid #d1d5db;
+    color: #374151;
+}
+
+.bug-btn-secondary:hover {
+    background: #e5e7eb;
+}
+
+.bug-btn-primary {
+    background: linear-gradient(135deg, #333, #666);
+    color: white;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    min-width: 180px;
+}
+
+.bug-btn-primary:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+}
+
+.bug-btn-primary:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.bug-loading-spinner {
+    display: none;
+    width: 18px;
+    height: 18px;
+    border: 2px solid transparent;
+    border-top: 2px solid white;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.bug-help-text {
+    font-size: 0.85rem;
+    color: #718096;
+    margin-top: 6px;
+    font-style: italic;
+}
+
+.bug-contact-info {
+    background: #f7fafc;
+    border-radius: 12px;
+    padding: 25px 30px;
+    margin: 20px 30px 30px;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.bug-contact-info h3 {
+    color: #2d3748;
+    margin-bottom: 15px;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.bug-contact-info h3 svg {
+    color: #333;
+}
+
+.bug-contact-info p {
+    color: #4a5568;
+    margin: 0;
+    line-height: 1.6;
+}
+
+/* Alertes */
+.bug-alert {
+    padding: 16px 20px;
+    border-radius: 8px;
+    margin: 0 30px 20px;
+    font-weight: 500;
+    display: none;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
+.bug-alert-success {
+    background: rgba(34, 197, 94, 0.1);
+    border: 1px solid rgba(34, 197, 94, 0.3);
+    color: #15803d;
+}
+
+.bug-alert-error {
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    color: #dc2626;
+}
+
+/* RESPONSIVE - CORRECTIONS SPÉCIFIQUES */
+@media (max-width: 768px) {
+    .bug-modal-content {
+        width: 95%;
+        margin: 2.5vh auto;
+        max-height: 95vh;
+        border-radius: 12px;
+    }
+    
+    .bug-modal-header {
+        padding: 15px 20px;
+    }
+    
+    .bug-modal-body {
+        padding-bottom: 0;
+    }
+    
+    .bug-form-section {
+        padding: 0 20px;
+        margin-bottom: 20px;
+    }
+    
+    .bug-priority-selector {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+    
+    .bug-submit-section {
+        padding: 15px 20px;
+        margin-top: 0;
+        flex-direction: column-reverse;
+        gap: 10px;
+    }
+    
+    .bug-btn-secondary,
+    .bug-btn-primary {
+        width: 100%;
+        justify-content: center;
+        padding: 12px 20px;
+        font-size: 1rem;
+        min-width: unset;
+    }
+    
+    .bug-contact-info {
+        margin: 15px 20px 20px;
+        padding: 20px;
+    }
+    
+    .bug-hero {
+        padding: 20px 15px;
+        margin-bottom: 20px;
+    }
+    
+    .bug-hero h2 {
+        font-size: 1.3rem;
+        margin-bottom: 10px;
+    }
+    
+    .bug-hero p {
+        font-size: 0.95rem;
+        line-height: 1.5;
+    }
+    
+    .bug-section-title {
+        font-size: 1.2rem;
+        margin-bottom: 15px;
+    }
+    
+    .bug-form-label {
+        font-size: 0.95rem;
+        margin-bottom: 6px;
+    }
+    
+    .bug-form-input,
+    .bug-form-select,
+    .bug-form-textarea {
+        padding: 10px 14px;
+        font-size: 0.95rem;
+    }
+    
+    .bug-help-text {
+        font-size: 0.8rem;
+    }
+    
+    .bug-upload-area {
+        padding: 25px 15px;
+    }
+    
+    .bug-upload-area p {
+        font-size: 1rem;
+    }
+    
+    .bug-upload-area span {
+        font-size: 0.85rem;
+    }
+    
+    .bug-alert {
+        margin: 0 20px 15px;
+        padding: 12px 16px;
+        font-size: 0.9rem;
+    }
+    
+    .bug-form-row {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .bug-modal-content {
+        width: 92%;
+        margin: 2vh auto;
+        max-height: 96vh;
+        border-radius: 10px;
+    }
+    
+    .bug-form-section {
+        padding: 0 15px;
+        margin-bottom: 15px;
+    }
+    
+    .bug-modal-header {
+        padding: 12px 15px;
+    }
+    
+    .bug-modal-title {
+        font-size: 1.2rem;
+    }
+    
+    .bug-hero {
+        padding: 15px 12px;
+        margin-bottom: 15px;
+    }
+    
+    .bug-hero h2 {
+        font-size: 1.15rem;
+    }
+    
+    .bug-hero p {
+        font-size: 0.9rem;
+    }
+    
+    .bug-contact-info {
+        margin: 10px 15px 15px;
+        padding: 15px;
+    }
+    
+    .bug-contact-info h3 {
+        font-size: 1.1rem;
+    }
+    
+    .bug-contact-info p {
+        font-size: 0.9rem;
+    }
+    
+    .bug-submit-section {
+        padding: 12px 15px;
+    }
+    
+    /* Correction finale pour l'espace en bas */
+    .bug-modal-body {
+        padding-bottom: env(safe-area-inset-bottom, 0);
+    }
+}
+
+
+/* Responsive */
+/* Responsive pour le modal bug */
+@media (max-width: 768px) {
+    .bug-modal-content {
+        width: 95%;
+        margin: 2.5vh auto;
+        max-height: 95vh;
+        border-radius: 12px;
+    }
+    
+    .bug-modal-header {
+        padding: 15px 20px;
+    }
+    
+    .bug-modal-body {
+        padding-bottom: 0; /* Supprime le padding en bas */
+    }
+    
+    .bug-form-section {
+        padding: 0 20px;
+        margin-bottom: 25px;
+    }
+    
+    .bug-priority-selector {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+    
+    .bug-submit-section {
+        padding: 20px;
+        margin-top: 0; /* Supprime la marge supérieure */
+        flex-direction: column-reverse;
+        gap: 12px;
+    }
+    
+    .bug-btn-secondary,
+    .bug-btn-primary {
+        width: 100%;
+        justify-content: center;
+        padding: 14px 20px;
+        font-size: 1rem;
+    }
+    
+    .bug-contact-info {
+        margin: 20px 20px 25px;
+        padding: 20px;
+    }
+    
+    .bug-hero {
+        padding: 20px 15px;
+        margin-bottom: 20px;
+    }
+    
+    .bug-hero h2 {
+        font-size: 1.3rem;
+        margin-bottom: 10px;
+    }
+    
+    .bug-hero p {
+        font-size: 0.95rem;
+        line-height: 1.5;
+    }
+    
+    .bug-section-title {
+        font-size: 1.2rem;
+        margin-bottom: 15px;
+    }
+    
+    .bug-form-label {
+        font-size: 0.95rem;
+        margin-bottom: 6px;
+    }
+    
+    .bug-form-input,
+    .bug-form-select,
+    .bug-form-textarea {
+        padding: 10px 14px;
+        font-size: 0.95rem;
+    }
+    
+    .bug-help-text {
+        font-size: 0.8rem;
+    }
+    
+    .bug-upload-area {
+        padding: 30px 20px;
+    }
+    
+    .bug-upload-area p {
+        font-size: 1rem;
+    }
+    
+    .bug-upload-area span {
+        font-size: 0.85rem;
+    }
+    
+    .bug-alert {
+        margin: 0 20px 15px;
+        padding: 12px 16px;
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .bug-modal-content {
+        width: 92%;
+        margin: 2vh auto;
+        max-height: 96vh;
+    }
+    
+    .bug-form-section {
+        padding: 0 15px;
+    }
+    
+    .bug-modal-header {
+        padding: 12px 15px;
+    }
+    
+    .bug-modal-title {
+        font-size: 1.2rem;
+    }
+    
+    .bug-hero {
+        padding: 15px 12px;
+    }
+    
+    .bug-hero h2 {
+        font-size: 1.15rem;
+    }
+    
+    .bug-hero p {
+        font-size: 0.9rem;
+    }
+    
+    .bug-contact-info {
+        margin: 15px 15px 20px;
+        padding: 15px;
+    }
+    
+    .bug-contact-info h3 {
+        font-size: 1.1rem;
+    }
+    
+    .bug-contact-info p {
+        font-size: 0.9rem;
+    }
+    
+    .bug-form-row {
+        gap: 15px;
+    }
+    
+    /* Correction spécifique pour l'espace en bas */
+    .bug-submit-section {
+        padding: 15px;
+    }
+}
+
+@media (max-width: 768px) {
+    .bug-modal-content {
+        width: 98%;
+        margin: 1vh auto;
+        max-height: 98vh;
+    }
+    
+    .bug-modal-header {
+        padding: 15px 20px;
+    }
+    
+    .bug-form-section {
+        padding: 0 20px;
+    }
+    
+    .bug-priority-selector {
+        grid-template-columns: 1fr;
+    }
+    
+    .bug-submit-section {
+        padding: 20px;
+        flex-direction: column-reverse;
+    }
+    
+    .bug-btn-secondary,
+    .bug-btn-primary {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .bug-contact-info {
+        margin: 20px 20px 20px;
+        padding: 20px;
+    }
+    
+    .bug-hero {
+        padding: 20px;
+    }
+    
+    .bug-hero h2 {
+        font-size: 1.3rem;
+    }
+}
+
+/* Bell active (gris clair quand ouvert) */
+.notification-bell{position:relative;background:0;border:0;cursor:pointer;padding:6px;border-radius:8px;color:#666}
+.notification-bell:hover{color:#d81b60;background:#f9f9f9}
+.notification-bell.is-open{color:#d81b60;background:#e8e8e8} /* reste gris clair quand ouvert */
+
+/* Pastille rouge en haut de la cloche (style Facebook) */
+.notif-badge{position:absolute; right:-2px; top:-2px; background:#e53935; color:#fff; border-radius:999px; font-size:10px; min-width:16px; height:16px; display:flex; align-items:center; justify-content:center; padding:0 4px; line-height:1; box-shadow:0 0 0 2px #fff}
+
+.notification-wrapper{position:relative}
+
+/* Décalage du panneau : s'ouvre à DROITE de la cloche, s'arrête au niveau du profil */
+/* aligne le panneau SOUS la cloche, bord droit collé à la cloche */
+.notif-dropdown{
+  position:absolute; left:auto; right:0;       /* <= C'EST ICI QUE TU AJUSTES */
+  top:44px;                                     /* distance verticale */
+  width:380px; 
+  background:#fff; border:1px solid #eee; border-radius:12px;
+  box-shadow:0 12px 32px rgba(0,0,0,.08); z-index:1200;
+  overflow:visible; /* scroll géré à l'intérieur de la liste */
+}
+
+/* En-tête : titre + onglets + menu (pas de trait sous les onglets) */
+.notif-header{display:flex; align-items:center; gap:10px; padding:10px 12px; border-bottom:2px solid #eee; background:#fff}
+.notif-title{font-weight:700; color:#222; font-size:1rem; margin-right:auto}
+
+/* Onglets */
+.notif-tabs{display:flex; gap:8px}
+.notif-tab{border:0;background:#f5f5f5;padding:6px 10px;border-radius:14px;font-size:.85rem;cursor:pointer}
+.notif-tab.active{background:#e0e0e0;color:#333;font-weight:600}
+
+/* Menu 3 points */
+.notif-actions{display:flex; align-items:center; gap:8px; position:relative}
+.notif-menu-btn{border:0;background:transparent;cursor:pointer;padding:6px;border-radius:8px;color:#666}
+.notif-menu-btn:hover{background:#f9f9f9;color:#d81b60}
+.notif-menu{
+  position:absolute; right:0; top:36px; background:#fff; border:1px solid #eee;
+  border-radius:10px; box-shadow:0 10px 24px rgba(0,0,0,.08); min-width:220px; z-index:1300;
+}
+.notif-menu-item{display:flex; align-items:center; gap:8px; width:100%; padding:10px 12px; background:0;border:0;cursor:pointer; text-align:left; font-size:.9rem; color:#333}
+.notif-menu-item:hover{background:#f7f7f7}
+
+/* Liste */
+.notif-group-label{padding:8px 12px;font-size:.8rem;color:#888;font-weight:600;background:#fff;position:sticky;top:0;z-index:1}
+.notif-item{display:flex;gap:10px;padding:12px;align-items:flex-start; background:#fff}
+.notif-item.unread{background:#f9fbff}
+.notif-avatar{width:36px;height:36px;border-radius:50%;background:#d81b60;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700}
+.notif-content{flex:1}
+.notif-line{font-size:.92rem;color:#222}
+.notif-time{font-size:.78rem;color:#888;margin-top:2px}
+.notif-dot{width:10px;height:10px;border-radius:50%;background:#1e88e5;margin-top:8px;flex:0 0 10px}
+.notif-footer{padding:8px 12px;text-align:center}
+.notif-more{border:0;background:#f3f4f6;padding:8px 12px;border-radius:8px;cursor:pointer}
+.notif-more:hover{background:#e7e9ee}
+
+/* Liste auto-adaptative: pas de scroll au départ; scroll seulement après "Voir plus" */
+.notif-list{max-height:none; overflow:visible}
+.notif-list.scroll{max-height:420px; overflow-y:auto}
+.notif-empty{padding:16px; text-align:center; color:#888; font-size:.9rem}
+
+@media (max-width:480px){
+  .notif-dropdown{width:92vw; left:auto; right:-12px; margin-left:0}
+}
+
+
+      /* Responsive */
+      @media (max-width: 768px) {
+        .sidebar {
+          transform: translateX(-100%);
+        }
+
+        .sidebar.open {
+          transform: translateX(0);
+        }
+
+        .main-content {
+          margin-left: 0;
+        }
+
+        .mobile-menu-btn {
+          display: block;
+        }
+
+        /* Optimisation pour l'affichage mobile */
+        .top-bar {
+          padding: 12px 20px;
+          position: sticky;
+          top: 0;
+          z-index: 800;
+          box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .profile-info {
+          gap: 8px;
+        }
+
+        .profile-details {
+          display: flex !important; /* Force l'affichage sur mobile */
+          flex-direction: column;
+        }
+
+        .profile-name {
+          font-size: 0.85rem;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          max-width: 100px;
+        }
+
+        .profile-ville {
+          font-size: 0.75rem;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .top-bar {
+          padding: 10px 15px;
+        }
+
+        .content-area {
+          padding: 20px 15px;
+        }
+
+        .profile-name {
+          max-width: 80px;
+        }
+
+        .notification-icon {
+          margin-right: 5px;
+        }
+      }
+
+      /* Styles cross-browser */
+      .sidebar::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      .sidebar::-webkit-scrollbar-track {
+        background: #f1f1f1;
+      }
+
+      .sidebar::-webkit-scrollbar-thumb {
+        background: #d81b60;
+        border-radius: 3px;
+      }
+
+      .sidebar::-webkit-scrollbar-thumb:hover {
+        background: #c2185b;
+      }
+
+      /* === CHAT PANEL STYLES === */
+      .chat-panel {
+        position: fixed;
+        top: 0;
+        right: -500px;
+        width: 500px;
+        height: 100vh;
+        background: white;
+        border-left: 1px solid #e0e0e0;
+        box-shadow: -2px 0 10px rgba(0,0,0,0.1);
+        transition: right 0.3s ease;
+        z-index: 1001;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .chat-panel.open {
+        right: 0;
+      }
+
+      /* Chat header avec onglets */
+      .chat-header {
+        display: flex;
+        align-items: center;
+        padding: 15px 20px;
+        border-bottom: 1px solid #e0e0e0;
+        background: white;
+        gap: 10px;
+      }
+
+      .chat-tabs {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        flex: 1;
+        overflow-x: auto;
+        overflow-y: hidden;
+        cursor: grab; /* coulisser comme Cursor */
+        -ms-overflow-style: none; /* IE/Edge */
+        scrollbar-width: none; /* Firefox */
+      }
+
+      /* Cacher la scrollbar (Webkit) */
+      .chat-tabs::-webkit-scrollbar { height: 0; }
+
+      .chat-tab {
+        padding: 8px 12px;
+        background: #f5f5f5;
+        border: 1px solid #e0e0e0;
+        border-radius: 6px;
+        font-size: 12px;
+        color: #666;
+        cursor: pointer;
+        white-space: nowrap;
+        transition: all 0.3s ease;
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .chat-tab:hover .delete-tab-icon {
+        opacity: 1;
+      }
+
+      .delete-tab-icon {
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        color: #999;
+        font-size: 10px;
+        cursor: pointer;
+      }
+
+      .delete-tab-icon:hover {
+        color: #ff4444;
+      }
+
+      .chat-tab.active {
+        background: #333;
+        color: white;
+        border-color: #333;
+      }
+
+      .chat-tab:hover {
+        background: #e0e0e0;
+      }
+
+      .chat-tab.active:hover {
+        background: #555;
+      }
+
+      .new-chat-btn {
+        padding: 8px;
+        background: #333;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 14px;
+        transition: all 0.3s ease;
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .new-chat-btn:hover {
+        background: #555;
+      }
+
+      /* Bouton et dropdown d'historique */
+      .history-wrapper { position: relative; margin-left: 4px; }
+      .history-btn { 
+        border: none; 
+        background: #333; 
+        color: white; 
+        height: 32px; 
+        width: 32px; 
+        border-radius: 6px; 
+        cursor: pointer; 
+        display: flex; 
+        align-items: center; 
+        justify-content: center; 
+        font-size: 14px;
+        transition: all 0.3s ease;
+      }
+      .history-btn:hover { background: #555; }
+      .history-dropdown { position:absolute; right:0; top:40px; width:320px; background:#fff; border:1px solid #eee; border-radius:12px; box-shadow:0 12px 32px rgba(0,0,0,.08); z-index:1400; display:none; overflow:hidden; }
+      .history-header{ padding:10px 12px; border-bottom:2px solid #eee; font-weight:700; color:#222; font-size:1rem; background:#fff; }
+      .history-search{ padding:8px 12px; border-bottom:1px solid #eee; }
+      .history-search input{ width:100%; border:1px solid #e0e0e0; border-radius:6px; padding:6px 10px; font-size:12px; }
+      .history-list{ max-height:360px; overflow:auto; }
+      .history-item{ display:flex; align-items:center; justify-content:space-between; gap:10px; padding:8px 12px; cursor:pointer; font-size:12px; }
+      .history-item:hover{ background:#f7f7f7; }
+      .history-empty{ padding:16px; text-align:center; color:#888; font-size:.9rem; }
+      .history-actions{ display:flex; gap:6px; }
+      .icon-btn{ border:none; background:transparent; color:#111; padding:4px; cursor:pointer; border-radius:4px; }
+      .icon-btn:hover{ background:#f0f0f0; }
+
+      /* Boutons d'action du header: côte à côte */
+      .chat-actions { display:flex; align-items:center; gap:8px; margin-left:8px; }
+
+      /* Bulle de saisie / réponse en cours */
+      .typing-bubble { background:#f8f9fa; color:#333; border:1px solid #e0e0e0; }
+
+      .close-btn {
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        color: #666;
+        cursor: pointer;
+        padding: 5px;
+        border-radius: 50%;
+        transition: all 0.3s ease;
+      }
+
+      .close-btn:hover {
+        background: #f0f0f0;
+        color: #333;
+      }
+
+      .chat-messages {
+        flex: 1;
+        padding: 20px;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      .message {
+        max-width: 85%;
+        padding: 12px 16px;
+        border-radius: 18px;
+        word-wrap: break-word;
+        position: relative;
+      }
+
+      .message.user {
+        background: #333;
+        color: white;
+        align-self: flex-end;
+        margin-left: auto;
+      }
+
+      .message.bizzio {
+        background: #f8f9fa !important;
+        color: #333 !important;
+        border: 1px solid #e0e0e0 !important;
+        align-self: flex-start;
+      }
+      
+      .message.assistant {
+        background: #f8f9fa !important;
+        color: #333 !important;
+        border: 1px solid #e0e0e0 !important;
+        align-self: flex-start;
+      }
+
+      .message.typing-bubble {
+        background: transparent;
+        border: none;
+        padding: 8px 16px;
+      }
+
+      .message-title{
+        font-weight: 600;
+        margin-bottom: 6px;
+        color: #222;
+      }
+
+      .message-body{ 
+        line-height: 1.5; 
+      }
+      
+      /* Styles pour les éléments Markdown */
+      .message-body strong {
+        font-weight: bold;
+        color: #333;
+      }
+      
+      .message-body em {
+        font-style: italic;
+        color: #555;
+      }
+      
+      .message-body code {
+        background: #f1f1f1;
+        padding: 2px 4px;
+        border-radius: 3px;
+        font-family: 'Courier New', monospace;
+        font-size: 0.9em;
+      }
+      
+      .message-body ul {
+        margin: 8px 0;
+        padding-left: 20px;
+      }
+      
+      .message-body li {
+        margin: 4px 0;
+        list-style-type: disc;
+      }
+      
+      /* Styles pour les tableaux Markdown */
+      .message-body .markdown-table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 8px 0;
+        border: 1px solid #ddd;
+      }
+      
+      .message-body .markdown-table td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+      }
+      
+      .message-body .markdown-table tr:nth-child(even) {
+        background-color: #f9f9f9;
+      }
+
+      .message-actions{
+        display: none;
+        gap: 1px;
+        margin-top: 6px;
+        align-items: center;
+        position: absolute;
+        z-index: 10;
+        bottom: -25px;
+        padding: 10px;
+        margin: -10px;
+      }
+
+      .message:hover .message-actions,
+      .message-actions:hover { 
+        display: flex; 
+      }
+
+      .msg-action-btn{
+        border: none; background: none; color: #333; cursor: pointer;
+        width: 20px; height: 20px; display:flex; align-items:center; justify-content:center; font-size:12px;
+        padding: 0; margin: 0;
+        transition: none;
+      }
+      .msg-action-btn:hover{ color: #000; transform: none; }
+
+      /* Alignement des actions selon le type de message */
+      .message.user .message-actions{ 
+        justify-content: flex-end; 
+        right: 0;
+        left: auto;
+        transform: none;
+      }
+      .message.bizzio .message-actions{ 
+        justify-content: flex-start; 
+        left: 0;
+        transform: none;
+      }
+
+      /* Styles pour les tableaux */
+      .data-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 10px 0;
+        font-size: 14px;
+      }
+
+      .data-table td {
+        border: 1px solid #ddd;
+        padding: 8px 12px;
+        text-align: left;
+      }
+
+      .data-table tr:nth-child(even) {
+        background-color: #f9f9f9;
+      }
+
+      .data-table tr:hover {
+        background-color: #f5f5f5;
+      }
+
+      .chat-input-container {
+        padding: 20px;
+        border-top: 1px solid #e0e0e0;
+        background: white;
+      }
+
+      .chat-input-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background: white;
+        border: 1px solid #e0e0e0;
+        border-radius: 12px;
+        padding: 8px 15px;
+      }
+
+      .chat-input {
+        flex: 1;
+        border: none;
+        outline: none;
+        padding: 8px 0;
+        font-size: 14px;
+        background: transparent;
+        resize: none;
+        min-height: 20px;
+        max-height: 120px;
+        font-family: inherit;
+      }
+
+      .chat-input::placeholder {
+        color: #999;
+      }
+
+      .upload-btn, .send-btn {
+        background: none;
+        border: none;
+        color: #333;
+        cursor: pointer;
+        padding: 8px;
+        border-radius: 50%;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .upload-btn:hover, .send-btn:hover {
+        background: #f0f0f0;
+      }
+
+      .send-btn {
+        background: #333;
+        color: white;
+      }
+
+      .send-btn:hover {
+        background: #555;
+      }
+
+      .disclaimer {
+        padding: 5px 20px;
+        margin-top: 5px;
+        font-size: 11px;
+        color: #999;
+        text-align: center;
+        background: transparent;
+        border: none;
+      }
+
+      /* Welcome screen - styles permanents pour éviter le décalage */
+      .chat-welcome-screen {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: center !important;
+        height: 100% !important;
+        padding: 40px 20px !important;
+        text-align: center !important;
+        position: relative !important;
+        min-height: 400px !important;
+      }
+
+      .bizzio-icon-welcome {
+        width: 60px;
+        height: 60px;
+        margin-bottom: 20px;
+        background: #333;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 24px;
+      }
+
+      .welcome-title {
+        color: #333;
+        font-size: 18px;
+        font-weight: 600;
+        margin-bottom: 10px;
+      }
+
+      .welcome-description {
+        color: #666;
+        font-size: 14px;
+        margin-bottom: 20px;
+        line-height: 1.5;
+        max-width: 300px;
+      }
+
+      .welcome-text {
+        color: #999;
+        font-size: 12px;
+        margin: 0;
+      }
+
+      /* Loading animation - barres latérales */
+      .loading {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        padding: 0;
+        background: transparent;
+      }
+
+      .loading-bars {
+        display: flex;
+        align-items: center;
+        gap: 2px;
+      }
+
+      .loading-bar {
+        width: 3px;
+        height: 12px;
+        background: #333;
+        border-radius: 1px;
+        animation: loading-bars 1.4s infinite ease-in-out;
+      }
+
+      .loading-bar:nth-child(1) { animation-delay: -0.32s; }
+      .loading-bar:nth-child(2) { animation-delay: -0.16s; }
+      .loading-bar:nth-child(3) { animation-delay: 0s; }
+
+      @keyframes loading-bars {
+        0%, 80%, 100% { 
+          transform: scaleY(0.4);
+          opacity: 0.5;
+        }
+        40% { 
+          transform: scaleY(1);
+          opacity: 1;
+        }
+      }
+
+      /* Overlay pour le chat */
+      .chat-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.5);
+        z-index: 1000;
+        display: none;
+      }
+
+      .chat-overlay.active {
+        display: block;
+      }
+
+      /* Responsive pour le chat */
+      @media (max-width: 768px) {
+        .chat-panel {
+          width: 100%;
+          right: -100%;
+        }
+      }
+    </style>
+    {% block extra_css %}{% endblock %}
+  </head>
+  <body>
+    <!-- Overlay pour mobile -->
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <h2>
+          <svg class="svg-icon" viewBox="0 0 24 24" width="24" height="24">
+            <path
+              d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8v-6h-8v6zm0-18v6h8V3h-8z"
+            />
+          </svg>
+          Bizzio
+        </h2>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-main">
+          <ul>
+            <li>
+              <a
+                href="{{ url_for('my_admin_dashboard') }}"
+                class="nav-link"
+                data-page="accueil"
+              >
+                <svg
+                  class="svg-icon"
+                  viewBox="0 0 24 24"
+                  width="20"
+                  height="20"
+                >
+                  <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
+                </svg>
+                Tableau de bord
+              </a>
+            </li>
+
+            <li>
+              <a
+                href="#"
+                class="nav-link"
+                data-page="data_analyst"
+                onclick="openChatPanel()"
+              >
+                <svg
+                  class="svg-icon"
+                  viewBox="0 0 24 24"
+                  width="20"
+                  height="20"
+                >
+                  <path d="M3 17h3v-7H3v7zm5 0h3V7H8v10zm5 0h3v-4h-3v4zm5 0h3V4h-3v13z"/>
+                </svg>
+                Data Analyst
+              </a>
+            </li>
+
+            
+            <li>
+              <a
+                href="{{ url_for('admin_ventes') }}"
+                class="nav-link"
+                data-page="ventes"
+              >
+                <svg
+                  class="svg-icon"
+                  viewBox="0 0 24 24"
+                  width="20"
+                  height="20"
+                >
+                  <path
+                    d="M7 18c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12L8.1 13h7.45c.75 0 1.41-.41 1.75-1.03L21.7 4H5.21l-.94-2H1zm16 16c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
+                  />
+                </svg>
+                Ventes
+              </a>
+            </li>
+
+            <li>
+              <a
+                href="{{ url_for('admin_repertoire') }}"
+                class="nav-link"
+                data-page="repertoire"
+              >
+                <svg
+                  class="svg-icon"
+                  viewBox="0 0 24 24"
+                  width="20"
+                  height="20"
+                >
+                  <path
+                    d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"
+                  />
+                </svg>
+                Répertoire
+              </a>
+            </li>
+
+            <li>
+              <a
+                href="{{ url_for('admin_catalogue') }}"
+                class="nav-link"
+                data-page="catalogue"
+              >
+                <svg
+                  class="svg-icon"
+                  viewBox="0 0 24 24"
+                  width="20"
+                  height="20"
+                >
+                  <path
+                    d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"
+                  />
+                </svg>
+                Prestations
+              </a>
+            </li>
+
+            <li>
+              <a
+                href="{{ url_for('admin_equipe') }}"
+                class="nav-link {% if request.endpoint == 'admin_equipe' %}active{% endif %}"
+                data-page="equipe"
+              >
+                <svg
+                  class="svg-icon"
+                  viewBox="0 0 24 24"
+                  width="20"
+                  height="20"
+                >
+                  <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5s-3 1.34-3 3 1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5C15 14.17 10.33 13 8 13zm8 0c-.29 0-.62.02-.97.05C17.16 14.09 20 15.17 20 17.5V19h4v-2.5c0-2.33-4.67-3.5-8-3.5z"/>
+                </svg>
+                Equipe
+              </a>
+            </li>
+
+            <li>
+              <a
+                href="{{ url_for('admin_reporting') }}"
+                class="nav-link"
+                data-page="reporting"
+              >
+                <svg
+                  class="svg-icon"
+                  viewBox="0 0 24 24"
+                  width="20"
+                  height="20"
+                >
+                  <path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 8h14v-2H7v2zm0-4h14v-2H7v2zm0-6v2h14V7H7z"/>
+                </svg>
+                Reporting
+              </a>
+            </li>
+          </ul>
+        </div>
+
+
+        <div class="nav-section">
+          <div class="section-divider"></div>
+          <div class="section-title">SUPPORT</div>
+          <ul>
+
+            <li>
+              <a href="#" onclick="openBugModal(); return false;">
+                <svg
+                  class="svg-icon"
+                  viewBox="0 0 24 24"
+                  width="20"
+                  height="20"
+                >
+                  <path
+                    d="M20 8h-2.81c-.45-.78-1.07-1.45-1.82-1.96L17 4.41 15.59 3l-2.17 2.17C12.96 5.06 12.49 5 12 5c-.49 0-.96.06-1.42.17L8.41 3 7 4.41l1.62 1.63C7.88 6.55 7.26 7.22 6.81 8H4v2h2.09c-.05.33-.09.66-.09 1v1H4v2h2v1c0 .34.04.67.09 1H4v2h2.81c1.04 1.79 2.97 3 5.19 3s4.15-1.21 5.19-3H20v-2h-2.09c.05-.33.09-.66.09-1v-1h2v-2h-2v-1c0-.34-.04-.67-.09-1H20V8zm-6 8h-4v-2h4v2zm0-4h-4v-2h4v2z"
+                  />
+                </svg>
+                Bug
+              </a>
+            </li>
+            <li>
+              <a href="{{ url_for('admin_aide') }}" class="nav-link" data-page="aide">
+                <svg class="svg-icon" viewBox="0 0 24 24" width="20" height="20">
+                  <path d="M11 18h2v-2h-2v2zm1-16C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-2.21 0-4 1.79-4 4h2c0-1.1.9-2 2-2s2 .9 2 2c0 2-3 1.75-3 5h2c0-2.25 3-2.5 3-5 0-2.21-1.79-4-4-4z"/>
+                </svg>
+                Centre d'aide
+              </a>
+            </li>
+          </ul>
+
+          <div class="section-divider"></div>
+          <div class="section-title">LOGS</div>
+          <ul>
+            <li>
+              <a href="{{ url_for('logout') }}">
+                <svg
+                  class="svg-icon"
+                  viewBox="0 0 24 24"
+                  width="20"
+                  height="20"
+                >
+                  <path d="M16 13v-2H7V8l-5 4 5 4v-3z"/>
+                  <path d="M20 3H12a2 2 0 0 0-2 2v4h2V5h8v14h-8v-4h-2v4a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2z"/>
+                </svg>
+                Déconnexion
+              </a>
+            </li>
+          </ul>
+        </div>
+      </nav>
+    </div>
+
+    <!-- Contenu principal -->
+    <div class="main-content">
+      <!-- Top Bar -->
+      <div class="top-bar">
+        <div class="top-bar-left">
+          <button class="mobile-menu-btn" id="mobile-menu-btn">☰</button>
+        </div>
+        <div class="top-bar-right">
+          <div class="notification-wrapper" id="notifWrapper">
+            <button class="notification-bell" id="notifBell" aria-label="Notifications">
+              <svg class="svg-icon" viewBox="0 0 24 24" width="20" height="20">
+                <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5S10.5 3.17 10.5 4v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/>
+              </svg>
+              <span class="notif-badge" id="notifBadge" hidden>0</span>
+            </button>
+
+            <div class="notif-dropdown" id="notifDropdown" hidden>
+              <div class="notif-header">
+                <div class="notif-title">Notifications</div>
+
+                <div class="notif-actions">
+                  <div class="notif-tabs">
+                    <button class="notif-tab active" data-tab="all">Tout</button>
+                    <button class="notif-tab" data-tab="unread">Non lu</button>
+                  </div>
+
+                  <button class="notif-menu-btn" id="notifMenuBtn" aria-label="Options">
+                    <!-- 3 points horizontaux -->
+                    <svg viewBox="0 0 24 24" width="18" height="18">
+                      <circle cx="5" cy="12" r="2"></circle>
+                      <circle cx="12" cy="12" r="2"></circle>
+                      <circle cx="19" cy="12" r="2"></circle>
+                    </svg>
+                  </button>
+
+                  <div class="notif-menu" id="notifMenu" hidden>
+                    <button class="notif-menu-item" id="notifMarkAll">
+                      <!-- icône check -->
+                      <svg width="18" height="18" viewBox="0 0 24 24">
+                        <path d="M9 16.17l-3.88-3.88-1.41 1.41L9 19 20.29 7.71l-1.41-1.41z"/>
+                      </svg>
+                      Tout marquer comme lu
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="notif-list" id="notifList"></div>
+
+              <div class="notif-footer">
+                <button class="notif-more" id="notifMore" hidden>Voir plus</button>
+              </div>
+            </div>
+          </div>
+          <div class="profile-info">
+            <div class="profile-avatar">
+              {% if current_user %} {{ current_user.nom_utilisateur[:1].upper() }} {% else %} {{ session.username[:1].upper() if session.username }} {% endif %}
+            </div>
+            <div class="profile-details">
+              <div class="profile-name">
+                {% if current_user %} {{ current_user.nom_utilisateur }} {% else %} {{ session.username if session.username }} {% endif %}
+              </div>
+              <div class="profile-ville">
+                {% if current_user %} {{ current_user.ville }} {% else %} {{ session.ville if session.ville }} {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Zone de contenu -->
+      <div class="content-area">{% block content %}{% endblock %}</div>
+    </div>
+
+    <!-- Scripts communs -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const mobileMenuBtn = document.getElementById("mobile-menu-btn");
+    const sidebar = document.getElementById("sidebar");
+    const sidebarOverlay = document.getElementById("sidebar-overlay");
+
+    // Menu mobile
+    mobileMenuBtn.addEventListener("click", function () {
+      sidebar.classList.toggle("open");
+      sidebarOverlay.classList.toggle("show");
+    });
+
+    // Fermer le menu en cliquant sur l'overlay
+    sidebarOverlay.addEventListener("click", function () {
+      sidebar.classList.remove("open");
+      sidebarOverlay.classList.remove("show");
+    });
+
+    // Gestion du lien actif
+    const currentPath = window.location.pathname;
+    const navLinks = document.querySelectorAll(".nav-link");
+
+    navLinks.forEach((link) => {
+      link.classList.remove("active");
+
+      // Déterminer le lien actif basé sur l'URL
+       if (currentPath === "/" || currentPath === "/dashboard" || currentPath === "/admin/dashboard") {
+        if (link.dataset.page === "accueil") {
+          link.classList.add("active");
+        }
+      } else if (
+        currentPath.includes("catalogue") &&
+        link.dataset.page === "catalogue"
+      ) {
+        link.classList.add("active");
+      } else if (
+        currentPath.includes("repertoire") &&
+        link.dataset.page === "repertoire"
+      ) {
+        link.classList.add("active");
+      } else if (
+        currentPath.includes("ventes") &&
+        link.dataset.page === "ventes"
+      ) {
+        link.classList.add("active");
+      } else if (
+        currentPath.includes("aide") &&
+        link.dataset.page === "aide"
+      ) {
+        link.classList.add("active");
+      } else if (
+        currentPath.includes("equipe") &&
+        link.dataset.page === "equipe"
+      ) {
+        link.classList.add("active");
+      } else if (
+        currentPath.includes("reporting") &&
+        link.dataset.page === "reporting"
+      ) {
+        link.classList.add("active");
+      }
+    });
+  });
+</script>
+    {% block extra_js %}{% endblock %}
+    
+<!-- MODAL BUG COMPLET - Remplace tout l'ancien modal dans base.html -->
+<div id="bugModal" class="bug-modal">
+    <div class="bug-modal-overlay" onclick="closeBugModal()"></div>
+    <div class="bug-modal-content">
+        <div class="bug-modal-header">
+            <h2 class="bug-modal-title">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M20 8h-2.81c-.45-.78-1.07-1.45-1.82-1.96L17 4.41 15.59 3l-2.17 2.17C12.96 5.06 12.49 5 12 5c-.49 0-.96.06-1.42.17L8.41 3 7 4.41l1.62 1.63C7.88 6.55 7.26 7.22 6.81 8H4v2h2.09c-.05.33-.09.66-.09 1v1H4v2h2v1c0 .34.04.67.09 1H4v2h2.81c1.04 1.79 2.97 3 5.19 3s4.15-1.21 5.19-3H20v-2h-2.09c.05-.33.09-.66.09-1v-1h2v-2h-2v-1c0-.34-.04-.67-.09-1H20V8zm-6 8h-4v-2h4v2zm0-4h-4v-2h4v2z" stroke="currentColor" stroke-width="2"/>
+                </svg>
+                Signaler un problème ?
+            </h2>
+            <button class="bug-modal-close" onclick="closeBugModal()">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M15 5L5 15M5 5l10 10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+            </button>
+        </div>
+
+        <div class="bug-modal-body">
+            <div class="bug-hero">
+                <div class="bug-hero-content">
+                    <h2>
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M20 8h-2.81c-.45-.78-1.07-1.45-1.82-1.96L17 4.41 15.59 3l-2.17 2.17C12.96 5.06 12.49 5 12 5c-.49 0-.96.06-1.42.17L8.41 3 7 4.41l1.62 1.63C7.88 6.55 7.26 7.22 6.81 8H4v2h2.09c-.05.33-.09.66-.09 1v1H4v2h2v1c0 .34.04.67.09 1H4v2h2.81c1.04 1.79 2.97 3 5.19 3s4.15-1.21 5.19-3H20v-2h-2.09c.05-.33.09-.66.09-1v-1h2v-2h-2v-1c0-.34-.04-.67-.09-1H20V8zm-6 8h-4v-2h4v2zm0-4h-4v-2h4v2z" stroke="currentColor" stroke-width="2"/>
+                        </svg>
+                        Vous avez trouvé un problème ?
+                    </h2>
+                    <p>Votre retour est précieux ! Décrivez le problème rencontré et nous nous efforcerons de le corriger rapidement pour améliorer votre expérience sur Bizzio.</p>
+                </div>
+            </div>
+
+            <div id="bugAlertContainer"></div>
+            
+            <form id="bugModalForm">
+                <!-- SECTION 1: INFORMATIONS GÉNÉRALES -->
+                <div class="bug-form-section">
+                    <h3 class="bug-section-title">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M9 11H15M9 15H15M17 21H7C5.89543 21 5 20.1046 5 19V5C5 3.89543 5.89543 3 7 3H12.5858C12.851 3 13.1054 3.10536 13.2929 3.29289L19.7071 9.70711C19.8946 9.89464 20 10.149 20 10.4142V19C20 20.1046 19.1046 21 18 21H17Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        Informations générales
+                    </h3>
+                    
+                    <div class="bug-form-row">
+                        <div class="bug-form-group">
+                            <label class="bug-form-label required" for="bugSubject">Titre du problème</label>
+                            <input type="text" 
+                                   id="bugSubject" 
+                                   name="bugSubject" 
+                                   class="bug-form-input" 
+                                   placeholder="Ex: Impossible de saisir un prompt"
+                                   required>
+                            <div class="bug-help-text">Résumez le problème en quelques mots</div>
+                        </div>
+                        
+                        <div class="bug-form-group">
+                            <label class="bug-form-label" for="bugType">Type de problème</label>
+                            <select id="bugType" name="bugType" class="bug-form-select">
+                                <option value="bug">
+                                    <svg width="16" height="16" class="inline-icon" viewBox="0 0 24 24" fill="none">
+                                        <path d="M20 8h-2.81c-.45-.78-1.07-1.45-1.82-1.96L17 4.41 15.59 3l-2.17 2.17C12.96 5.06 12.49 5 12 5c-.49 0-.96.06-1.42.17L8.41 3 7 4.41l1.62 1.63C7.88 6.55 7.26 7.22 6.81 8H4v2h2.09c-.05.33-.09.66-.09 1v1H4v2h2v1c0 .34.04.67.09 1H4v2h2.81c1.04 1.79 2.97 3 5.19 3s4.15-1.21 5.19-3H20v-2h-2.09c.05-.33.09-.66.09-1v-1h2v-2h-2v-1c0-.34-.04-.67-.09-1H20V8zm-6 8h-4v-2h4v2zm0-4h-4v-2h4v2z" stroke="currentColor" stroke-width="2"/>
+                                    </svg>
+                                    Bug / Erreur
+                                </option>
+                                <option value="interface">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                                        <path d="M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" stroke="currentColor" stroke-width="2"/>
+                                    </svg>
+                                    Problème d'interface
+                                </option>
+                                <option value="performance">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                                        <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" stroke="currentColor" stroke-width="2"/>
+                                    </svg>
+                                    Problème de performance
+                                </option>
+                                <option value="fonctionnalite">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                                        <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2"/>
+                                        <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z" stroke="currentColor" stroke-width="2"/>
+                                    </svg>
+                                    Fonctionnalité manquante
+                                </option>
+                                <option value="autre">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                                        <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                                        <path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3" stroke="currentColor" stroke-width="2"/>
+                                        <path d="M12 17h.01" stroke="currentColor" stroke-width="2"/>
+                                    </svg>
+                                    Autre
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="bug-form-group">
+                        <label class="bug-form-label">Priorité</label>
+                        <div class="bug-priority-selector">
+                            <div class="bug-priority-option low">
+                                <input type="radio" id="priorite_basse" name="bugPriority" value="Basse" checked>
+                                <label class="bug-priority-label" for="priorite_basse">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                                        <circle cx="12" cy="12" r="10" fill="#22c55e"/>
+                                        <path d="M8 12l2 2 4-4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                    Basse
+                                    <small>Gênant mais pas bloquant</small>
+                                </label>
+                            </div>
+                            <div class="bug-priority-option normal">
+                                <input type="radio" id="priorite_normale" name="bugPriority" value="Normale">
+                                <label class="bug-priority-label" for="priorite_normale">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                                        <circle cx="12" cy="12" r="10" fill="#f59e0b"/>
+                                        <path d="M12 8v4M12 16h.01" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                    Normale
+                                    <small>Problème important</small>
+                                </label>
+                            </div>
+                            <div class="bug-priority-option high">
+                                <input type="radio" id="priorite_haute" name="bugPriority" value="Haute">
+                                <label class="bug-priority-label" for="priorite_haute">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                                        <circle cx="12" cy="12" r="10" fill="#ef4444"/>
+                                        <path d="M12 8v4M12 16h.01" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                    Haute
+                                    <small>Bloque mon travail</small>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SECTION 2: DESCRIPTION DU PROBLÈME -->
+                <div class="bug-form-section">
+                    <h3 class="bug-section-title">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        Description du problème
+                    </h3>
+                    
+                    <div class="bug-form-group">
+                        <label class="bug-form-label required" for="bugDescription">Description détaillée</label>
+                        <textarea id="bugDescription" 
+                                  name="bugDescription" 
+                                  class="bug-form-textarea" 
+                                  placeholder="Décrivez précisément le problème rencontré, ce que vous faisiez quand il est survenu, et quel était le comportement attendu..."
+                                  required></textarea>
+                        <div class="bug-help-text">Plus vous êtes précis, plus nous pourrons vous aider rapidement</div>
+                    </div>
+                    
+                    <div class="bug-form-group">
+                        <label class="bug-form-label" for="bugSteps">Étapes pour reproduire le problème</label>
+                        <textarea id="bugSteps" 
+                                  name="bugSteps" 
+                                  class="bug-form-textarea" 
+                                  placeholder="1. Je vais sur la page...&#10;2. Je clique sur...&#10;3. J'observe que...&#10;4. Le problème apparaît quand..."></textarea>
+                        <div class="bug-help-text">Aidez-nous à reproduire le problème étape par étape</div>
+                    </div>
+                </div>
+
+                <!-- SECTION 3: CAPTURES D'ÉCRAN -->
+                <div class="bug-form-section">
+                    <h3 class="bug-section-title">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2" stroke="currentColor" stroke-width="2"/>
+                            <circle cx="8.5" cy="8.5" r="1.5" stroke="currentColor" stroke-width="2"/>
+                            <path d="M21 15l-5-5L5 21" stroke="currentColor" stroke-width="2"/>
+                        </svg>
+                        Captures d'écran (optionnel)
+                    </h3>
+                    
+                    <div class="bug-upload-area" onclick="document.getElementById('bugImages').click()">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <p>Cliquez pour ajouter des images</p>
+                        <span>PNG, JPG jusqu'à 5MB</span>
+                    </div>
+                    <input type="file" id="bugImages" multiple accept="image/*" style="display: none;">
+                    
+                    <div id="bugImagePreview" class="bug-image-preview"></div>
+                </div>
+
+                <!-- SECTION 4: CONTEXTE TECHNIQUE -->
+                <div class="bug-form-section">
+                    <h3 class="bug-section-title">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="4" y="4" width="16" height="12" rx="2" stroke="currentColor" stroke-width="2"/>
+                            <path d="M8 20h8M12 16v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                        Informations techniques
+                    </h3>
+                    
+                    <div class="bug-form-row">
+                        <div class="bug-form-group">
+                            <label class="bug-form-label" for="bugPage">Page concernée</label>
+                            <select id="bugPage" name="bugPage" class="bug-form-select">
+                              <option value="">Sélectionnez une page</option>
+
+                              <option value="dashboard">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                                  <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" stroke="currentColor" stroke-width="2"/>
+                                </svg>
+                                Tableau de bord
+                              </option>
+
+                              <option value="data_analyst">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                                  <path d="M3 17h18M3 12h12M3 7h6" stroke="currentColor" stroke-width="2"/>
+                                </svg>
+                                Data Analyst
+                              </option>
+
+                              <option value="ventes">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                                  <path d="M7 18c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 
+                                          0 1.1.9 2 2 2h12v-2H7.42l.03-.12L8.1 13h7.45c.75 0 1.41-.41 1.75-1.03L21.7 4H5.21l-.94-2H1zM17 18c-1.1 
+                                          0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/>
+                                </svg>
+                                Ventes
+                              </option>
+
+                              <option value="repertoire">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                                  <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 
+                                          1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                                </svg>
+                                Répertoire
+                              </option>
+
+                              <option value="catalogue">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                                  <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 
+                                          14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
+                                </svg>
+                                Catalogue
+                              </option>
+
+                              <option value="equipe">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                                  <path d="M16 11c1.66 0 2.99-1.34 
+                                          2.99-3S17.66 5 16 5s-3 
+                                          1.34-3 3 1.34 3 3 3zm-8 0c1.66 
+                                          0 2.99-1.34 2.99-3S9.66 5 8 5 5 
+                                          6.34 5 8s1.34 3 3 3zm0 2c-2.33 
+                                          0-7 1.17-7 3.5V20h14v-3.5c0-2.33-4.67-3.5-7-3.5zm8 
+                                          0c-.29 0-.62.02-.97.05 1.16.84 1.97 
+                                          1.97 1.97 3.45V20h6v-3.5c0-2.33-4.67-3.5-7-3.5z"/>
+                                </svg>
+                                Équipe
+                              </option>
+
+                              <option value="reporting">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                                  <path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 8h14v-2H7v2zm0-4h14v-2H7v2zm0-6v2h14V7H7z"/>
+                                </svg>
+                                Reporting
+                              </option>
+                            </select>
+                        </div>
+                        
+                        <div class="bug-form-group">
+                            <label class="bug-form-label" for="bugBrowser">Navigateur utilisé</label>
+                            <input type="text" 
+                                   id="bugBrowser" 
+                                   name="bugBrowser" 
+                                   class="bug-form-input" 
+                                   placeholder="Ex: Chrome, Firefox, Safari..."
+                                   readonly>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- BOUTONS D'ACTION -->
+                <div class="bug-submit-section">
+                    <button type="button" class="bug-btn-secondary" onclick="closeBugModal()">
+                        Annuler
+                    </button>
+                    <button type="submit" class="bug-btn-primary" id="bugSubmitBtn">
+                        <span class="bug-loading-spinner" id="bugSpinner"></span>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span id="bugSubmitText">Envoyer le rapport</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+        
+</button>
+<script>
+// Variables globales
+let bugSelectedImages = [];
+
+// Fonction pour ouvrir le modal
+function openBugModal() {
+    const modal = document.getElementById('bugModal');
+    modal.style.display = 'block';
+    document.body.style.overflow = 'hidden';
+    
+    // Détecter le navigateur
+    detectBugBrowser();
+    
+    // Réinitialiser le formulaire
+    document.getElementById('bugModalForm').reset();
+    document.getElementById('bugImagePreview').innerHTML = '';
+    bugSelectedImages = [];
+    clearBugAlert();
+}
+
+// Fonction pour fermer le modal
+function closeBugModal() {
+    const modal = document.getElementById('bugModal');
+    modal.style.display = 'none';
+    document.body.style.overflow = 'auto';
+}
+
+// Détecter le navigateur
+function detectBugBrowser() {
+    const userAgent = navigator.userAgent;
+    let browser = 'Navigateur inconnu';
+    
+    if (userAgent.includes('Chrome') && !userAgent.includes('Edg')) {
+        browser = 'Google Chrome';
+    } else if (userAgent.includes('Firefox')) {
+        browser = 'Mozilla Firefox';
+    } else if (userAgent.includes('Safari') && !userAgent.includes('Chrome')) {
+        browser = 'Safari';
+    } else if (userAgent.includes('Edg')) {
+        browser = 'Microsoft Edge';
+    } else if (userAgent.includes('Opera')) {
+        browser = 'Opera';
+    }
+    
+    document.getElementById('bugBrowser').value = browser;
+}
+
+// Gestion de l'upload d'images
+document.addEventListener('DOMContentLoaded', function() {
+    const imageInput = document.getElementById('bugImages');
+    const preview = document.getElementById('bugImagePreview');
+    
+    if (imageInput) {
+        imageInput.addEventListener('change', function(e) {
+            const files = Array.from(e.target.files);
+            
+            files.forEach(file => {
+                if (file && file.type.startsWith('image/')) {
+                    if (file.size > 5 * 1024 * 1024) {
+                        showBugAlert('Le fichier ' + file.name + ' est trop volumineux (max 5MB)', 'error');
+                        return;
+                    }
+                    
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        bugSelectedImages.push({
+                            file: file,
+                            url: e.target.result
+                        });
+                        updateBugImagePreview();
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        });
+    }
+});
+
+function updateBugImagePreview() {
+    const preview = document.getElementById('bugImagePreview');
+    preview.innerHTML = '';
+    
+    bugSelectedImages.forEach((image, index) => {
+        const item = document.createElement('div');
+        item.className = 'bug-image-item';
+        item.innerHTML = `
+            <img src="${image.url}" alt="Capture d'écran">
+            <button type="button" class="bug-image-remove" onclick="removeBugImage(${index})">×</button>
+        `;
+        preview.appendChild(item);
+    });
+}
+
+function removeBugImage(index) {
+    bugSelectedImages.splice(index, 1);
+    updateBugImagePreview();
+}
+
+// Afficher les alertes
+function showBugAlert(message, type = 'success') {
+    const container = document.getElementById('bugAlertContainer');
+    const alertClass = type === 'success' ? 'bug-alert-success' : 'bug-alert-error';
+    const icon = type === 'success' ? 
+        '<svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/></svg>' :
+        '<svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/><path d="M15 9l-6 6M9 9l6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+    
+    container.innerHTML = `
+        <div class="bug-alert ${alertClass}" style="display: flex;">
+            ${icon}
+            ${message}
+        </div>
+    `;
+    
+    if (type === 'success') {
+        setTimeout(() => {
+            clearBugAlert();
+        }, 5000);
+    }
+}
+
+function clearBugAlert() {
+    document.getElementById('bugAlertContainer').innerHTML = '';
+}
+
+function setBugLoading(loading) {
+    const btn = document.getElementById('bugSubmitBtn');
+    const spinner = document.getElementById('bugSpinner');
+    const text = document.getElementById('bugSubmitText');
+    
+    btn.disabled = loading;
+    spinner.style.display = loading ? 'inline-block' : 'none';
+    text.textContent = loading ? 'Envoi en cours...' : 'Envoyer le rapport';
+}
+
+// Gestion du formulaire
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('bugModalForm');
+    if (form) {
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            // Validation
+            const subject = document.getElementById('bugSubject').value.trim();
+            const description = document.getElementById('bugDescription').value.trim();
+            
+            if (!subject || !description) {
+                showBugAlert('Veuillez remplir tous les champs obligatoires.', 'error');
+                return;
+            }
+            
+            if (description.length < 10) {
+                showBugAlert('La description doit contenir au moins 10 caractères.', 'error');
+                return;
+            }
+            
+            setBugLoading(true);
+            
+            // Préparer les données
+            const formData = {
+                sujet: subject,
+                description: description,
+                type: document.getElementById('bugType').value,
+                priorite: document.querySelector('input[name="bugPriority"]:checked').value,
+                page: document.getElementById('bugPage').value,
+                etapes: document.getElementById('bugSteps').value.trim(),
+                navigateur: document.getElementById('bugBrowser').value,
+                url_actuelle: window.location.href,
+                images_count: bugSelectedImages.length
+            };
+            
+            try {
+                const response = await fetch('/api/bug/send', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData)
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showBugAlert(result.message, 'success');
+                    
+                    // Fermer le modal après 2 secondes
+                    setTimeout(() => {
+                        closeBugModal();
+                    }, 2000);
+                } else {
+                    showBugAlert(result.message || 'Erreur lors de l\'envoi du rapport.', 'error');
+                }
+            } catch (error) {
+                console.error('Erreur:', error);
+                showBugAlert('Erreur de connexion. Veuillez vérifier votre connexion internet et réessayer.', 'error');
+            } finally {
+                setBugLoading(false);
+            }
+        });
+    }
+});
+
+// === Notifications FB-like ===
+const bell = document.getElementById('notifBell');
+if (bell) {
+  const badge = document.getElementById('notifBadge');
+  const panel = document.getElementById('notifDropdown');
+  const listEl = document.getElementById('notifList');
+  const moreBtn = document.getElementById('notifMore');
+  const markAllBtn = document.getElementById('notifMarkAll'); // dans le menu
+  const tabs = document.querySelectorAll('.notif-tab');
+  const menuBtn = document.getElementById('notifMenuBtn');
+  const menuEl = document.getElementById('notifMenu');
+
+  let state = { opened:false, onlyUnread:false, lastId:null, loading:false };
+
+function timeAgo(iso){
+  const hasTZ = /[zZ]|[+\-]\d{2}:\d{2}$/.test(iso);
+  const d = new Date(hasTZ ? iso : iso + 'Z');
+  const s = Math.floor((Date.now() - d.getTime()) / 1000);
+  if (s < 4) return "À l'instant";
+  if (s < 60) return `${s} s`;
+  const m = Math.floor(s / 60);
+  if (m < 60) return `${m} min`;
+  const h = Math.floor(m / 60);
+  if (h < 24) return `${h} h`;
+  const day = Math.floor(h / 24);
+  return `${day} j`;
+}
+
+  function renderGroups(groups, replace=true){
+    if(replace) listEl.innerHTML='';
+    if(!groups || groups.length===0){
+      listEl.innerHTML = '<div class="notif-empty">Aucune notification disponible</div>';
+      listEl.classList.remove('scroll');
+      moreBtn.hidden = true;
+      return;
+    }
+    groups.forEach(g=>{
+      const h=document.createElement('div');
+      h.className='notif-group-label';
+      h.textContent=g.label;
+      listEl.appendChild(h);
+
+      g.items.forEach(item=>{
+        const row=document.createElement('div');
+        row.className='notif-item'+(item.is_unread?' unread':'');
+        row.dataset.id=item.notif_id;
+
+        const avatar=document.createElement('div');
+        avatar.className='notif-avatar';
+        avatar.textContent=(item.actor||'?').slice(0,1).toUpperCase();
+
+        const content=document.createElement('div');
+        content.className='notif-content';
+
+        const line=document.createElement('div');
+        line.className='notif-line';
+
+        // ➜ évite le doublon du nom : si le message commence déjà par l'acteur, ne le préfixe pas
+        const actor = (item.actor || '').trim();
+        const msg   = (item.message || '').trim();
+        const text  = msg.toLowerCase().startsWith(actor.toLowerCase() + ' ')
+                        ? msg
+                        : `${actor} ${msg}`;
+        line.textContent = text;
+
+        const when=document.createElement('div');
+        when.className='notif-time';
+        when.textContent=timeAgo(item.created_at);
+
+        content.appendChild(line);
+        content.appendChild(when);
+        row.appendChild(avatar);
+        row.appendChild(content);
+
+        if(item.is_unread){
+          const dot=document.createElement('div');
+          dot.className='notif-dot';
+          row.appendChild(dot);
+        }
+
+        row.addEventListener('click',()=>markRead(item.notif_id,row));
+        listEl.appendChild(row);
+      });
+    });
+  }
+
+  function fetchUnreadCount(){
+    fetch('/api/notifs/unread_count').then(r=>r.json()).then(({count})=>{
+      if(count>0){ badge.hidden=false; badge.textContent=count; } else { badge.hidden=true; }
+    }).catch(()=>{});
+  }
+
+  function load(first=false){
+    if(state.loading) return;
+    state.loading=true;
+    const params=new URLSearchParams(); params.set('limit','12');
+    if(state.onlyUnread) params.set('only_unread','1');
+    if(!first && state.lastId) params.set('before_id',state.lastId);
+    fetch('/api/notifs/list?'+params.toString())
+      .then(r=>r.json())
+      .then(({groups,has_more,last_id})=>{
+        renderGroups(groups, true);
+        state.lastId=last_id; moreBtn.hidden=!has_more;
+        // active le scroll seulement si on a "voir plus"
+        if(has_more){ listEl.classList.add('scroll'); } else { listEl.classList.remove('scroll'); }
+      })
+      .finally(()=>{ state.loading=false; });
+  }
+
+  function markRead(id, rowEl){
+    fetch('/api/notifs/mark_read',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({notif_id:id})})
+      .then(()=>{ rowEl.classList.remove('unread'); const dot=rowEl.querySelector('.notif-dot'); if(dot) dot.remove();
+        const current=parseInt(badge.textContent||"0",10); if(!isNaN(current)&&current>0){const next=current-1; badge.textContent=next; if(next<=0) badge.hidden=true;}
+      }).catch(()=>{});
+  }
+  
+
+  // Ouvrir / fermer le panneau (cloche devient rose .is-open)
+  bell.addEventListener('click',()=>{
+    state.opened=!state.opened; panel.hidden=!state.opened;
+    bell.classList.toggle('is-open', state.opened);
+    menuEl.hidden = true; // referme le menu 3 points si ouvert
+    if(state.opened){ state.lastId=null; load(true); }
+  });
+
+  if (moreBtn) moreBtn.addEventListener('click',()=>load(false));
+
+  // Menu 3 points
+  if (menuBtn){
+    menuBtn.addEventListener('click',(e)=>{
+      e.stopPropagation();
+      menuEl.hidden = !menuEl.hidden;
+    });
+  }
+  if (markAllBtn){
+    markAllBtn.addEventListener('click',()=>{
+      fetch('/api/notifs/mark_all_read',{method:'POST'}).then(()=>{
+        document.querySelectorAll('.notif-item.unread').forEach(el=>{ el.classList.remove('unread'); const d=el.querySelector('.notif-dot'); if(d) d.remove(); });
+        badge.hidden=true; menuEl.hidden=true;
+      });
+    });
+  }
+
+  tabs.forEach(t=> t.addEventListener('click',()=>{
+    tabs.forEach(x=>x.classList.remove('active')); t.classList.add('active');
+    state.onlyUnread=(t.dataset.tab==='unread'); state.lastId=null; load(true);
+  }));
+
+  document.addEventListener('click',(e)=>{
+    if(panel && !panel.contains(e.target) && !bell.contains(e.target)){ state.opened=false; panel.hidden=true; bell.classList.remove('is-open'); }
+    if(menuEl && !menuEl.contains(e.target) && !menuBtn.contains(e.target)){ menuEl.hidden=true; }
+  });
+
+  fetchUnreadCount();
+  setInterval(fetchUnreadCount,30000);
+}
+
+// Fermer le modal en cliquant sur Escape
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        closeBugModal();
+    }
+});
+
+// Gestion de l'inactivité et déconnexion automatique
+(function() {
+    let inactivityTimer;
+    let warningTimer;
+    let warningShown = false;
+    const INACTIVITY_WARNING_TIME = 119.5 * 60 * 1000; // 1 heure 59 minutes 30 secondes (alerte 30s avant)
+    const INACTIVITY_TIMEOUT = 120 * 60 * 1000; // 2 heures (déconnexion totale)
+    
+    // Canal de communication entre onglets
+    const broadcastChannel = new BroadcastChannel('session-timeout');
+    
+    // Écouter les messages de déconnexion des autres onglets
+    broadcastChannel.addEventListener('message', (event) => {
+        if (event.data.type === 'logout') {
+            window.location.href = '/login';
+        }
+    });
+    
+    function resetInactivityTimer() {
+        clearTimeout(inactivityTimer);
+        clearTimeout(warningTimer);
+        warningShown = false;
+        
+        // Timer pour l'alerte
+        warningTimer = setTimeout(() => {
+            if (!warningShown) {
+                showInactivityWarning();
+                warningShown = true;
+            }
+        }, INACTIVITY_WARNING_TIME);
+        
+        // Timer pour la déconnexion
+        inactivityTimer = setTimeout(() => {
+            logoutDueToInactivity();
+        }, INACTIVITY_TIMEOUT);
+    }
+    
+    function showInactivityWarning() {
+        // Créer le backdrop avec blur
+        const backdrop = document.createElement('div');
+        backdrop.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+        `;
+        
+        // Créer le modal d'alerte
+        const modalDiv = document.createElement('div');
+        modalDiv.style.cssText = `
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            max-width: 500px;
+            width: 90%;
+            animation: modalSlideIn 0.3s ease-out;
+        `;
+        
+        // Ajouter les styles d'animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes modalSlideIn {
+                from {
+                    opacity: 0;
+                    transform: scale(0.8) translateY(-20px);
+                }
+                to {
+                    opacity: 1;
+                    transform: scale(1) translateY(0);
+                }
+            }
+            @keyframes modalSlideOut {
+                from {
+                    opacity: 1;
+                    transform: scale(1) translateY(0);
+                }
+                to {
+                    opacity: 0;
+                    transform: scale(0.8) translateY(-20px);
+                }
+            }
+        `;
+        document.head.appendChild(style);
+        
+        // Contenu du modal avec décompte
+        let countdown = 30; // 30 secondes de décompte
+        modalDiv.innerHTML = `
+            <div style="margin-bottom: 20px;">
+                <svg width="60" height="60" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2L22 20H2L12 2Z" fill="#ff6b6b" stroke="#ff6b6b" stroke-width="2"/>
+                    <path d="M12 8V14" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                    <circle cx="12" cy="17" r="1" fill="white"/>
+                </svg>
+            </div>
+            <h3 style="color: #333; margin-bottom: 15px; font-size: 1.5em;">Session expirera bientôt</h3>
+            <p style="color: #666; margin-bottom: 25px; font-size: 1.1em;">
+                Votre session expirera dans <span id="countdown-timer" style="color: #000; font-weight: bold; font-size: 1.2em;">${countdown}</span> secondes d'inactivité.
+            </p>
+            <div style="display: flex; gap: 15px; justify-content: center;">
+                <button id="extend-session-btn" style="
+                    background: linear-gradient(90deg, #333, #666);
+                    color: white;
+                    border: none;
+                    padding: 12px 24px;
+                    border-radius: 8px;
+                    cursor: pointer;
+                    font-weight: 500;
+                    font-size: 1em;
+                ">Prolonger la session</button>
+                <button id="logout-now-btn" style="
+                    background: #6c757d;
+                    color: white;
+                    border: none;
+                    padding: 12px 24px;
+                    border-radius: 8px;
+                    cursor: pointer;
+                    font-weight: 500;
+                    font-size: 1em;
+                ">Se déconnecter maintenant</button>
+            </div>
+        `;
+        
+        backdrop.appendChild(modalDiv);
+        document.body.appendChild(backdrop);
+        
+        // Gestion du décompte
+        const countdownElement = modalDiv.querySelector('#countdown-timer');
+        const countdownInterval = setInterval(() => {
+            countdown--;
+            countdownElement.textContent = countdown;
+            
+            if (countdown <= 0) {
+                clearInterval(countdownInterval);
+                backdrop.remove();
+                style.remove();
+                // Déconnexion automatique après le décompte - notifier tous les onglets
+                broadcastChannel.postMessage({ type: 'logout' });
+                window.location.href = '/login';
+            }
+        }, 1000);
+        
+        // Bouton prolonger la session
+        modalDiv.querySelector('#extend-session-btn').addEventListener('click', () => {
+            clearInterval(countdownInterval);
+            backdrop.remove();
+            style.remove();
+            // Réinitialiser le timer d'inactivité
+            resetInactivityTimer();
+        });
+        
+        // Bouton se déconnecter maintenant
+        modalDiv.querySelector('#logout-now-btn').addEventListener('click', () => {
+            clearInterval(countdownInterval);
+            backdrop.remove();
+            style.remove();
+            // Déconnexion immédiate - notifier tous les onglets
+            broadcastChannel.postMessage({ type: 'logout' });
+            window.location.href = '/login';
+        });
+        
+        // Fermer en cliquant sur le backdrop
+        backdrop.addEventListener('click', (e) => {
+            if (e.target === backdrop) {
+                clearInterval(countdownInterval);
+                backdrop.remove();
+                style.remove();
+            }
+        });
+    }
+    
+    function logoutDueToInactivity() {
+        // Créer une notification de déconnexion
+        const logoutDiv = document.createElement('div');
+        logoutDiv.style.cssText = `
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            z-index: 10001;
+            text-align: center;
+            max-width: 400px;
+        `;
+        logoutDiv.innerHTML = `
+            <div style="color: #d81b60; font-size: 2em; margin-bottom: 15px;">🔒</div>
+            <h3 style="color: #333; margin-bottom: 10px;">Session expirée</h3>
+            <p style="color: #666; margin-bottom: 20px;">Vous avez été déconnecté pour des raisons de sécurité après 2 heures d'inactivité.</p>
+            <button onclick="window.location.href='/login'" style="
+                background: linear-gradient(90deg, #333, #666);
+                color: white;
+                border: none;
+                padding: 12px 24px;
+                border-radius: 5px;
+                cursor: pointer;
+                font-weight: 500;
+            ">Se reconnecter</button>
+        `;
+        
+        document.body.appendChild(logoutDiv);
+        
+        // Notifier tous les onglets et rediriger après 3 secondes
+        broadcastChannel.postMessage({ type: 'logout' });
+        setTimeout(() => {
+            window.location.href = '/login';
+        }, 3000);
+    }
+    
+    // Événements qui réinitialisent le timer
+    const events = ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart', 'click'];
+    events.forEach(event => {
+        document.addEventListener(event, resetInactivityTimer, true);
+    });
+    
+    // Initialiser le timer au chargement de la page
+    resetInactivityTimer();
+})();
+
+// === CHAT PANEL FUNCTIONS ===
+let isTyping = false;
+// Variables globales pour le système multi-onglets
+let currentChatId = null;
+let chatSessions = [];
+let tabCounter = 0; // Compteur pour les onglets temporaires
+let tabStates = new Map(); // État de chaque onglet (messages, input, etc.)
+
+// Fonction pour créer une nouvelle conversation
+async function createNewChat() {
+    try {
+        // Créer un nouvel onglet "Nouvelle conversation" avec un ID unique
+        tabCounter++;
+        const newTabId = `current_${tabCounter}`;
+        const title = 'Nouvelle conversation';
+        
+        // Créer/activer l'onglet
+        addOrActivateTab(newTabId, title);
+        window.__activeChatId = null; // Pas de chat_id pour les nouveaux onglets
+        
+        // Recharger l'historique
+        loadSessions();
+    } catch(e) { 
+        console.error('createNewChat failed', e); 
+    }
+}
+
+// Fonctions de gestion du panneau
+function openChatPanel() {
+    console.log('Ouverture du panneau de chat');
+    document.getElementById('chatPanel').classList.add('open');
+    document.getElementById('overlay').classList.add('active');
+    
+    // Masquer le loading
+    const loadingDiv = document.getElementById('bizzioLoading');
+    if (loadingDiv) {
+        loadingDiv.style.display = 'none';
+    }
+    
+    // Charger le contenu de l'onglet actif
+    const activeTab = document.querySelector('.chat-tab.active');
+    if (activeTab) {
+        const chatId = activeTab.getAttribute('data-chat-id');
+        console.log('Onglet actif trouvé:', chatId);
+        
+        // Forcer le rechargement du contenu avec un délai
+        setTimeout(() => {
+            loadTabContent(chatId);
+            
+            // Forcer le scroll après le chargement
+            setTimeout(() => {
+                const messagesContainer = document.getElementById('chatMessages');
+                if (messagesContainer) {
+                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                    console.log('Scroll forcé vers le bas après ouverture');
+                }
+            }, 300);
+        }, 100);
+    } else {
+        console.log('Aucun onglet actif, création d\'un onglet par défaut');
+        // Aucun onglet actif - créer un onglet par défaut
+        createDefaultTab();
+    }
+    
+    document.getElementById('chatInput').focus();
+}
+
+function closeChatPanel() {
+    console.log('Fermeture du panneau de chat');
+    // Sauvegarder l'état avant de fermer
+    saveCurrentTabState();
+    saveTabsState();
+    
+    document.getElementById('chatPanel').classList.remove('open');
+    document.getElementById('overlay').classList.remove('active');
+}
+
+// Gestion des touches
+function handleKeyPress(event) {
+  if (event.key === 'Enter' && !event.shiftKey) {
+    event.preventDefault();
+    sendMessage();
+  }
+  // Shift+Enter permet d'aller à la ligne
+}
+
+// Fonction d'upload de fichier
+function uploadFile() {
+    // Pour l'instant, juste un placeholder
+    alert('Fonctionnalité d\'upload à venir !');
+}
+
+// Fonction de formatage Markdown améliorée avec support des tableaux
+function formatMarkdown(text) {
+  if (!text) return '';
+  
+  return text
+    // Gras (**texte** ou __texte__)
+    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+    .replace(/__(.*?)__/g, '<strong>$1</strong>')
+    // Italique (*texte* ou _texte_)
+    .replace(/\*(.*?)\*/g, '<em>$1</em>')
+    .replace(/_(.*?)_/g, '<em>$1</em>')
+    // Code inline (`code`)
+    .replace(/`(.*?)`/g, '<code>$1</code>')
+    // Listes à puces (- ou * au début de ligne)
+    .replace(/^[\s]*[-*]\s+(.+)$/gm, '<li>$1</li>')
+    // Entourer les listes de <ul>
+    .replace(/(<li>.*<\/li>)/gs, '<ul>$1</ul>')
+    // Nettoyer les <ul> imbriqués
+    .replace(/<\/ul>\s*<ul>/g, '')
+    // Tableaux simples (lignes avec |)
+    .replace(/^[\s]*\|(.+)\|[\s]*$/gm, (match, content) => {
+      const cells = content.split('|').map(cell => cell.trim()).filter(cell => cell);
+      return '<tr>' + cells.map(cell => `<td>${cell}</td>`).join('') + '</tr>';
+    })
+    // Entourer les tableaux de <table>
+    .replace(/(<tr>.*<\/tr>)/gs, '<table class="markdown-table">$1</table>')
+    // Nettoyer les <table> imbriqués
+    .replace(/<\/table>\s*<table class="markdown-table">/g, '')
+    // Retours à la ligne
+    .replace(/\n/g, '<br>')
+    // Nettoyer les <br> avant les éléments de bloc
+    .replace(/<br>\s*<(ul|table)/g, '<$1')
+    // Nettoyer les <br> après les éléments de bloc
+    .replace(/<\/(ul|table)>\s*<br>/g, '</$1>');
+}
+
+// Fonction d'envoi de message
+function sendMessage() {
+  const input = document.getElementById('chatInput');
+  const message = input.value.trim();
+  
+  if (!message || isTyping) return;
+  
+  // Masquer l'écran d'accueil dès qu'on commence à taper
+  const welcomeScreen = document.getElementById('chatWelcomeScreen');
+  if (welcomeScreen) {
+    welcomeScreen.style.display = 'none';
+  }
+  
+  // Sauvegarder l'état de l'onglet actuel avant envoi
+  saveCurrentTabState();
+  
+  // Ajouter le message utilisateur
+  addMessage(message, 'user');
+  input.value = '';
+  
+  // Afficher le loading
+  showTypingIndicator();
+  
+  // Envoyer à l'API
+  sendToAPI(message);
+}
+
+// Ajouter un message au chat
+function addMessage(content, sender, saveState = true) {
+    const messagesContainer = document.getElementById('chatMessages');
+    
+    const messageDiv = document.createElement('div');
+    messageDiv.className = `message ${sender}`;
+
+    let bodyHtml;
+    if (sender === 'user') {
+        bodyHtml = content;
+    } else {
+      // Utiliser la fonction de formatage Markdown améliorée pour tous les messages non-utilisateur
+      bodyHtml = formatMarkdown(content);
+    }
+
+    if (sender === 'user') {
+        messageDiv.innerHTML = `
+          <div class="message-body">${bodyHtml}</div>
+          <div class="message-actions">
+            <button class="msg-action-btn" title="Copier" onclick="copyMessage(this)"><i class="fas fa-copy"></i></button>
+            <button class="msg-action-btn" title="Modifier" onclick="editUserMessage(this)"><i class="fas fa-pen"></i></button>
+          </div>
+        `;
+    } else {
+        messageDiv.innerHTML = `
+          <div class="message-body">${bodyHtml}</div>
+          <div class="message-actions">
+            <button class="msg-action-btn" title="Copier" onclick="copyMessage(this)"><i class="fas fa-copy"></i></button>
+          </div>
+        `;
+    }
+    
+    messagesContainer.appendChild(messageDiv);
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    
+    // Mettre à jour le flag hasMessages de l'onglet actuel
+    const activeTab = document.querySelector('.chat-tab.active');
+    if (activeTab && saveState) {
+        const chatId = activeTab.getAttribute('data-chat-id');
+        const tabState = tabStates.get(chatId);
+        if (tabState) {
+            tabState.hasMessages = true;
+            tabStates.set(chatId, tabState);
+        }
+    }
+    
+    // Sauvegarder l'état de l'onglet actuel si demandé
+    if (saveState) {
+        saveCurrentTabState();
+    }
+}
+
+// Afficher l'indicateur de frappe
+function showTypingIndicator() {
+    const messagesContainer = document.getElementById('chatMessages');
+    // Supprimer l'ancien spinner s'il existe
+    const oldBubble = document.getElementById('typingBubble');
+    if (oldBubble) {
+        oldBubble.remove();
+    }
+    
+    // Créer un nouveau spinner à la fin des messages
+    const bubble = document.createElement('div');
+    bubble.id = 'typingBubble';
+    bubble.className = 'message bizzio typing-bubble';
+    bubble.innerHTML = `
+      <div class="loading-bars">
+        <div class="loading-bar"></div>
+        <div class="loading-bar"></div>
+        <div class="loading-bar"></div>
+      </div>`;
+    messagesContainer.appendChild(bubble);
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    isTyping = true;
+}
+
+// Supprimer l'indicateur de frappe
+function removeTypingIndicator() {
+    const bubble = document.getElementById('typingBubble');
+    if (bubble) bubble.remove();
+    isTyping = false;
+}
+
+// Copier le contenu d'un message
+function copyMessage(btn){
+  const msg = btn.closest('.message');
+  if(!msg) return;
+  const body = msg.querySelector('.message-body');
+  const text = body ? body.innerText : msg.innerText;
+  navigator.clipboard.writeText(text).catch(()=>{});
+}
+
+// Modifier un message utilisateur
+function editUserMessage(btn){
+  const msg = btn.closest('.message.user');
+  if(!msg) return;
+  const body = msg.querySelector('.message-body');
+  const current = body ? body.innerText : '';
+  const input = document.getElementById('chatInput');
+  input.value = current;
+  input.focus();
+  
+  // Supprimer le message modifié et TOUTES les réponses suivantes (y compris agent)
+  let nextElement = msg.nextElementSibling;
+  while (nextElement) {
+    const temp = nextElement.nextElementSibling;
+    nextElement.remove();
+    nextElement = temp;
+  }
+  msg.remove();
+  
+  // Mettre à jour l'état de l'onglet
+  saveCurrentTabState();
+  
+  // Forcer l'affichage de l'écran d'accueil si plus de messages
+  const messagesContainer = document.getElementById('chatMessages');
+  const remainingMessages = messagesContainer.querySelectorAll('.message');
+  if (remainingMessages.length === 0) {
+    showWelcomeScreen();
+  }
+}
+
+// Envoyer à l'API
+function sendToAPI(message) {
+    fetch('/admin/api/data-analyst/chat', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            message: message,
+            chat_id: window.__activeChatId || null,
+            session_name: 'Nouvelle conversation'
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        removeTypingIndicator();
+        
+        if (data.success) {
+            addMessage(data.response, 'bizzio');
+            if (data.chat_id) { 
+                window.__activeChatId = data.chat_id; 
+                loadSessions();
+                // Mettre à jour le titre de l'onglet si un nouveau titre est fourni
+                if (data.session_name) {
+                    updateActiveTabTitle(data.session_name);
+                }
+            }
+        } else {
+            addMessage('Désolé, j\'ai rencontré une erreur. Pouvez-vous reformuler votre question ?', 'bizzio');
+        }
+    })
+    .catch(error => {
+        removeTypingIndicator();
+        addMessage('Désolé, problème de connexion. Veuillez réessayer.', 'bizzio');
+        console.error('Erreur:', error);
+    });
+}
+
+// Drag-scroll pour les onglets de chat
+document.addEventListener('DOMContentLoaded', function(){
+  const tabs = document.getElementById('chatTabs');
+  if(!tabs) return;
+
+  // ===== Drag & Drop des onglets =====
+  let draggedTab = null;
+  function handleDragStart(e){
+    draggedTab = e.currentTarget;
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/plain', 'drag');
+    draggedTab.classList.add('dragging');
+  }
+  function handleDragOver(e){
+    e.preventDefault();
+    const target = e.target.closest('.chat-tab');
+    if(!target || target === draggedTab) return;
+    const container = document.getElementById('chatTabs');
+    const rect = target.getBoundingClientRect();
+    const before = (e.clientX - rect.left) < rect.width / 2;
+    if(before) container.insertBefore(draggedTab, target);
+    else container.insertBefore(draggedTab, target.nextSibling);
+  }
+  function handleDrop(e){ e.preventDefault(); }
+  function handleDragEnd(){ if(draggedTab){ draggedTab.classList.remove('dragging'); draggedTab=null; } }
+
+  // Attache comportements (fermer/activer + DnD) à un onglet
+  window.attachTabBehaviors = function(tab){
+    if(!tab) return;
+    const deleteBtn = tab.querySelector('.delete-tab-icon');
+    if (deleteBtn && !deleteBtn.__wired){
+      deleteBtn.__wired = true;
+      deleteBtn.addEventListener('click', (e) => { e.stopPropagation(); deleteChatTab(e.currentTarget); });
+    }
+    if (!tab.__wiredClick){
+      tab.__wiredClick = true;
+      tab.addEventListener('click', (e)=>{
+        if (e.target.classList.contains('delete-tab-icon')) return;
+        
+        // Désactiver tous les onglets
+        document.querySelectorAll('.chat-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        
+        const id = tab.getAttribute('data-chat-id');
+        
+        // Vider immédiatement le conteneur pour éviter l'affichage de l'ancien contenu
+        const messagesContainer = document.getElementById('chatMessages');
+        if (messagesContainer) {
+          messagesContainer.innerHTML = '';
+        }
+        
+        // Charger le contenu de l'onglet de manière asynchrone
+        loadTabContent(id).catch(console.error);
+        
+        // Sauvegarder l'état des onglets
+        saveTabsState();
+      });
+    }
+    tab.setAttribute('draggable', 'true');
+    if (!tab.__wiredDrag){
+      tab.__wiredDrag = true;
+      tab.addEventListener('dragstart', handleDragStart);
+      tab.addEventListener('dragover', handleDragOver);
+      tab.addEventListener('drop', handleDrop);
+      tab.addEventListener('dragend', handleDragEnd);
+    }
+  };
+
+  // Fonctions de persistance
+  window.saveTabsState = function(){
+    // Sauvegarder l'état de l'onglet actuel avant de sauvegarder
+    saveCurrentTabState();
+    
+    const tabs = Array.from(document.querySelectorAll('.chat-tab')).map(tab => ({
+      id: tab.getAttribute('data-chat-id'),
+      title: tab.querySelector('.tab-title').textContent,
+      isActive: tab.classList.contains('active')
+    }));
+    
+    // Sauvegarder les onglets et leurs états
+    const tabsData = {
+      tabs: tabs,
+      tabStates: Object.fromEntries(tabStates),
+      tabCounter: tabCounter
+    };
+    
+    localStorage.setItem('bizzio_chat_tabs', JSON.stringify(tabsData));
+  };
+
+
+
+  window.restoreTabsState = function(){
+    const saved = localStorage.getItem('bizzio_chat_tabs');
+    console.log('Données sauvegardées:', saved);
+    if (!saved) return false;
+    
+    try {
+      const data = JSON.parse(saved);
+      console.log('Données parsées:', data);
+      
+      // Support de l'ancien format (compatibilité)
+      const tabs = data.tabs || data;
+      const tabStatesData = data.tabStates || {};
+      const savedTabCounter = data.tabCounter || 1;
+      
+      if (tabs.length === 0) {
+        console.log('Aucun onglet à restaurer');
+        return false;
+      }
+      
+      console.log('Restauration de', tabs.length, 'onglets');
+      
+      const container = document.getElementById('chatTabs');
+      container.innerHTML = '';
+      
+      // Restaurer le compteur d'onglets
+      tabCounter = savedTabCounter;
+      console.log('Compteur d\'onglets restauré:', tabCounter);
+      
+      // Restaurer les états des onglets
+      tabStates.clear();
+      Object.entries(tabStatesData).forEach(([id, state]) => {
+        tabStates.set(id, state);
+        console.log('État restauré pour', id, ':', state);
+      });
+      
+      tabs.forEach((tabData, index) => {
+        console.log('Création onglet', index, ':', tabData);
+        const tab = document.createElement('div');
+        tab.className = 'chat-tab';
+        if (tabData.isActive) tab.classList.add('active');
+        tab.setAttribute('data-chat-id', tabData.id);
+        
+        // Corriger le titre si c'est un onglet vide
+        const title = tabData.title === 'Établir contact initial' ? 'Nouvelle conversation' : tabData.title;
+        
+        tab.innerHTML = `<span class="tab-title">${title}</span><span class="delete-tab-icon" title="Supprimer cette conversation">×</span>`;
+        container.appendChild(tab);
+        attachTabBehaviors(tab);
+        
+        if (tabData.isActive) {
+          console.log('Chargement contenu onglet actif:', tabData.id);
+          // Charger le contenu de l'onglet actif
+          loadTabContent(tabData.id);
+        }
+      });
+      
+      console.log('Restauration terminée avec succès');
+      return true;
+    } catch (e) {
+      console.error('Erreur restauration onglets:', e);
+      return false;
+    }
+  };
+
+  // Recrée un onglet par défaut et l'écran d'accueil
+  window.createDefaultTab = async function(){
+    const container = document.getElementById('chatTabs');
+    document.querySelectorAll('.chat-tab.active').forEach(t=>t.classList.remove('active'));
+    
+    // Créer un ID unique pour l'onglet par défaut
+    tabCounter++;
+    const defaultTabId = `current_${tabCounter}`;
+    
+    const tab = document.createElement('div');
+    tab.className = 'chat-tab active';
+    tab.setAttribute('data-chat-id', defaultTabId);
+    tab.innerHTML = '<span class="tab-title">Nouvelle conversation</span><span class="delete-tab-icon" title="Supprimer cette conversation">×</span>';
+    container.appendChild(tab);
+    attachTabBehaviors(tab);
+    
+    // Initialiser l'état de l'onglet
+    tabStates.set(defaultTabId, {
+      messages: [],
+      inputValue: '',
+      hasMessages: false
+    });
+    
+    // Vider le conteneur immédiatement
+    const messagesContainer = document.getElementById('chatMessages');
+    if (messagesContainer) {
+      messagesContainer.innerHTML = '';
+    }
+    
+    // Charger le contenu de l'onglet de manière asynchrone
+    await loadTabContent(defaultTabId);
+    saveTabsState();
+  };
+
+  // Initialiser le compteur d'onglets
+  tabCounter = 1;
+  
+  // Restaurer l'état des onglets au chargement
+  if (!restoreTabsState()) {
+    // Si pas de sauvegarde, initialiser l'onglet existant
+    const initialTab = tabs.querySelector('.chat-tab[data-chat-id="current_1"]');
+    if (initialTab) {
+      attachTabBehaviors(initialTab);
+      // Initialiser l'état de l'onglet
+      tabStates.set('current_1', {
+        messages: [],
+        inputValue: '',
+        hasMessages: false
+      });
+      // Charger le contenu de l'onglet
+      loadTabContent('current_1');
+      // Sauvegarder l'état
+      saveTabsState();
+    } else {
+      // Fallback : créer un onglet par défaut
+      createDefaultTab().catch(console.error);
+    }
+  }
+  
+  // Ajouter un événement pour sauvegarder l'input en temps réel
+  const chatInput = document.getElementById('chatInput');
+  if (chatInput) {
+    chatInput.addEventListener('input', function() {
+      const activeTab = document.querySelector('.chat-tab.active');
+      if (activeTab) {
+        const chatId = activeTab.getAttribute('data-chat-id');
+        if (chatId) {
+          // Sauvegarder dans localStorage
+          localStorage.setItem(`bizzio_chat_input_${chatId}`, this.value);
+          // Mettre à jour l'état de l'onglet
+          const tabState = tabStates.get(chatId);
+          if (tabState) {
+            tabState.inputValue = this.value;
+            tabStates.set(chatId, tabState);
+          }
+        }
+      }
+    });
+  }
+  
+  // Sauvegarde automatique toutes les 2 secondes
+  setInterval(() => {
+    saveCurrentTabState();
+    saveTabsState();
+  }, 2000);
+  
+  // Sauvegarde forcée à chaque changement d'onglet
+  document.addEventListener('click', function(e) {
+    if (e.target.closest('.chat-tab')) {
+      setTimeout(() => {
+        saveCurrentTabState();
+        saveTabsState();
+        // Supprimer l'appel à stabilizeLayout() qui causait le décalage
+      }, 100);
+    }
+  });
+
+  // Scroll latéral des onglets (drag-scroll visuel)
+  let isDown=false, startX=0, scrollLeft=0;
+  tabs.addEventListener('mousedown', (e)=>{ isDown=true; tabs.classList.add('dragging'); startX=e.pageX - tabs.offsetLeft; scrollLeft=tabs.scrollLeft; tabs.style.cursor='grabbing'; });
+  tabs.addEventListener('mouseleave', ()=>{ isDown=false; tabs.style.cursor='grab'; });
+  tabs.addEventListener('mouseup', ()=>{ isDown=false; tabs.style.cursor='grab'; });
+  tabs.addEventListener('mousemove', (e)=>{ if(!isDown) return; e.preventDefault(); const x=e.pageX - tabs.offsetLeft; const walk=(x-startX)*1; tabs.scrollLeft = scrollLeft - walk; });
+  // support tactile
+  let startTX=0, startSL=0, tActive=false;
+  tabs.addEventListener('touchstart', (e)=>{ tActive=true; startTX=e.touches[0].pageX; startSL=tabs.scrollLeft; }, {passive:true});
+  tabs.addEventListener('touchmove', (e)=>{ if(!tActive) return; const dx=e.touches[0].pageX - startTX; tabs.scrollLeft = startSL - dx; }, {passive:true});
+  tabs.addEventListener('touchend', ()=>{ tActive=false; });
+});
+
+// Historique: ouverture/fermeture et peuplement basique à partir des onglets
+document.addEventListener('DOMContentLoaded', function(){
+  const btn = document.getElementById('historyBtn');
+  const dropdown = document.getElementById('historyDropdown');
+  const list = document.getElementById('historyList');
+  const tabs = document.getElementById('chatTabs');
+  if(!btn || !dropdown) return;
+  btn.addEventListener('click', (e)=>{
+    e.stopPropagation();
+    loadSessions();
+    dropdown.style.display = dropdown.style.display==='block' ? 'none' : 'block';
+  });
+  document.addEventListener('click', (e)=>{
+    if(dropdown && !dropdown.contains(e.target) && !btn.contains(e.target)) dropdown.style.display='none';
+  });
+  const search = document.getElementById('historySearch');
+  if (search){ search.addEventListener('input', ()=>filterHistory(search.value)); }
+});
+
+
+// Supprimer un onglet
+function deleteChatTab(el){
+  const tab = el.closest('.chat-tab');
+  if(!tab) return;
+  
+  const chatId = tab.getAttribute('data-chat-id');
+  const wasActive = tab.classList.contains('active');
+  
+  // Supprimer l'état de l'onglet
+  if (chatId) {
+    tabStates.delete(chatId);
+  }
+  
+  // Trouver l'onglet précédent ou suivant
+  const prevTab = tab.previousElementSibling && tab.previousElementSibling.classList.contains('chat-tab')
+    ? tab.previousElementSibling
+    : null;
+  const nextTab = !prevTab && tab.nextElementSibling && tab.nextElementSibling.classList.contains('chat-tab')
+    ? tab.nextElementSibling
+    : null;
+
+  tab.remove();
+
+  if(wasActive){
+    const target = prevTab || nextTab;
+    if (target){
+      // Activer l'onglet cible
+      document.querySelectorAll('#chatTabs .chat-tab').forEach(t=>t.classList.remove('active'));
+      target.classList.add('active');
+      
+      // Vider immédiatement le conteneur pour éviter l'affichage de l'ancien contenu
+      const messagesContainer = document.getElementById('chatMessages');
+      if (messagesContainer) {
+        messagesContainer.innerHTML = '';
+      }
+      
+      const nextChatId = target.getAttribute('data-chat-id');
+      // Charger le contenu de l'onglet cible de manière asynchrone
+      loadTabContent(nextChatId).catch(console.error);
+    } else {
+      // Plus aucun onglet → créer un onglet par défaut
+      createDefaultTab().catch(console.error);
+    }
+  }
+
+  // Sauvegarder l'état
+  saveTabsState();
+  loadSessions();
+}
+
+// Mettre à jour le dropdown d'historique
+async function loadSessions(){
+  const list = document.getElementById('historyList');
+  list.innerHTML = '<div class="history-empty">Chargement...</div>';
+  try{
+    const res = await fetch('/admin/api/data-analyst/sessions');
+    const data = await res.json();
+    if(!data.success){ list.innerHTML = '<div class="history-empty">Erreur</div>'; return; }
+    const sessions = data.sessions || [];
+    renderHistory(sessions);
+  }catch{ list.innerHTML = '<div class="history-empty">Erreur réseau</div>'; }
+}
+
+function renderHistory(items){
+  const list = document.getElementById('historyList');
+  list.innerHTML='';
+  if(items.length===0){ list.innerHTML='<div class="history-empty">Aucune conversation</div>'; return; }
+  items.forEach(s=>{
+    const row = document.createElement('div'); row.className='history-item'; row.dataset.chatId=s.chat_id;
+    const title = document.createElement('span'); title.textContent = s.session_name;
+    const actions = document.createElement('div'); actions.className='history-actions';
+    const editBtn = document.createElement('button'); editBtn.className='icon-btn'; editBtn.innerHTML='<i class="fas fa-pen"></i>';
+    const delBtn = document.createElement('button'); delBtn.className='icon-btn'; delBtn.innerHTML='<i class="fas fa-trash"></i>';
+    actions.appendChild(editBtn); actions.appendChild(delBtn);
+    row.appendChild(title); row.appendChild(actions);
+    row.addEventListener('click', (e)=>{ 
+      if(e.target.closest('.icon-btn')) return; 
+      
+      // Utiliser l'onglet actif au lieu de créer un nouvel onglet
+      const activeTab = document.querySelector('.chat-tab.active');
+      if (activeTab) {
+        // Transformer l'onglet actif en onglet de session
+        activeTab.setAttribute('data-chat-id', s.chat_id);
+        const titleSpan = activeTab.querySelector('.tab-title');
+        if (titleSpan) titleSpan.textContent = s.session_name;
+        
+        // Charger la session dans l'onglet actif
+        openSession(s.chat_id, s.session_name);
+      } else {
+        // Fallback : créer un nouvel onglet si aucun onglet actif
+        addOrActivateTab(s.chat_id, s.session_name);
+      }
+      
+      // Fermer le menu Historique après sélection
+      const dropdown = document.getElementById('historyDropdown');
+      if (dropdown) dropdown.style.display = 'none';
+    });
+    editBtn.addEventListener('click', async (e)=>{ e.stopPropagation(); renameSessionInline(s); });
+    delBtn.addEventListener('click', async (e)=>{ e.stopPropagation(); showDeleteModal(s); });
+    list.appendChild(row);
+  });
+}
+
+function filterHistory(q){
+  const list = document.getElementById('historyList');
+  const rows = list.querySelectorAll('.history-item');
+  const query = (q||'').toLowerCase();
+  rows.forEach(r=>{ const txt = r.querySelector('span').textContent.toLowerCase(); r.style.display = txt.includes(query)?'flex':'none'; });
+}
+
+function resetChatUI(){
+  // Utiliser la nouvelle fonction showWelcomeScreen
+  showWelcomeScreen();
+  
+  // Sauvegarder l'état après reset
+  saveTabsState();
+}
+
+async function openSession(chatId, name){
+  // Charger les messages de cette session
+  try{
+    const res = await fetch(`/admin/api/data-analyst/chats/${chatId}/messages?limit=50`);
+    const data = await res.json();
+    if(data.success){
+      const msgs = data.messages || [];
+      
+      // Sauvegarder les messages dans l'état de l'onglet
+      const messages = msgs.map(m => ({
+        content: m.message_type === 'user' ? (m.user_message || '') : (m.bizzio_response || ''),
+        sender: m.message_type
+      }));
+      
+      // Mettre à jour l'état de l'onglet
+      tabStates.set(chatId, {
+        messages: messages,
+        inputValue: '',
+        hasMessages: messages.length > 0
+      });
+      
+      // Mettre à jour l'ID de chat actif
+      window.__activeChatId = chatId;
+      
+      // Charger le contenu directement
+      loadTabContent(chatId);
+    }
+  }catch(e){
+    console.error('Erreur chargement messages:', e);
+    // En cas d'erreur, réinitialiser l'interface
+    resetChatUI();
+  }
+}
+
+function updateActiveTabTitle(newTitle) {
+  const activeTab = document.querySelector('.chat-tab.active');
+  if (activeTab) {
+    const titleSpan = activeTab.querySelector('.tab-title') || activeTab.childNodes[0];
+    if (titleSpan) {
+      titleSpan.textContent = newTitle;
+    }
+  }
+}
+
+// Ajouter ou activer un onglet sans fermer les autres
+function addOrActivateTab(chatId, title){
+  const tabsContainer = document.getElementById('chatTabs');
+  
+  // Chercher d'abord si l'onglet existe déjà
+  let tab = tabsContainer.querySelector(`.chat-tab[data-chat-id="${chatId}"]`);
+  
+  if (!tab){
+    // Créer un nouvel onglet
+    tab = document.createElement('div');
+    tab.className = 'chat-tab';
+    tab.setAttribute('data-chat-id', chatId);
+    tab.innerHTML = `<span class="tab-title">${title}</span><span class="delete-tab-icon" title="Supprimer cette conversation">×</span>`;
+    tabsContainer.appendChild(tab);
+    attachTabBehaviors(tab);
+    
+    // Initialiser l'état de l'onglet
+    tabStates.set(chatId, {
+      messages: [],
+      inputValue: '',
+      hasMessages: false
+    });
+  }
+  
+  // Désactiver tous les onglets actifs
+  document.querySelectorAll('.chat-tab.active').forEach(t => t.classList.remove('active'));
+  
+  // Mettre à jour le titre si changé
+  const span = tab.querySelector('.tab-title'); 
+  if (span && title) {
+    span.textContent = title;
+  }
+  
+  // Activer cet onglet
+  tab.classList.add('active');
+  
+  // Vider immédiatement le conteneur pour éviter l'affichage de l'ancien contenu
+  const messagesContainer = document.getElementById('chatMessages');
+  if (messagesContainer) {
+    messagesContainer.innerHTML = '';
+  }
+  
+  // Charger le contenu de l'onglet de manière asynchrone
+  loadTabContent(chatId).catch(console.error);
+  
+  // Si c'est un nouvel onglet "current_", forcer l'écran d'accueil immédiatement
+  if (chatId.startsWith('current_')) {
+    showWelcomeScreen();
+  }
+  
+  // Sauvegarder l'état
+  saveTabsState();
+}
+
+// Charger le contenu d'un onglet de manière asynchrone
+async function loadTabContent(chatId) {
+  console.log('Chargement contenu onglet:', chatId);
+  const messagesContainer = document.getElementById('chatMessages');
+  const chatInput = document.getElementById('chatInput');
+  
+  // Sauvegarder l'état de l'onglet précédent
+  saveCurrentTabState();
+  
+  // S'assurer que le conteneur est vide
+  messagesContainer.innerHTML = '';
+  
+  // Charger l'état de l'onglet actuel
+  const tabState = tabStates.get(chatId) || {
+    messages: [],
+    inputValue: '',
+    hasMessages: false
+  };
+  
+  console.log('État de l\'onglet:', tabState);
+  
+  // Utiliser requestAnimationFrame pour un rendu fluide
+  await new Promise(resolve => requestAnimationFrame(resolve));
+  
+  // Restaurer les messages si ils existent
+  if (tabState.hasMessages && tabState.messages.length > 0) {
+    console.log('Affichage des messages sauvegardés:', tabState.messages.length);
+    
+    // Créer un fragment pour améliorer les performances
+    const fragment = document.createDocumentFragment();
+    
+    tabState.messages.forEach((msg, index) => {
+      const messageDiv = document.createElement('div');
+      messageDiv.className = `message ${msg.sender}`;
+      
+      // Formater le contenu si c'est un message agent
+      let bodyHtml = msg.content;
+      if (msg.sender === 'assistant' || msg.sender === 'bizzio') {
+        bodyHtml = formatMarkdown(msg.content);
+      }
+      
+      if (msg.sender === 'user') {
+        messageDiv.innerHTML = `
+          <div class="message-body">${bodyHtml}</div>
+          <div class="message-actions">
+            <button class="msg-action-btn" title="Copier" onclick="copyMessage(this)"><i class="fas fa-copy"></i></button>
+            <button class="msg-action-btn" title="Modifier" onclick="editUserMessage(this)"><i class="fas fa-pen"></i></button>
+          </div>
+        `;
+      } else {
+        messageDiv.innerHTML = `
+          <div class="message-body">${bodyHtml}</div>
+          <div class="message-actions">
+            <button class="msg-action-btn" title="Copier" onclick="copyMessage(this)"><i class="fas fa-copy"></i></button>
+          </div>
+        `;
+      }
+      
+      fragment.appendChild(messageDiv);
+    });
+    
+    // Ajouter tous les messages d'un coup
+    messagesContainer.appendChild(fragment);
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    
+  } else if (chatId && !String(chatId).startsWith('current_')) {
+    console.log('Chargement historique session:', chatId);
+    // Si c'est un onglet de session (pas current_), charger l'historique
+    try {
+      await loadSessionHistory(chatId);
+      console.log('Historique chargé pour:', chatId);
+    } catch (e) {
+      console.error('Erreur chargement historique:', e);
+      showWelcomeScreen();
+    }
+  } else {
+    console.log('Affichage écran d\'accueil pour onglet vide');
+    // Afficher l'écran d'accueil pour les onglets vides
+    showWelcomeScreen();
+  }
+  
+  // Restaurer le contenu de l'input
+  if (chatInput) {
+    // Charger depuis l'état de l'onglet ou depuis localStorage
+    const savedInput = tabState.inputValue || localStorage.getItem(`bizzio_chat_input_${chatId}`) || '';
+    chatInput.value = savedInput;
+    console.log('Input restauré:', savedInput);
+  }
+  
+  // Mettre à jour l'ID de chat actif
+  const chatIdStr = String(chatId);
+  window.__activeChatId = chatIdStr.startsWith('current_') ? null : chatIdStr;
+  console.log('Chat ID actif:', window.__activeChatId);
+}
+
+// Sauvegarder l'état de l'onglet actuel
+function saveCurrentTabState() {
+  const activeTab = document.querySelector('.chat-tab.active');
+  if (!activeTab) {
+    console.log('Aucun onglet actif pour sauvegarder');
+    return;
+  }
+  
+  const chatId = activeTab.getAttribute('data-chat-id');
+  if (!chatId) {
+    console.log('Aucun chatId pour sauvegarder');
+    return;
+  }
+  
+  console.log('Sauvegarde état onglet:', chatId);
+  
+  const messagesContainer = document.getElementById('chatMessages');
+  const chatInput = document.getElementById('chatInput');
+  
+  // Sauvegarder les messages
+  const messages = Array.from(messagesContainer.querySelectorAll('.message')).map(msg => {
+    const isUser = msg.classList.contains('user');
+    const messageBody = msg.querySelector('.message-body');
+    
+    // Pour les messages utilisateur, sauvegarder le texte brut
+    if (isUser) {
+      const content = messageBody ? messageBody.textContent || messageBody.innerText : msg.textContent || msg.innerText;
+      return {
+        content: content,
+        sender: 'user'
+      };
+    } else {
+      // Pour les messages assistant, sauvegarder le texte brut (sans HTML)
+      const content = messageBody ? messageBody.textContent || messageBody.innerText : msg.textContent || msg.innerText;
+      return {
+        content: content,
+        sender: 'assistant'
+      };
+    }
+  });
+  
+  console.log('Messages trouvés pour sauvegarde:', messages.length);
+  
+  // Sauvegarder l'état
+  const hasMessages = messages.length > 0;
+  const inputValue = chatInput ? chatInput.value : '';
+  
+  console.log('Messages à sauvegarder:', messages.length, 'Input:', inputValue);
+  
+  tabStates.set(chatId, {
+    messages: messages,
+    inputValue: inputValue,
+    hasMessages: hasMessages
+  });
+  
+  // Sauvegarder aussi dans localStorage pour la persistance
+  localStorage.setItem(`bizzio_chat_input_${chatId}`, inputValue);
+  
+  console.log('État sauvegardé pour:', chatId, tabStates.get(chatId));
+}
+
+// Charger l'historique d'une session
+async function loadSessionHistory(chatId) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const chatIdStr = String(chatId);
+      console.log('Chargement historique pour session:', chatIdStr);
+      const res = await fetch(`/admin/api/data-analyst/chats/${chatIdStr}/messages?limit=50`);
+      const data = await res.json();
+      console.log('Réponse API historique:', data);
+      
+      if (data.success) {
+        const msgs = data.messages || [];
+        console.log('Messages trouvés:', msgs.length);
+        
+        // Sauvegarder les messages dans l'état de l'onglet
+        const messages = msgs.map(m => ({
+          content: m.message_type === 'user' ? (m.user_message || '') : (m.bizzio_response || ''),
+          sender: m.message_type
+        }));
+        
+        // Mettre à jour l'état de l'onglet
+        tabStates.set(chatIdStr, {
+          messages: messages,
+          inputValue: '',
+          hasMessages: messages.length > 0
+        });
+        
+        // Afficher les messages
+        if (messages.length > 0) {
+          console.log('Affichage des messages:', messages.length);
+          const messagesContainer = document.getElementById('chatMessages');
+          messages.forEach(msg => {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${msg.sender}`;
+            // Formater le contenu si c'est un message agent
+            let bodyHtml = msg.content;
+            if (msg.sender === 'assistant' || msg.sender === 'bizzio') {
+              bodyHtml = formatMarkdown(msg.content);
+            }
+            
+            if (msg.sender === 'user') {
+              messageDiv.innerHTML = `
+                <div class="message-body">${bodyHtml}</div>
+                <div class="message-actions">
+                  <button class="msg-action-btn" title="Copier" onclick="copyMessage(this)"><i class="fas fa-copy"></i></button>
+                  <button class="msg-action-btn" title="Modifier" onclick="editUserMessage(this)"><i class="fas fa-pen"></i></button>
+                </div>
+              `;
+            } else {
+              messageDiv.innerHTML = `
+                <div class="message-body">${bodyHtml}</div>
+                <div class="message-actions">
+                  <button class="msg-action-btn" title="Copier" onclick="copyMessage(this)"><i class="fas fa-copy"></i></button>
+                </div>
+              `;
+            }
+            messagesContainer.appendChild(messageDiv);
+          });
+          messagesContainer.scrollTop = messagesContainer.scrollHeight;
+          
+          // Vérifier si le dernier message est de l'utilisateur et qu'il n'y a pas de réponse
+          const lastMessage = messages[messages.length - 1];
+          if (lastMessage && lastMessage.sender === 'user') {
+            console.log('Dernier message utilisateur détecté, déclenchement réponse agent');
+            // Déclencher la réponse de l'agent
+            setTimeout(() => {
+              sendMessage();
+            }, 1500);
+          }
+          
+          resolve(messages);
+        } else {
+          console.log('Aucun message trouvé, affichage écran d\'accueil');
+          // Forcer l'affichage de l'écran d'accueil immédiatement
+          showWelcomeScreen();
+          resolve([]);
+        }
+      } else {
+        console.log('Erreur API, affichage écran d\'accueil');
+        showWelcomeScreen();
+        reject(new Error('Erreur API: ' + (data.error || 'Inconnue')));
+      }
+    } catch (e) {
+      console.error('Erreur chargement historique session:', e);
+      showWelcomeScreen();
+      reject(e);
+    }
+  });
+}
+
+// Afficher l'écran d'accueil
+function showWelcomeScreen() {
+  const messagesContainer = document.getElementById('chatMessages');
+  
+  // S'assurer que le conteneur est complètement vide
+  messagesContainer.innerHTML = '';
+  
+  let welcomeScreen = document.getElementById('chatWelcomeScreen');
+  
+  // Si l'écran d'accueil n'existe pas, le créer
+  if (!welcomeScreen) {
+    welcomeScreen = document.createElement('div');
+    welcomeScreen.className = 'chat-welcome-screen';
+    welcomeScreen.id = 'chatWelcomeScreen';
+    welcomeScreen.innerHTML = `
+      <div class="bizzio-icon-welcome">
+        <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+          <path d="M3 17h3v-7H3v7zm5 0h3V7H8v10zm5 0h3v-4h-3v4zm5 0h3V4h-3v13z"/>
+        </svg>
+      </div>
+      <div class="welcome-title">Data Analyst</div>
+      <div class="welcome-description">
+        Votre assistant IA pour l'analyse de données business. Posez vos questions sur les ventes, produits, clients et performances.
+      </div>
+      <div class="welcome-text">Par Bookbookshop.com</div>
+    `;
+  }
+  
+  // Styles permanents pour maintenir l'alignement centré
+  welcomeScreen.style.cssText = `
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    height: 100% !important;
+    min-height: 400px !important;
+    padding: 40px 20px !important;
+    text-align: center !important;
+    position: relative !important;
+  `;
+  
+  // Ajouter l'écran d'accueil au conteneur vide
+  messagesContainer.appendChild(welcomeScreen);
+}
+
+// Renommage inline comme ChatGPT
+function renameSessionInline(session) {
+  const titleSpan = document.querySelector(`[data-chat-id="${session.chat_id}"] span`);
+  if (!titleSpan) return;
+  
+  const originalText = titleSpan.textContent;
+  titleSpan.innerHTML = `<input type="text" value="${originalText}" style="background:transparent;border:1px solid #ddd;border-radius:4px;padding:2px 6px;font-size:12px;width:120px;">`;
+  
+  const input = titleSpan.querySelector('input');
+  input.focus();
+  input.select();
+  
+  const finishRename = async () => {
+    const newName = input.value.trim();
+    if (newName && newName !== originalText) {
+      try {
+        await fetch(`/admin/api/data-analyst/sessions/${session.chat_id}`, {
+          method: 'PATCH',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({session_name: newName})
+        });
+        titleSpan.textContent = newName;
+        // Mettre à jour l'onglet actif si c'est la même session
+        if (window.__activeChatId === session.chat_id) {
+          updateActiveTabTitle(newName);
+        }
+      } catch (e) {
+        titleSpan.textContent = originalText;
+      }
+  } else {
+      titleSpan.textContent = originalText;
+    }
+  };
+  
+  input.addEventListener('blur', finishRename);
+  input.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') finishRename();
+    if (e.key === 'Escape') {
+      titleSpan.textContent = originalText;
+    }
+  });
+}
+
+// Modal de suppression personnalisé
+function showDeleteModal(session) {
+  // Créer le modal
+  const modal = document.createElement('div');
+  modal.style.cssText = `
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+    background: rgba(0,0,0,0.5); z-index: 10000; display: flex; 
+    align-items: center; justify-content: center;
+  `;
+  
+  modal.innerHTML = `
+    <div style="background: white; border-radius: 12px; padding: 24px; max-width: 400px; width: 90%; box-shadow: 0 20px 40px rgba(0,0,0,0.3);">
+      <h3 style="margin: 0 0 16px 0; color: #333; font-size: 18px;">Supprimer le chat ?</h3>
+      <p style="margin: 0 0 24px 0; color: #666; font-size: 14px;">
+        Cette action entraînera la suppression de <strong>${session.session_name}</strong>.
+      </p>
+      <div style="display: flex; gap: 12px; justify-content: flex-end;">
+        <button id="cancelBtn" style="
+          background: #f5f5f5; border: 1px solid #ddd; border-radius: 8px; 
+          padding: 10px 20px; cursor: pointer; font-size: 14px; color: #333;
+        ">Annuler</button>
+        <button id="deleteBtn" style="
+          background: linear-gradient(135deg, #333 0%, #555 100%); 
+          border: none; border-radius: 8px; padding: 10px 20px; 
+          cursor: pointer; font-size: 14px; color: white;
+        ">Supprimer</button>
+      </div>
+    </div>
+  `;
+  
+  document.body.appendChild(modal);
+  
+  // Gestion des clics
+  modal.querySelector('#cancelBtn').onclick = () => document.body.removeChild(modal);
+  modal.querySelector('#deleteBtn').onclick = async () => {
+    try {
+      await fetch(`/admin/api/data-analyst/sessions/${session.chat_id}`, {method: 'DELETE'});
+      // supprimer l'onglet si actif/présent
+      const tab = document.querySelector(`.chat-tab[data-chat-id="${session.chat_id}"]`);
+      if (tab){
+        const wasActive = tab.classList.contains('active');
+        tab.remove();
+        if (wasActive){
+          const remaining = document.querySelector('#chatTabs .chat-tab');
+          if (remaining){ 
+            remaining.classList.add('active'); 
+            window.__activeChatId = remaining.getAttribute('data-chat-id');
+            // Mettre à jour le contenu de l'onglet restant
+            const messagesContainer = document.getElementById('chatMessages');
+            if (messagesContainer) {
+              messagesContainer.innerHTML = '';
+            }
+            loadTabContent(window.__activeChatId).catch(console.error);
+          }
+          else { 
+            window.__activeChatId = null; 
+            resetChatUI(); 
+          }
+        }
+      }
+      loadSessions();
+      document.body.removeChild(modal);
+    } catch (e) {
+      console.error('Erreur suppression:', e);
+      document.body.removeChild(modal);
+    }
+  };
+  
+  // Fermer en cliquant à l'extérieur
+  modal.onclick = (e) => {
+    if (e.target === modal) document.body.removeChild(modal);
+  };
+}
+</script>
+
+    <!-- Chat Panel -->
+    <div class="chat-panel" id="chatPanel">
+        <!-- Header avec onglets -->
+        <div class="chat-header">
+            <div class="chat-tabs" id="chatTabs">
+                <div class="chat-tab active" data-chat-id="current_1">
+                    <span class="tab-title">Nouvelle conversation</span>
+                    <span class="delete-tab-icon" title="Supprimer cette conversation">×</span>
+                </div>
+            </div>
+            <div class="chat-actions">
+              <button class="new-chat-btn" onclick="createNewChat()" title="Nouvelle conversation">
+                  <i class="fas fa-plus"></i>
+              </button>
+              <div class="history-wrapper">
+                <button class="history-btn" id="historyBtn" title="Historique des conversations">
+                  <i class="fas fa-clock"></i>
+                </button>
+                <div class="history-dropdown" id="historyDropdown">
+                  <div class="history-header">Historique</div>
+                  <div class="history-search"><input type="text" id="historySearch" placeholder="Rechercher..."/></div>
+                  <div class="history-list" id="historyList">
+                    <div class="history-empty">Aucune conversation</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+        </div>
+        
+        <div class="chat-messages" id="chatMessages">
+            <!-- Welcome Screen -->
+            <div class="chat-welcome-screen" id="chatWelcomeScreen">
+                <div class="bizzio-icon-welcome">
+                    <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+                        <path d="M3 17h3v-7H3v7zm5 0h3V7H8v10zm5 0h3v-4h-3v4zm5 0h3V4h-3v13z"/>
+                    </svg>
+                </div>
+                <div class="welcome-title">Data Analyst</div>
+                <div class="welcome-description">
+                    Votre assistant IA pour l'analyse de données business. Posez vos questions sur les ventes, produits, clients et performances.
+                </div>
+                <div class="welcome-text">Par Bookbookshop.com</div>
+            </div>
+        </div>
+        
+        <!-- L'indicateur de frappe est désormais injecté dans la zone des messages -->
+        
+        <div class="chat-input-container">
+            <div class="chat-input-wrapper">
+                <button class="upload-btn" onclick="uploadFile()" title="Uploader un fichier">
+                    <i class="fas fa-plus"></i>
+                </button>
+                <textarea class="chat-input" id="chatInput" placeholder="Posez votre question sur les données..." onkeypress="handleKeyPress(event)"></textarea>
+                <button class="send-btn" onclick="sendMessage()" title="Envoyer">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Overlay pour le chat -->
+    <div class="chat-overlay" id="overlay" onclick="closeChatPanel()"></div>
+
+  </body>
+</html> 

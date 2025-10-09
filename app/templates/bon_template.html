@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BON DE LIVRAISON</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='image/logo.png') }}">
+    <style>
+        /* Reset de base pour tous les éléments */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Styles généraux du corps de la page */
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            line-height: 1.4;
+            color: #333; /* Texte noir classique */
+            background: white;
+        }
+
+        /* Conteneur principal du document */
+        .container {
+            max-width: 21cm; /* Largeur standard A4 */
+            margin: 0 auto; /* Centrage horizontal */
+            padding: 20px;
+            background: white;
+        }
+
+        /* Section de l'en-tête du document */
+        .header {
+            display: flex;
+            justify-content: space-between; /* Alignement du logo à gauche et des infos à droite */
+            align-items: flex-start;
+            margin-bottom: 30px;
+        }
+
+        /* Style du logo */
+        .logo {
+            width: 100px; /* Taille du logo réduite pour plus de simplicité */
+            height: auto;
+        }
+
+        /* Informations du bon de livraison (ID, Date) */
+        .delivery-info {
+            text-align: right; /* Alignement à droite des informations */
+        }
+
+        /* Titre "BON DE LIVRAISON" */
+        .delivery-info h1 {
+            font-size: 36px; /* Taille du titre légèrement réduite */
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #d81b60; /* Couleur rose spécifiée */
+        }
+
+        .delivery-info p {
+            margin: 2px 0; /* Espacement réduit */
+            font-size: 13px; /* Taille de police légèrement réduite */
+        }
+
+        /* Section des informations client */
+        .client-section {
+            margin-bottom: 25px; /* Espacement réduit */
+            border-left: 4px solid #d81b60; /* Bordure rose pour le bloc client */
+            padding-left: 10px;
+        }
+
+        /* Titre "Informations Client" */
+        .client-title {
+            color: #d81b60; /* Couleur rose spécifiée */
+            font-size: 15px; /* Taille de police légèrement réduite */
+            font-weight: bold;
+            margin-bottom: 10px; /* Espacement réduit */
+        }
+
+        /* Détails des informations client */
+        .client-info {
+            font-size: 12px;
+            line-height: 1.5; /* Espacement de ligne ajusté */
+        }
+
+        .client-info p {
+            margin: 2px 0;
+        }
+
+        /* Tableau des articles */
+        .items-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 25px; /* Espacement réduit */
+            border: 1px solid #eee; /* Bordure plus légère pour le tableau */
+        }
+
+        /* En-têtes du tableau */
+        .items-table th {
+            padding: 10px 8px; /* Espacement réduit */
+            text-align: left;
+            font-weight: bold;
+            font-size: 12px; /* Taille de police légèrement réduite */
+            color: white;
+            border: 1px solid; /* Bordure générale, la couleur sera définie ci-dessous */
+        }
+
+        /* En-têtes du tableau: Catégorie et Désignation en rose */
+        .items-table th:first-child,
+        .items-table th:nth-child(2) {
+            background-color: #d81b60; /* Rose */
+            border-color: #d81b60;
+        }
+
+        /* En-têtes du tableau: Qté Livrée et Observations en noir */
+        .items-table th:nth-child(3),
+        .items-table th:nth-child(4) {
+            background-color: #000; /* Noir */
+            border-color: #000; /* Bordure noire pour ces colonnes */
+        }
+
+        /* Cellules du tableau */
+        .items-table td {
+            padding: 8px 8px; /* Espacement réduit */
+            border-bottom: 1px solid #eee; /* Bordure inférieure plus légère */
+            font-size: 11px; /* Taille de police légèrement réduite */
+            border-left: 1px solid #f5f5f5; /* Bordures latérales très légères */
+            border-right: 1px solid #f5f5f5;
+        }
+
+        /* Alignement à droite pour la dernière colonne du tableau (Quantité Livrée) */
+        .items-table td:last-child,
+        .items-table th:last-child {
+            text-align: right;
+        }
+
+        /* Section d'accusé de réception */
+        .reception-section {
+            margin-top: 40px; /* Espacement réduit */
+            padding-top: 15px; /* Espacement réduit */
+            border-top: 1px solid #ddd;
+        }
+
+        .reception-title {
+            color: #d81b60;
+            font-size: 15px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .reception-details {
+            display: flex;
+            justify-content: space-around; /* Utilisation de space-around pour une distribution plus simple */
+            align-items: flex-end;
+            font-size: 12px;
+            flex-wrap: wrap; /* Permet aux éléments de passer à la ligne sur petits écrans */
+        }
+
+        .reception-details div {
+            flex: 0 0 30%; /* Chaque section prend environ 30% de la largeur */
+            margin-bottom: 15px; /* Espacement entre les blocs sur petits écrans */
+            text-align: center; /* Centrer le texte dans chaque bloc */
+        }
+
+        .reception-details div:last-child {
+            margin-right: 0;
+        }
+
+        .reception-details p {
+            margin-bottom: 5px;
+        }
+
+        .signature-line {
+            border-bottom: 1px solid #333;
+            width: 90%; /* Ligne de signature plus courte */
+            margin: 10px auto 0 auto; /* Centrer la ligne de signature */
+            padding-bottom: 5px;
+        }
+
+        /* Pied de page */
+        .footer {
+            text-align: center;
+            font-size: 10px; /* Taille de police réduite */
+            color: #666;
+            border-top: 1px solid #eee; /* Bordure plus légère */
+            padding-top: 10px; /* Espacement réduit */
+            margin-top: 40px; /* Espacement réduit */
+        }
+
+        .footer-row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 3px 0; /* Espacement réduit */
+        }
+
+        .footer-icon {
+            width: 12px; /* Taille des icônes réduite */
+            height: 12px;
+            margin-right: 5px; /* Espacement réduit */
+            fill: #d81b60; /* Couleur rose pour les icônes du pied de page */
+        }
+
+        /* Styles d'impression pour une meilleure mise en page sur papier */
+        @media print {
+            body {
+                font-size: 10px; /* Taille de police encore plus petite à l'impression */
+            }
+            
+            .container {
+                max-width: none;
+                margin: 0;
+                padding: 10px; /* Marge d'impression réduite */
+            }
+            
+            @page {
+                size: A4;
+                margin: 1cm; /* Marges de page réduites */
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- En-tête du document -->
+        <div class="header">
+            <!-- Logo (si disponible, sinon peut être remplacé par un texte) -->
+            <img src="https://placehold.co/100x50/d81b60/ffffff?text=LOGO" alt="Logo" class="logo">
+            <div class="delivery-info">
+                <h1>BON DE LIVRAISON</h1>
+                <p><strong>ID Bon :</strong> BL-20250703-001</p>
+                <p><strong>Date :</strong> 03/07/2025</p>
+                <!-- Réf. Commande retirée pour la simplicité, peut être ajoutée dans les observations du tableau si nécessaire -->
+            </div>
+        </div>
+
+        <!-- Section des informations client -->
+        <div class="client-section">
+            <div class="client-title">Informations Client</div>
+            <div class="client-info">
+                <p><strong>Nom :</strong> Jean Ndongo</p>
+                <p><strong>Téléphone :</strong> 237695123456</p>
+                <p><strong>Adresse :</strong> Carrefour Mvog-Ada</p>
+                <p><strong>Ville :</strong> Yaoundé</p>
+                <p><strong>Pays :</strong> Cameroun</p>
+            </div>
+        </div>
+
+        <!-- Tableau des articles livrés -->
+        <table class="items-table">
+            <thead>
+                <tr>
+                    <th>Catégorie</th>
+                    <th>Désignation</th>
+                    <th>Qté Livrée</th>
+                    <th>Observations</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Fourniture</td>
+                    <td>Cahier 200 pages</td>
+                    <td>20</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>Fourniture</td>
+                    <td>Crayon graphite HB</td>
+                    <td>10</td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Section d'accusé de réception -->
+        <div class="reception-section">
+            <div class="reception-title">Accusé de Réception</div>
+            <div class="reception-details">
+                <div>
+                    <p>Nom du réceptionnaire :</p>
+                    <div class="signature-line"></div>
+                </div>
+                <div>
+                    <p>Date de réception :</p>
+                    <div class="signature-line"></div>
+                </div>
+                <div>
+                    <p>Signature :</p>
+                    <div class="signature-line"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pied de page avec icônes SVG -->
+        <div class="footer">
+            <div class="footer-row">
+                <svg class="footer-icon" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                </svg>
+                <span>Agence : Yaoundé</span>
+            </div>
+            <div class="footer-row">
+                <svg class="footer-icon" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
+                </svg>
+                <span>Tel : +237 690 000 111</span>
+            </div>
+            <div class="footer-row">
+                <svg class="footer-icon" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zm6.93 6h-2.95c-.32-1.25-.78-2.45-1.38-3.56 1.84.63 3.37 1.91 4.33 3.56zM12 4.04c.83 1.2 1.48 2.53 1.91 3.96h-3.82c.43-1.43 1.08-2.76 1.91-3.96zM4.26 14C4.1 13.36 4 12.69 4 12s.1-1.36.26-2h3.38c-.08.66-.14 1.32-.14 2 0 .68.06 1.34.14 2H4.26zm.82 2h2.95c.32 1.25.78 2.45 1.38 3.56-1.84-.63-3.37-1.9-4.33-3.56zm2.95-8H5.08c.96-1.66 2.49-2.93 4.33-3.56C8.81 5.55 8.35 6.75 8.03 8zM12 19.96c-.83-1.2-1.48-2.53-1.91-3.96h3.82c-.43 1.43-1.08 2.76-1.91 3.96zM14.34 14H9.66c-.09-.66-.16-1.32-.16-2 0-.68.07-1.35.16-2h4.68c.09.65.16 1.32.16 2 0 .68-.07 1.34-.16 2zm.25 5.56c.6-1.11 1.06-2.31 1.38-3.56h2.95c-.96 1.65-2.49 2.93-4.33 3.56zM16.36 14c.08-.66.14-1.32.14-2 0-.68-.06-1.34-.14-2h3.38c.16.64.26 1.31.26 2s-.1 1.36-.26 2h-3.38z"/>
+                </svg>
+                <span>No. de Contribuable : M0991200321</span>
+            </div>
+            <div class="footer-row">
+                <span>R.C. No : RCYDE202300189</span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
