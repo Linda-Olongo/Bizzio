@@ -19,8 +19,8 @@ import io
 import csv
 
 # Database & SQL
-import psycopg
-from psycopg import sql
+import psycopg2
+from psycopg2 import sql
 from sqlalchemy import func, and_, or_, extract
 
 # External libraries
@@ -85,7 +85,7 @@ def init_routes(flask_app, database, models):
 
     # === FONCTION UTILITAIRE : CONNEXION BD ===
     def get_db_connection():
-        conn = psycopg.connect(current_app.config['SQLALCHEMY_DATABASE_URI'])
+        conn = psycopg2.connect(current_app.config['SQLALCHEMY_DATABASE_URI'])
         return conn
     
     # === FONCTION UTILITAIRE : DASHBOARD ===
