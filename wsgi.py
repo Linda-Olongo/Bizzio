@@ -9,13 +9,21 @@ import sys
 # Add the current directory to Python path
 sys.path.insert(0, os.path.dirname(__file__))
 
-# Import the Flask app
-from app import app
-
-# Make sure the app is available for Gunicorn
-application = app
+try:
+    # Import the Flask app
+    from app import app
+    application = app
+except ImportError as e:
+    print(f"Error importing app: {e}")
+    # Fallback: try to import from app.py directly
+    try:
+        from app import app
+        application = app
+    except ImportError:
+        print("Failed to import app from both locations")
+        raise
 
 if __name__ == "__main__":
     # For local development
     port = int(os.environ.get('PORT', 5001))
-    app.run(host='0.0.0.0', port=port, debug=False)
+    application.run(host='0.0.0.0', port=port, debug=False)
